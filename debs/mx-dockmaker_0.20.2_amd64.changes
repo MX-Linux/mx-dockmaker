@@ -1,0 +1,49 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Format: 1.8
+Date: Thu, 06 Feb 2020 12:50:39 -0500
+Source: mx-dockmaker
+Binary: mx-dockmaker mx-dockmaker-dbgsym
+Architecture: source amd64
+Version: 0.20.2
+Distribution: mx
+Urgency: medium
+Maintainer: Adrian <adrian@mxlinux.org>
+Changed-By: Adrian <adrian@mxlinux.org>
+Description:
+ mx-dockmaker - mx-dockmaker
+Changes:
+ mx-dockmaker (0.20.2) mx; urgency=medium
+ .
+   * initial release
+Checksums-Sha1:
+ 005decf41481824bf800ae4c19ffae7f38ee2d1d 1129 mx-dockmaker_0.20.2.dsc
+ 3548cb52c98b38c055f09a74d12f5dfb3aac70aa 16484 mx-dockmaker_0.20.2.tar.xz
+ 68af096ab8e2a7128485ba376d1354a0548e04bb 881572 mx-dockmaker-dbgsym_0.20.2_amd64.deb
+ 183d7aea4dcf083e5f99aafabffeb864c70a22bd 10616 mx-dockmaker_0.20.2_amd64.buildinfo
+ ec2b0a43e7d1a11619a2c52bd4c472e40480c1ed 41364 mx-dockmaker_0.20.2_amd64.deb
+Checksums-Sha256:
+ 454bf8ecb8c915d22c010fd4252161bc47ec839d79a52c7079830d13c5a11843 1129 mx-dockmaker_0.20.2.dsc
+ 22bd60c31b02f3905b88f0e8eb3965cfeb891cbd1772e42e6870bfc49d079147 16484 mx-dockmaker_0.20.2.tar.xz
+ 6a4100ab064c0d9fdec9f13634f334cde471350f929851320e595e4d160a56f4 881572 mx-dockmaker-dbgsym_0.20.2_amd64.deb
+ 0da30a62d1fa9d575dc5e768eb755e8480142075e961b3b411b7d709210501ab 10616 mx-dockmaker_0.20.2_amd64.buildinfo
+ b971e49936faa5a7f230a35b11258430b3432d367a01dee581c313733f18ff9e 41364 mx-dockmaker_0.20.2_amd64.deb
+Files:
+ 68c20c9d050e08d3899b4b5836e01124 1129 admin optional mx-dockmaker_0.20.2.dsc
+ 44a2ce370acc41568e09fe55819e25d9 16484 admin optional mx-dockmaker_0.20.2.tar.xz
+ eccab5bac840f099475921e1a6e82fc2 881572 debug optional mx-dockmaker-dbgsym_0.20.2_amd64.deb
+ e103fc801392a04c6d86728f0808adb6 10616 admin optional mx-dockmaker_0.20.2_amd64.buildinfo
+ ba82d98c03934a9404fdb64a0a0d540d 41364 admin optional mx-dockmaker_0.20.2_amd64.deb
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAl5DTNwTHGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumDgaCADW+hZGDU8Swl8SLWQtoii/Is8QeWul
+tZh24NDmpEEuw8GHVCvxmu0iWhMEQTH9q3+w2BClJFZesm2DosyPfHTCFxAzuER6
+044z5TRwQ/VcZ8wttdhQWFVnN1XXuRfwoHV62G+2wOAF7WNixUQoXkTpZio81KW+
+aMOPlbGc5xgvA7pEFsd2BT6xqA9cfyjQFSgEwi52dia3RXcNpSJH/RsSABB1fmEa
+VhQvtn+Jeuvvb5fmK8cW58UsWxUmu6ij+XAs71eQdDWxsSnxeoAX1Z7OVCAPSaJF
+aOmNXcRfg5rb1uNIYV90dyeUc6wDCLlADDJgs+TgB3x2u7rWM7H8qbQu
+=9OWf
+-----END PGP SIGNATURE-----
