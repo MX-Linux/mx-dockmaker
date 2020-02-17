@@ -27,7 +27,6 @@
 
 #include <QButtonGroup>
 #include <QFile>
-#include <QMap>
 #include <QMessageBox>
 
 #include "cmd.h"
@@ -45,35 +44,44 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    bool isDockInMenu(const QString &file_name);
+
+    void addApp(const QString &app);
+    void addDockToMenu(const QString &file_name);
+    void blockAllSignals(bool enable);
+    void cleanup();
+    void displayIcon(const QString &app_name);
+    void editDock();
+    void enableAdd();
+    void enableNext();
+    void newDock();
+    void parseFile(QFile &file);
+    void resetAdd();
     void setup();
+    void showApp(int i);
+
+    QString findIcon(const QString &icon_name);
+    QString findLargest(const QStringList &files);
+    QString getDockName(const QString &file_name);
+    QString inputDockName();
 
 public slots:
 
 private slots:
-    void addApp(const QString &app);
-    void blockAllSignals(bool enable);
-    void cleanup();
-    void detectSlitLocation();
-    void enableAdd();
-    void enableNext();
-    void parseFile(QFile &file);
-    void resetAdd();
-    void showApp(int i);
-
     void on_buttonSave_clicked();
     void on_buttonAbout_clicked();
     void on_buttonHelp_clicked();
 
+    void on_buttonDelete_clicked();
+    void on_buttonNext_clicked();
+    void on_buttonPrev_clicked();
+    void on_buttonSelectApp_clicked();
+    void on_buttonSelectIcon_clicked();
     void on_comboBgColor_currentIndexChanged(const QString);
     void on_comboBorderColor_currentIndexChanged(const QString);
     void on_comboSize_currentIndexChanged(const QString);
-    void on_buttonNext_clicked();
-    void on_buttonDelete_clicked();
-    void on_buttonSelect_clicked();
-    void on_radioEditDock_toggled(bool checked);
-    void onGroupButton(int button_id);
-    void on_radioNewDock_toggled(bool checked);
-    void on_buttonPrev_clicked();
+    void on_radioDesktop_toggled(bool checked);
+    void on_lineEditCommand_textEdited(const QString);
 
 private:
     Ui::MainWindow *ui;
@@ -81,8 +89,11 @@ private:
     Cmd cmd;
 
     int index = 0;
-    QButtonGroup *buttonGroup;
+    QList<QLabel *> list_icons;
+    QString dock_name;
+    QString file_name;
     QVector<QStringList> apps;
+
 
 };
 
