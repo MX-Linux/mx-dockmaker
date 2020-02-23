@@ -115,6 +115,7 @@ void MainWindow::setup()
         QTimer::singleShot(0, qApp, &QGuiApplication::quit);
     }
     on_radioDesktop_toggled(true);
+    ui->buttonSave->setEnabled(false);
 }
 
 QString MainWindow::findIcon(const QString &icon_name)
@@ -416,7 +417,8 @@ void MainWindow::on_buttonDelete_clicked()
 void MainWindow::resetAdd()
 {
     enableAdd();
-    ui->buttonSelectApp->setText(tr("Select .desktop file..."));
+    ui->radioDesktop->click();
+    ui->radioDesktop->toggled(true);
     ui->comboSize->setCurrentIndex(ui->comboSize->findText("48x48"));
     ui->comboBgColor->setCurrentIndex(ui->comboBgColor->findText(tr("black")));
     ui->comboBorderColor->setCurrentIndex(ui->comboBorderColor->findText(tr("white")));
@@ -427,8 +429,10 @@ void MainWindow::showApp(int idx)
 {
     if (apps.at(idx).at(0).endsWith(".desktop")) {
         ui->radioDesktop->click();
+        ui->radioDesktop->toggled(true);
     } else {
         ui->radioCommand->click();
+        ui->radioDesktop->toggled(false);
         ui->lineEditCommand->setText(apps.at(idx).at(1));
         ui->buttonSelectIcon->setText(apps.at(idx).at(2));
     }
