@@ -67,7 +67,7 @@ void MainWindow::displayIcon(const QString &app_name, int location)
     int width = ui->comboSize->currentText().section("x", 0, 0).toInt();
     int height = width;
     QSize size(width, height);
-    QPixmap pix = QFileInfo::exists(icon) ? QPixmap(icon).scaled(size) : QPixmap(findIcon(icon)).scaled(size);
+    QPixmap pix = QPixmap(findIcon(icon)).scaled(size);
     if (location == list_icons.size()) {
         list_icons << new QLabel(this);
     }
@@ -118,6 +118,8 @@ void MainWindow::setup()
 
 QString MainWindow::findIcon(const QString &icon_name)
 {
+    if (QFileInfo::exists(icon_name)) return icon_name;
+
     const QStringList extList({".png", ".svg", ".xpm"});
 
     QString out = cmd.getCmdOut("xfconf-query -c xsettings -p /Net/IconThemeName", true);
@@ -367,9 +369,9 @@ void MainWindow::on_buttonHelp_clicked()
 }
 
 
-void MainWindow::on_comboSize_currentIndexChanged(const QString)
+void MainWindow::on_comboSize_currentIndexChanged()
 {
-    //ui->buttonNext->setEnabled(true);
+    displayIcon(ui->buttonSelectApp->text(), index);
 }
 
 void MainWindow::on_comboBgColor_currentIndexChanged(const QString)
@@ -508,11 +510,12 @@ void MainWindow::on_buttonSelectApp_clicked()
         ui->buttonSelectApp->setText(file);
         ui->buttonNext->setEnabled(true);
     }
+    displayIcon(file, index);
 }
 
 void MainWindow::editDock()
 {
-    QString selected_dock = QFileDialog::getOpenFileName(this, tr("Select a .fbxdock file"), QDir::homePath() + "/.fluxbox/scripts");
+    QString selected_dock = QFileDialog::getOpenFileName(this, tr("Select a dock file"), QDir::homePath() + "/.fluxbox/scripts");
     if (!QFileInfo::exists(selected_dock)) {
         QMessageBox::warning(this, tr("No file selected"), tr("You haven't selected any dock file to edit.\nCreating a new dock instead."));
         newDock();
@@ -570,11 +573,13 @@ void MainWindow::on_buttonSelectIcon_clicked()
     QString selected = QFileDialog::getOpenFileName(this, tr("Select icon"), "/usr/share/icons", tr("Icons (*.png *.jpg *.bmp *.xpm *.svg)"));
     QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
-        ui->buttonSelectIcon->setText(file);
+        ui->buttonSelectIcon->setText(selected);
         if (!ui->lineEditCommand->text().isEmpty()) {
             ui->buttonNext->setEnabled(true);
+            displayIcon(QString(), index);
         }
     }
+
 }
 
 void MainWindow::on_lineEditCommand_textEdited(const QString)

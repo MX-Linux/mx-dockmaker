@@ -79,7 +79,7 @@ private slots:
     void on_buttonSelectIcon_clicked();
     void on_comboBgColor_currentIndexChanged(const QString);
     void on_comboBorderColor_currentIndexChanged(const QString);
-    void on_comboSize_currentIndexChanged(const QString);
+    void on_comboSize_currentIndexChanged();
     void on_radioDesktop_toggled(bool checked);
     void on_lineEditCommand_textEdited(const QString);
 
