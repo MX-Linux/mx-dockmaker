@@ -46,7 +46,6 @@ public:
 
     bool isDockInMenu(const QString &file_name);
 
-    void updateApp(int idx);
     void addDockToMenu(const QString &file_name);
     void blockAllSignals(bool enable);
     void cleanup();
@@ -59,6 +58,7 @@ public:
     void resetAdd();
     void setup();
     void showApp(int i);
+    void updateApp(int idx);
 
     QString findIcon(const QString &icon_name);
     QString findLargest(const QStringList &files);

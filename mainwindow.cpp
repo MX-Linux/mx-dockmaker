@@ -354,6 +354,8 @@ void MainWindow::on_comboBorderColor_currentIndexChanged(const QString)
 void MainWindow::on_buttonNext_clicked()
 {
     blockAllSignals(true);
+    ui->buttonNext->setEnabled(false);
+    ui->buttonPrev->setEnabled(false);
 
     if (index < apps.size()) {
         updateApp(index);
@@ -452,10 +454,14 @@ void MainWindow::showApp(int idx)
         if (index < apps.size()) {
             enableNext();
         }
-    }
-    if (index == apps.size()) {
+    } else if (index == apps.size()) {
         ui->buttonNext->setIcon(QIcon::fromTheme("forward"));
         ui->buttonNext->setText(tr("Add application"));
+    } else {
+        ui->buttonNext->setIcon(QIcon::fromTheme("next"));
+        ui->buttonNext->setText(tr("Next"));
+        ui->buttonNext->setEnabled(true);
+        ui->buttonPrev->setEnabled(true);
     }
     blockAllSignals(false);
 }
@@ -509,6 +515,8 @@ void MainWindow::newDock()
 
 void MainWindow::on_buttonPrev_clicked()
 {
+    ui->buttonNext->setEnabled(false);
+    ui->buttonPrev->setEnabled(false);
 
     updateApp(index);
     index -= 1;
