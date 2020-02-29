@@ -18,7 +18,7 @@ public:
     QString button;
 
 private slots:
-    void onGroupButton();
+    void onGroupButton(int button_id);
 
 
 private:

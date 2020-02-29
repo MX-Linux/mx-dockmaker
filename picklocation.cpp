@@ -6,6 +6,8 @@ PickLocation::PickLocation(QWidget *parent) :
     ui(new Ui::PickLocation)
 {
     ui->setupUi(this);
+    this->setWindowTitle(tr("Select dock location."));
+
     buttonGroup = new QButtonGroup(this);
     buttonGroup->addButton(ui->buttonTL, 1);
     buttonGroup->addButton(ui->buttonTC, 2);
@@ -29,7 +31,7 @@ PickLocation::~PickLocation()
 
 }
 
-void PickLocation::onGroupButton()
+void PickLocation::onGroupButton(int button_id)
 {
     button = buttonGroup->button(button_id)->text();
 }
