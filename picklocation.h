@@ -13,17 +13,17 @@ class PickLocation : public QDialog
     Q_OBJECT
 
 public:
-    explicit PickLocation(QWidget *parent = nullptr);
+    explicit PickLocation(QString location, QWidget *parent = nullptr);
     ~PickLocation();
     QString button;
 
 private slots:
     void onGroupButton(int button_id);
 
-
 private:
     Ui::PickLocation *ui;
     QButtonGroup *buttonGroup;
+
 };
 
 #endif // PICKLOCATION_H

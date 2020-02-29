@@ -173,7 +173,7 @@ QString MainWindow::inputDockName()
 
 QString MainWindow::pickSlitLocation()
 {
-    PickLocation *pick = new PickLocation(this);
+    PickLocation *pick = new PickLocation("TopRight", this);
 
     pick->exec();
     qDebug() << "RETURN" << pick->button;

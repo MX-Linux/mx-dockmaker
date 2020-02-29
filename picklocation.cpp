@@ -1,7 +1,7 @@
 #include "picklocation.h"
 #include "ui_picklocation.h"
 
-PickLocation::PickLocation(QWidget *parent) :
+PickLocation::PickLocation(QString location, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PickLocation)
 {
@@ -23,6 +23,13 @@ PickLocation::PickLocation(QWidget *parent) :
     buttonGroup->addButton(ui->buttonRB, 12);
 
     connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked), this, &PickLocation::onGroupButton);
+
+    for (QAbstractButton *button : buttonGroup->buttons()) {
+        if (location == button->text()) {
+            button->click();
+            return;
+        }
+    }
 }
 
 PickLocation::~PickLocation()
