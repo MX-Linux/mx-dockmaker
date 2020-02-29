@@ -30,6 +30,7 @@
 #include <cmd.h>
 #include <sys/stat.h>
 #include "mainwindow.h"
+#include "picklocation.h"
 #include "ui_mainwindow.h"
 #include "version.h"
 
@@ -113,6 +114,23 @@ void MainWindow::setup()
     }
     on_radioDesktop_toggled(true);
     ui->buttonSave->setEnabled(false);
+
+
+//    buttonGroup = new QButtonGroup(this);
+//    buttonGroup->addButton(ui->buttonTL, 1);
+//    buttonGroup->addButton(ui->buttonTC, 2);
+//    buttonGroup->addButton(ui->buttonTR, 3);
+//    buttonGroup->addButton(ui->buttonLC, 4);
+//    buttonGroup->addButton(ui->buttonRC, 5);
+//    buttonGroup->addButton(ui->buttonBL, 6);
+//    buttonGroup->addButton(ui->buttonBC, 7);
+//    buttonGroup->addButton(ui->buttonBR, 8);
+//    buttonGroup->addButton(ui->buttonLT, 9);
+//    buttonGroup->addButton(ui->buttonLB, 10);
+//    buttonGroup->addButton(ui->buttonRT, 11);
+//    buttonGroup->addButton(ui->buttonRB, 12);
+
+//    connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked), this, &MainWindow::onGroupButton);
 }
 
 QString MainWindow::findIcon(const QString &icon_name)
@@ -168,6 +186,15 @@ QString MainWindow::inputDockName()
                                              QString(), &ok);
     if (ok && !text.isEmpty()) return text;
     return QString();
+}
+
+QString MainWindow::pickSlitLocation()
+{
+    PickLocation *pick = new PickLocation(this);
+
+    pick->exec();
+    qDebug() << "RETURN" << pick->button;
+    return pick->button;
 }
 
 void MainWindow::updateApp(int idx)
@@ -262,6 +289,8 @@ void MainWindow::parseFile(QFile &file)
 // Next button clicked
 void MainWindow::on_buttonSave_clicked()
 {
+    QString location = pickSlitLocation();
+
     // create "~/.fluxbox/scripts" if it doesn't exist
     if(!QFileInfo::exists(QDir::homePath() + "/.fluxbox/scripts")) {
         QDir dir;
@@ -282,7 +311,11 @@ void MainWindow::on_buttonSave_clicked()
 
     // build and write string
     stream << "#!/bin/bash\n\n";
+    stream << "set up slit location";
+    //TODO
+    stream << "fluxbox-remote restart\n\n";
     stream << "# commands for dock launchers\n";
+
 
     for (int i = 0; i < apps.size(); ++i) {
         QString command = (apps.at(i).at(0).endsWith(".desktop")) ? "--desktop-file " + apps.at(i).at(0) : "--command " + apps.at(i).at(1) + " --icon" + apps.at(i).at(2);
@@ -417,7 +450,7 @@ void MainWindow::on_buttonDelete_clicked()
         index -= 1;
         showApp(index);
     }
-    blockAllSignals(false);
+    ui->buttonSave->setEnabled(true);
 }
 
 void MainWindow::resetAdd()

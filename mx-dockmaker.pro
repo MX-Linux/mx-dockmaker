@@ -30,16 +30,19 @@ TEMPLATE = app
 SOURCES += main.cpp\
     mainwindow.cpp \
     about.cpp \
-    cmd.cpp
+    cmd.cpp \
+    picklocation.cpp
 
 HEADERS  += \
     mainwindow.h \
     version.h \
     about.h \
-    cmd.h
+    cmd.h \
+    picklocation.h
 
 FORMS    += \
-    mainwindow.ui
+    mainwindow.ui \
+    picklocation.ui
 
 TRANSLATIONS += translations/mx-dockmaker_ca.ts \
                 translations/mx-dockmaker_de.ts \

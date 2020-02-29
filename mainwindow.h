@@ -25,7 +25,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QButtonGroup>
 #include <QFile>
 #include <QMessageBox>
 
@@ -64,6 +63,7 @@ public:
     QString findLargest(const QStringList &files);
     QString getDockName(const QString &file_name);
     QString inputDockName();
+    QString pickSlitLocation();
 
 public slots:
 
