@@ -54,7 +54,7 @@ bool MainWindow::isDockInMenu(const QString &file_name)
     return getDockName(file_name) == dock_name;
 }
 
-void MainWindow::displayIcon(const QString &app_name)
+void MainWindow::displayIcon(const QString &app_name, int location)
 {
     QPalette pal = palette();
     QString icon;
@@ -63,18 +63,15 @@ void MainWindow::displayIcon(const QString &app_name)
     } else {
         icon = ui->buttonSelectIcon->text();
     }
-    if (!icon.isEmpty()) {
+    int width = ui->comboSize->currentText().section("x", 0, 0).toInt();
+    int height = width;
+    QSize size(width, height);
+    QPixmap pix = QFileInfo::exists(icon) ? QPixmap(icon).scaled(size) : QPixmap(findIcon(icon)).scaled(size);
+    if (location == list_icons.size()) {
         list_icons << new QLabel(this);
-        int width = ui->comboSize->currentText().section("x", 0, 0).toInt();
-        int height = width;
-        QSize size(width, height);
-        if (QFileInfo::exists(icon)) { //if fully specified name
-            list_icons.last()->setPixmap(QPixmap(icon).scaled(size));
-        } else {
-            list_icons.last()->setPixmap(QPixmap(findIcon(icon)).scaled(size));
-        }
-        ui->groupPreview->layout()->addWidget(list_icons.last());
     }
+    list_icons.at(location)->setPixmap(pix);
+    ui->groupPreview->layout()->addWidget(list_icons.last());
 }
 
 // setup versious items first time program runs
@@ -173,10 +170,15 @@ QString MainWindow::inputDockName()
     return QString();
 }
 
-void MainWindow::addApp(const QString &app)
+void MainWindow::updateApp(int idx)
 {
-    apps.push_back(QStringList({app, ui->lineEditCommand->text(), ui->buttonSelectIcon->text(), ui->comboSize->currentText(), ui->comboBgColor->currentText(), ui->comboBorderColor->currentText()}));
-    displayIcon(app);
+    if (idx == apps.size()) {
+        apps.push_back(QStringList({ui->buttonSelectApp->text(), ui->lineEditCommand->text(), ui->buttonSelectIcon->text(), ui->comboSize->currentText(), ui->comboBgColor->currentText(), ui->comboBorderColor->currentText()}));
+        displayIcon(ui->buttonSelectApp->text(), idx);
+    } else {
+        apps.replace(idx, QStringList({ui->buttonSelectApp->text(), ui->lineEditCommand->text(), ui->buttonSelectIcon->text(), ui->comboSize->currentText(), ui->comboBgColor->currentText(), ui->comboBorderColor->currentText()}));
+        displayIcon(ui->buttonSelectApp->text(), idx);
+    }
 }
 
 void MainWindow::addDockToMenu(const QString &file_name)
@@ -352,8 +354,10 @@ void MainWindow::on_comboBorderColor_currentIndexChanged(const QString)
 void MainWindow::on_buttonNext_clicked()
 {
     blockAllSignals(true);
-    index += 1;
-    if (index <= apps.size()) {
+
+    if (index < apps.size()) {
+        updateApp(index);
+        index += 1;
         ui->buttonDelete->setEnabled(true);
         ui->buttonPrev->setEnabled(true);
         if (index < apps.size()) {
@@ -362,17 +366,17 @@ void MainWindow::on_buttonNext_clicked()
             enableAdd();
             resetAdd();
         }
-    } else {
+    } else { // at the last app
         enableAdd();
         if (ui->buttonSelectApp->text() != tr("Select .desktop file...") || !ui->lineEditCommand->text().isEmpty()) {
             ui->buttonSave->setEnabled(true);
             ui->buttonDelete->setEnabled(true);
             ui->buttonPrev->setEnabled(true);
-            addApp(ui->buttonSelectApp->text());
+            updateApp(index);
+            index += 1;
             resetAdd();
         } else {
             QMessageBox::critical(this, windowTitle(), tr("Please select a file."));
-            index -= 1;
             return;
         }
     }
@@ -386,12 +390,12 @@ void MainWindow::on_buttonDelete_clicked()
         if (ui->buttonDelete->text() == tr("Delete last application")) {
             apps.pop_back();
             delete ui->groupPreview->layout()->itemAt(index - 1)->widget();
-            //list_icons.removeLast();
+            list_icons.removeLast();
             index -= 1; // decrement index because buttonBack doesn't decreament when showing "Delete last application"
         } else {
             delete ui->groupPreview->layout()->itemAt(index)->widget();
-            //list_icons.removeAt(index + 1);
-            apps.remove(index);
+            list_icons.removeAt(index);
+            apps.removeAt(index);
         }
 
         blockAllSignals(false);
@@ -403,13 +407,13 @@ void MainWindow::on_buttonDelete_clicked()
         enableAdd();
         ui->buttonPrev->setEnabled(false);
         resetAdd();
-    } else if (index == 0){
+    } else if (index == 0) {
         ui->buttonPrev->setEnabled(false);
-        index = -1; // Next button advances index;
-        ui->buttonNext->click();
+        showApp(index);
     } else {
         ui->buttonSave->setEnabled(true);
-        on_buttonPrev_clicked();
+        index -= 1;
+        showApp(index);
     }
     blockAllSignals(false);
 }
@@ -417,6 +421,7 @@ void MainWindow::on_buttonDelete_clicked()
 void MainWindow::resetAdd()
 {
     enableAdd();
+    ui->buttonSelectApp->setText(tr("Select .desktop file..."));
     ui->radioDesktop->click();
     ui->radioDesktop->toggled(true);
     ui->comboSize->setCurrentIndex(ui->comboSize->findText("48x48"));
@@ -440,12 +445,19 @@ void MainWindow::showApp(int idx)
     ui->comboSize->setCurrentIndex(ui->comboSize->findText(apps.at(idx).at(3)));
     ui->comboBgColor->setCurrentIndex(ui->comboBgColor->findText(apps.at(idx).at(4)));
     ui->comboBorderColor->setCurrentIndex(ui->comboBorderColor->findText(apps.at(idx).at(5)));
+
+    blockAllSignals(true);
     if (index == 0) {
         ui->buttonPrev->setEnabled(false);
         if (index < apps.size()) {
             enableNext();
         }
     }
+    if (index == apps.size()) {
+        ui->buttonNext->setIcon(QIcon::fromTheme("forward"));
+        ui->buttonNext->setText(tr("Add application"));
+    }
+    blockAllSignals(false);
 }
 
 
@@ -497,19 +509,10 @@ void MainWindow::newDock()
 
 void MainWindow::on_buttonPrev_clicked()
 {
-    blockAllSignals(true);
-    index -= 1;
-    enableNext();
 
+    updateApp(index);
+    index -= 1;
     showApp(index);
-    if (index == 0) {
-        ui->buttonPrev->setEnabled(false);
-    }
-    if (index == apps.size()) {
-        ui->buttonNext->setIcon(QIcon::fromTheme("forward"));
-        ui->buttonNext->setText(tr("Add application"));
-    }
-    blockAllSignals(false);
 }
 
 void MainWindow::on_radioDesktop_toggled(bool checked)

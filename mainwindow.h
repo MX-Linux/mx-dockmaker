@@ -46,11 +46,11 @@ public:
 
     bool isDockInMenu(const QString &file_name);
 
-    void addApp(const QString &app);
+    void updateApp(int idx);
     void addDockToMenu(const QString &file_name);
     void blockAllSignals(bool enable);
     void cleanup();
-    void displayIcon(const QString &app_name);
+    void displayIcon(const QString &app_name, int location);
     void editDock();
     void enableAdd();
     void enableNext();
@@ -92,7 +92,7 @@ private:
     QList<QLabel *> list_icons;
     QString dock_name;
     QString file_name;
-    QVector<QStringList> apps;
+    QList<QStringList> apps;
 
 
 };
