@@ -173,10 +173,9 @@ QString MainWindow::inputDockName()
 
 QString MainWindow::pickSlitLocation()
 {
-    PickLocation *pick = new PickLocation("TopRight", this);
+    PickLocation *pick = new PickLocation(slit_location, this);
 
     pick->exec();
-    qDebug() << "RETURN" << pick->button;
     return pick->button;
 }
 
@@ -231,6 +230,13 @@ void MainWindow::parseFile(QFile &file)
 {
     QString line;
     QCommandLineParser parser;
+
+    const QStringList possible_locations({"TopLeft",    "TopCenter",    "TopRight",
+                                          "LeftTop",                    "RightTop",
+                                          "LeftCenter",                 "RightCenter",
+                                          "LeftBottom",                 "RightBottom",
+                                          "BottomLeft", "BottomCenter", "BottomRight"});
+
     parser.addOptions({
                           {{"d", "desktop-file"}, "", "d"},
                           {{"k", "background-color"}, "", "k", "black"},
@@ -242,6 +248,17 @@ void MainWindow::parseFile(QFile &file)
                       });
     while (!file.atEnd()) {
         line = file.readLine().trimmed();
+
+        if (line.startsWith("sed -i")) { // assume it's a slit relocation sed command
+            for (const QString &location : possible_locations) {
+                if (line.contains(location)) {
+                    slit_location = location;
+                    break;
+                }
+            }
+            continue;
+        }
+
         if (line.startsWith("wmalauncher")) {
             ui->buttonNext->setEnabled(true);
             parser.process(line.split(" "));
@@ -272,7 +289,7 @@ void MainWindow::parseFile(QFile &file)
 // Next button clicked
 void MainWindow::on_buttonSave_clicked()
 {
-    QString location = pickSlitLocation();
+    slit_location = pickSlitLocation();
 
     // create "~/.fluxbox/scripts" if it doesn't exist
     if(!QFileInfo::exists(QDir::homePath() + "/.fluxbox/scripts")) {
@@ -294,11 +311,10 @@ void MainWindow::on_buttonSave_clicked()
 
     // build and write string
     stream << "#!/bin/bash\n\n";
-    stream << "set up slit location";
-    //TODO
+    stream << "#set up slit location\n";
+    stream << "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + slit_location + "/' $HOME/.fluxbox/init\n\n";
     stream << "fluxbox-remote restart\n\n";
-    stream << "# commands for dock launchers\n";
-
+    stream << "#commands for dock launchers\n";
 
     for (int i = 0; i < apps.size(); ++i) {
         QString command = (apps.at(i).at(0).endsWith(".desktop")) ? "--desktop-file " + apps.at(i).at(0) : "--command " + apps.at(i).at(1) + " --icon" + apps.at(i).at(2);

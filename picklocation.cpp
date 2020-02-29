@@ -24,12 +24,16 @@ PickLocation::PickLocation(QString location, QWidget *parent) :
 
     connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked), this, &PickLocation::onGroupButton);
 
+    bool found = false;
     for (QAbstractButton *button : buttonGroup->buttons()) {
         if (location == button->text()) {
             button->click();
+            found = true;
             return;
         }
     }
+    if (!found) ui->buttonBC->click();
+
 }
 
 PickLocation::~PickLocation()

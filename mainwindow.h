@@ -92,6 +92,7 @@ private:
     QList<QLabel *> list_icons;
     QString dock_name;
     QString file_name;
+    QString slit_location;
     QList<QStringList> apps;
 
 
