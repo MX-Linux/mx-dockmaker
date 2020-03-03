@@ -194,7 +194,7 @@ void MainWindow::updateApp(int idx)
 
 void MainWindow::addDockToMenu(const QString &file_name)
 {
-    cmd.run("sed -i '/(Docks and launchers)/a \\\\t\\t\\t[exec] (" + dock_name + ") {" +
+    cmd.run("sed -i '/(Docks & launchers)/a \\\\t\\t\\t[exec] (" + dock_name + ") {" +
             QFileInfo(file_name).baseName() + "}' " + QDir::homePath() + "/.fluxbox/menu-mx", true);
 }
 
