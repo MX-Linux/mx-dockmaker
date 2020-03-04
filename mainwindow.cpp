@@ -104,7 +104,7 @@ void MainWindow::setup()
 
     int ans = QMessageBox::question(nullptr, tr("Operation mode"),
                           tr("This tool allows you to create a new dock with one or more applications. You can also edit a dock created earlier.\n\n"
-                             "Please make your selection:"), tr("&Create a new dock"), tr("&Edit an existent dock"), tr("&Quit"));
+                             "Please make your selection:"), tr("&Create a new dock"), tr("&Edit an existing dock"), tr("&Quit"));
     if (ans == 0) {
         newDock();
     } else if (ans == 1) {
