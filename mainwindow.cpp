@@ -102,18 +102,33 @@ void MainWindow::setup()
 
     blockAllSignals(false);
 
-    int ans = QMessageBox::question(nullptr, tr("Operation mode"),
-                          tr("This tool allows you to create a new dock with one or more applications. You can also edit a dock created earlier.\n\n"
-                             "Please make your selection:"), tr("&Create a new dock"), tr("&Edit an existing dock"), tr("&Quit"));
-    if (ans == 0) {
-        newDock();
-    } else if (ans == 1) {
-        editDock();
-    } else {
+    QMessageBox *mbox = new QMessageBox(nullptr);
+    mbox->setText(tr("This tool allows you to create a new dock with one or more applications. You can also edit a dock created earlier."));
+    mbox->setIcon(QMessageBox::Question);
+    mbox->setWindowTitle(tr("Operation mode"));
+    mbox->addButton(QMessageBox::Close);
+    mbox->addButton(tr("&Create a new dock"), QMessageBox::NoRole);
+    mbox->addButton(tr("&Edit an existing dock"), QMessageBox::NoRole);
+    mbox->addButton(tr("&Delete a dock"), QMessageBox::NoRole);
+
+    int ans = mbox->exec();
+
+    switch (ans) {
+    case 0: newDock();
+        break;
+    case 1: editDock();
+        break;
+    case 2:
+        deleteDock();
+        setup();
+        return;
+    default:
         QTimer::singleShot(0, qApp, &QGuiApplication::quit);
     }
+
     on_radioDesktop_toggled(true);
     ui->buttonSave->setEnabled(false);
+    delete mbox;
 }
 
 QString MainWindow::findIcon(const QString &icon_name)
@@ -202,6 +217,15 @@ void MainWindow::addDockToMenu(const QString &file_name)
 void MainWindow::cleanup()
 {
 
+}
+
+void MainWindow::deleteDock()
+{
+    QString selected = QFileDialog::getOpenFileName(this, tr("Select dock to delete"), QDir::homePath() + "/.fluxbox/scripts");
+    if (!selected.isEmpty()) {
+        QFile::remove(selected);
+        cmd.run("sed -ni '\\|" + selected + "|!p' " + QDir::homePath() + "/.fluxbox/menu-mx", true);
+    }
 }
 
 // block/unblock all relevant signals when loading stuff into GUI
@@ -369,7 +393,7 @@ void MainWindow::on_buttonHelp_clicked()
 }
 
 
-void MainWindow::on_comboSize_currentIndexChanged()
+void MainWindow::on_comboSize_currentIndexChanged(const QString)
 {
     displayIcon(ui->buttonSelectApp->text(), index);
 }

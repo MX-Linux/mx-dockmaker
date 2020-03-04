@@ -48,6 +48,7 @@ public:
     void addDockToMenu(const QString &file_name);
     void blockAllSignals(bool enable);
     void cleanup();
+    void deleteDock();
     void displayIcon(const QString &app_name, int location);
     void editDock();
     void enableAdd();
@@ -79,7 +80,7 @@ private slots:
     void on_buttonSelectIcon_clicked();
     void on_comboBgColor_currentIndexChanged(const QString);
     void on_comboBorderColor_currentIndexChanged(const QString);
-    void on_comboSize_currentIndexChanged();
+    void on_comboSize_currentIndexChanged(const QString);
     void on_radioDesktop_toggled(bool checked);
     void on_lineEditCommand_textEdited(const QString);
 
