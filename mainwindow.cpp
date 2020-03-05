@@ -389,7 +389,7 @@ void MainWindow::on_buttonAbout_clicked()
 // Help button clicked
 void MainWindow::on_buttonHelp_clicked()
 {
-    QString url = "https://mxlinux.org/wiki/help-files/help-dockmaker/";
+    QString url = "https://mxlinux.org/wiki/help-files/help-mx-dockmaker/";
     displayDoc(url, tr("%1 Help").arg(this->windowTitle()), false);
 }
 

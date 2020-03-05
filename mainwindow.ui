@@ -410,7 +410,8 @@
         <string>Save</string>
        </property>
        <property name="icon">
-        <iconset theme="filesave"/>
+        <iconset theme="filesave">
+         <normaloff>.</normaloff>.</iconset>
        </property>
        <property name="shortcut">
         <string/>

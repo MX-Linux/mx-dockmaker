@@ -1,7 +1,6 @@
 mx-dockmaker		usr/bin
 mx-dockmaker.conf	etc
 mx-dockmaker.desktop	usr/share/applications
-mx-dockmaker.png		usr/share/icons/hicolor/48x48/apps
-mx-dockmaker.png		usr/share/pixmaps
+images/mx-dockmaker.png	usr/share/icons/hicolor/1024x1024/apps
 license.html            usr/share/doc/mx-dockmaker
 translations/*.qm	usr/share/mx-dockmaker/locale
