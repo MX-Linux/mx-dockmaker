@@ -32,7 +32,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    a.setWindowIcon(QIcon("/usr/share/icons/hicolor/1024x1024/apps/mx-dockmaker.png"));
+    a.setWindowIcon(QIcon("/usr/share/icons/hicolor/192x192/apps/mx-dockmaker.png"));
     a.setApplicationName("mx-dockmaker");
 
     QTranslator qtTran;
