@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1067</width>
-    <height>531</height>
+    <height>549</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,15 +15,50 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Add applications to the dock one at a time:
- 1. Select first the application .desktop file OR enter command on the next line
- 2. Select attributes (size, color)
- 3. Press &quot;Add application&quot; button.
- 4. Browse added apps using &quot;Back&quot; and &quot;Next&quot; buttons.
- 5. When done with the edits press &quot;Save&quot; to save any changes you made.</string>
+    <widget class="QFrame" name="frameUsage">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
      </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QGroupBox" name="groupBoxUsage">
+        <property name="title">
+         <string>Usage</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Maximum</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>3</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="labelUsage">
+           <property name="text">
+            <string>1. Add applications to the dock one at a time
+2. Select a .desktop file or enter a command for the application you want
+3 . Select icon attributes for size, background (black is standad) and border
+4. Press &quot;Add application&quot; to continue or &quot;Save&quot; to finish</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
@@ -143,7 +178,7 @@
          <item row="0" column="1" colspan="4">
           <widget class="QToolButton" name="buttonSelectApp">
            <property name="text">
-            <string>Select .desktop file...</string>
+            <string>Select...</string>
            </property>
            <property name="popupMode">
             <enum>QToolButton::DelayedPopup</enum>
@@ -189,7 +224,7 @@
          <item row="0" column="0">
           <widget class="QRadioButton" name="radioDesktop">
            <property name="text">
-            <string>Application</string>
+            <string>File</string>
            </property>
            <property name="checked">
             <bool>true</bool>
@@ -428,6 +463,23 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>radioDesktop</tabstop>
+  <tabstop>buttonSelectApp</tabstop>
+  <tabstop>radioCommand</tabstop>
+  <tabstop>lineEditCommand</tabstop>
+  <tabstop>buttonSelectIcon</tabstop>
+  <tabstop>comboSize</tabstop>
+  <tabstop>comboBgColor</tabstop>
+  <tabstop>comboBorderColor</tabstop>
+  <tabstop>buttonPrev</tabstop>
+  <tabstop>buttonNext</tabstop>
+  <tabstop>buttonDelete</tabstop>
+  <tabstop>buttonAbout</tabstop>
+  <tabstop>buttonHelp</tabstop>
+  <tabstop>buttonSave</tabstop>
+  <tabstop>buttonCancel</tabstop>
+ </tabstops>
  <resources>
   <include location="images.qrc"/>
  </resources>

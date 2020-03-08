@@ -80,6 +80,10 @@ void MainWindow::setup()
 {
     connect(qApp, &QApplication::aboutToQuit, this, &MainWindow::cleanup);
     this->setWindowTitle("MX Dockmaker");
+    ui->labelUsage->setText(tr("1. Add applications to the dock one at a time\n"
+                               "2. Select a .desktop file or enter a command for the application you want\n"
+                               "3 . Select icon attributes for size, background (black is standad) and border\n"
+                               "4. Press \"Add application\" to continue or \"Save\" to finish"));
     this->adjustSize();
 
     blockAllSignals(true);
@@ -103,25 +107,23 @@ void MainWindow::setup()
     blockAllSignals(false);
 
     QMessageBox *mbox = new QMessageBox(nullptr);
-    mbox->setText(tr("This tool allows you to create a new dock with one or more applications. You can also edit a dock created earlier."));
+    mbox->setText(tr("This tool allows you to create a new dock with one or more applications. You can also edit or delete a dock created earlier."));
     mbox->setIcon(QMessageBox::Question);
     mbox->setWindowTitle(tr("Operation mode"));
-    mbox->addButton(QMessageBox::Close);
-    mbox->addButton(tr("&Create a new dock"), QMessageBox::NoRole);
-    mbox->addButton(tr("&Edit an existing dock"), QMessageBox::NoRole);
-    mbox->addButton(tr("&Delete a dock"), QMessageBox::NoRole);
+    mbox->addButton(tr("&Close"), QMessageBox::NoRole);
+    mbox->addButton(tr("&Delete"), QMessageBox::NoRole);
+    mbox->addButton(tr("&Edit"), QMessageBox::NoRole);
+    mbox->addButton(tr("&Create"), QMessageBox::NoRole);
 
-    int ans = mbox->exec();
-
-    switch (ans) {
-    case 0: newDock();
-        break;
-    case 1: editDock();
-        break;
-    case 2:
+    switch (mbox->exec()) {
+    case 1:
         deleteDock();
         setup();
         return;
+    case 2: editDock();
+        break;
+    case 3: newDock();
+        break;
     default:
         QTimer::singleShot(0, qApp, &QGuiApplication::quit);
     }
@@ -181,10 +183,12 @@ QString MainWindow::getDockName(const QString &file_name)
 QString MainWindow::inputDockName()
 {
     bool ok;
-    QString text = QInputDialog::getText(nullptr, tr("QInputDialog::getText()"),
+    QString text = QInputDialog::getText(nullptr, tr("Dock name"),
                                              tr("Enter a name for the new dock:"), QLineEdit::Normal,
                                              QString(), &ok);
     if (ok && !text.isEmpty()) return text;
+
+    setup();
     return QString();
 }
 
@@ -249,7 +253,7 @@ void MainWindow::enableNext()
     ui->buttonNext->setIcon(QIcon::fromTheme("next"));
     ui->buttonNext->setText(tr("Next"));
     ui->buttonNext->setEnabled(true);
-    ui->buttonDelete->setText(tr("Delete selected application"));
+    ui->buttonDelete->setText(tr("Delete this application"));
 }
 
 
@@ -429,7 +433,7 @@ void MainWindow::on_buttonNext_clicked()
         }
     } else { // at the last app
         enableAdd();
-        if (ui->buttonSelectApp->text() != tr("Select .desktop file...") || !ui->lineEditCommand->text().isEmpty()) {
+        if (ui->buttonSelectApp->text() != tr("Select...") || !ui->lineEditCommand->text().isEmpty()) {
             ui->buttonSave->setEnabled(true);
             ui->buttonDelete->setEnabled(true);
             ui->buttonPrev->setEnabled(true);
@@ -482,7 +486,7 @@ void MainWindow::on_buttonDelete_clicked()
 void MainWindow::resetAdd()
 {
     enableAdd();
-    ui->buttonSelectApp->setText(tr("Select .desktop file..."));
+    ui->buttonSelectApp->setText(tr("Select..."));
     ui->radioDesktop->click();
     ui->radioDesktop->toggled(true);
     ui->comboSize->setCurrentIndex(ui->comboSize->findText("48x48"));
@@ -559,6 +563,8 @@ void MainWindow::editDock()
 
     parseFile(file);
     file.close();
+    ui->labelUsage->setText(tr("Edit applications one at a time using the Back and Next buttons\n"
+                               "When finished click Save"));
 }
 
 void MainWindow::newDock()
@@ -589,7 +595,7 @@ void MainWindow::on_radioDesktop_toggled(bool checked)
     ui->buttonSelectApp->setEnabled(checked);
     ui->lineEditCommand->setEnabled(!checked);
     ui->buttonSelectIcon->setEnabled(!checked);
-    if (!checked) ui->buttonSelectApp->setText(tr("Select .desktop file..."));
+    if (!checked) ui->buttonSelectApp->setText(tr("Select..."));
     if (checked) ui->buttonSelectIcon->setText(tr("Select icon..."));
 }
 
