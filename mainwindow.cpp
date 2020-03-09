@@ -82,7 +82,7 @@ void MainWindow::setup()
     this->setWindowTitle("MX Dockmaker");
     ui->labelUsage->setText(tr("1. Add applications to the dock one at a time\n"
                                "2. Select a .desktop file or enter a command for the application you want\n"
-                               "3 . Select icon attributes for size, background (black is standad) and border\n"
+                               "3. Select icon attributes for size, background (black is standad) and border\n"
                                "4. Press \"Add application\" to continue or \"Save\" to finish"));
     this->adjustSize();
 
@@ -184,7 +184,7 @@ QString MainWindow::inputDockName()
 {
     bool ok;
     QString text = QInputDialog::getText(nullptr, tr("Dock name"),
-                                             tr("Enter a name for the new dock:"), QLineEdit::Normal,
+                                             tr("Enter the name to show in the Menu:"), QLineEdit::Normal,
                                              QString(), &ok);
     if (ok && !text.isEmpty()) return text;
 
@@ -225,8 +225,8 @@ void MainWindow::cleanup()
 
 void MainWindow::deleteDock()
 {
-    QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select dock to delete"), QDir::homePath() + "/.fluxbox/scripts");
-    if (!selected.isEmpty() && QMessageBox::question(nullptr, tr("Confirmation"),
+    QString selected = QFileDialog::getOpenFileName(this, tr("Select dock to delete"), QDir::homePath() + "/.fluxbox/scripts");
+    if (!selected.isEmpty() && QMessageBox::question(this, tr("Confirmation"),
                                                      tr("Are you sure you want to delete %1?").arg(selected), tr("&Delete"), tr("&Cancel")) == 0) {
         QFile::remove(selected);
         cmd.run("sed -ni '\\|" + selected + "|!p' " + QDir::homePath() + "/.fluxbox/menu-mx", true);
@@ -333,7 +333,7 @@ void MainWindow::on_buttonSave_clicked()
         if (file_name.isEmpty()) return;
     }
     QFile file(file_name);
-    system("cp " + file_name.toUtf8() + " " + file_name.toUtf8() + ".~");
+    cmd.run("cp " + file_name + " " + file_name + ".~", true);
     if(!file.open(QIODevice::WriteOnly)) {
         qDebug() << "Could not open file:" << file.fileName();
         return;
@@ -576,7 +576,6 @@ void MainWindow::newDock()
     resetAdd();
     ui->buttonSave->setEnabled(false);
     ui->buttonDelete->setEnabled(false);
-
 }
 
 void MainWindow::on_buttonPrev_clicked()

@@ -48,10 +48,7 @@
          <item>
           <widget class="QLabel" name="labelUsage">
            <property name="text">
-            <string>1. Add applications to the dock one at a time
-2. Select a .desktop file or enter a command for the application you want
-3 . Select icon attributes for size, background (black is standad) and border
-4. Press &quot;Add application&quot; to continue or &quot;Save&quot; to finish</string>
+            <string/>
            </property>
           </widget>
          </item>
@@ -273,7 +270,7 @@
       <item row="3" column="0" alignment="Qt::AlignLeft">
        <widget class="QGroupBox" name="groupPreview">
         <property name="title">
-         <string>Preview Dock</string>
+         <string>Application List</string>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout"/>
        </widget>
