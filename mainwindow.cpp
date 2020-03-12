@@ -563,8 +563,9 @@ void MainWindow::editDock()
 
     parseFile(file);
     file.close();
-    ui->labelUsage->setText(tr("Edit applications one at a time using the Back and Next buttons\n"
-                               "When finished click Save"));
+    ui->labelUsage->setText(tr("1. Edit applications one at a time using the Back and Next buttons\n"
+                               "2. Add or delete applications as you like\n"
+                               "3. When finished click Save"));
 }
 
 void MainWindow::newDock()
