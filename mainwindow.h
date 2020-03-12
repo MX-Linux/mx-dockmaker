@@ -44,6 +44,7 @@ public:
     ~MainWindow();
 
     bool isDockInMenu(const QString &file_name);
+    bool isCompleteInfo();
 
     void addDockToMenu(const QString &file_name);
     void blockAllSignals(bool enable);

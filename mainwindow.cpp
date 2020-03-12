@@ -55,6 +55,18 @@ bool MainWindow::isDockInMenu(const QString &file_name)
     return getDockName(file_name) == dock_name;
 }
 
+bool MainWindow::isCompleteInfo()
+{
+    if (ui->buttonSelectApp->text().endsWith(".desktop") || (ui->buttonSelectIcon->text() != tr("Select icon...") && !ui->lineEditCommand->text().isEmpty())) {
+        ui->buttonNext->setEnabled(true);
+        ui->buttonSave->setEnabled(true);
+        return true;
+    }
+    ui->buttonNext->setEnabled(false);
+    ui->buttonSave->setEnabled(false);
+    return false;
+}
+
 void MainWindow::displayIcon(const QString &app_name, int location)
 {
     QPalette pal = palette();
@@ -401,16 +413,17 @@ void MainWindow::on_buttonHelp_clicked()
 void MainWindow::on_comboSize_currentIndexChanged(const QString)
 {
     displayIcon(ui->buttonSelectApp->text(), index);
+    isCompleteInfo();
 }
 
 void MainWindow::on_comboBgColor_currentIndexChanged(const QString)
 {
-    //ui->buttonNext->setEnabled(true);
+    isCompleteInfo();
 }
 
 void MainWindow::on_comboBorderColor_currentIndexChanged(const QString)
 {
-    //ui->buttonNext->setEnabled(true);
+    isCompleteInfo();
 }
 
 
@@ -539,6 +552,7 @@ void MainWindow::on_buttonSelectApp_clicked()
         ui->buttonSelectApp->setText(file);
         ui->buttonNext->setEnabled(true);
     }
+    isCompleteInfo();
     displayIcon(file, index);
 }
 
@@ -610,7 +624,7 @@ void MainWindow::on_buttonSelectIcon_clicked()
             displayIcon(QString(), index);
         }
     }
-
+    isCompleteInfo();
 }
 
 void MainWindow::on_lineEditCommand_textEdited(const QString)
