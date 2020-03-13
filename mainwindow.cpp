@@ -75,6 +75,14 @@ void MainWindow::displayIcon(const QString &app_name, int location)
     ui->groupPreview->layout()->addWidget(list_icons.last());
 }
 
+void MainWindow::ifNotDoneDisableBackDelete()
+{
+    if(ui->buttonNext->text() == tr("Add application") && ui->buttonNext->isEnabled()) {
+        ui->buttonPrev->setEnabled(false);
+        ui->buttonDelete->setEnabled(false);
+    }
+}
+
 // setup versious items first time program runs
 void MainWindow::setup()
 {
@@ -405,6 +413,7 @@ void MainWindow::on_comboSize_currentIndexChanged(const QString)
     changed = true;
     ui->buttonNext->setEnabled(true);
     ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
+    ifNotDoneDisableBackDelete();
 }
 
 void MainWindow::on_comboBgColor_currentIndexChanged(const QString)
@@ -412,6 +421,7 @@ void MainWindow::on_comboBgColor_currentIndexChanged(const QString)
     changed = true;
     ui->buttonNext->setEnabled(true);
     ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
+    ifNotDoneDisableBackDelete();
 }
 
 void MainWindow::on_comboBorderColor_currentIndexChanged(const QString)
@@ -419,6 +429,7 @@ void MainWindow::on_comboBorderColor_currentIndexChanged(const QString)
     changed = true;
     ui->buttonNext->setEnabled(true);
     ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
+    ifNotDoneDisableBackDelete();
 }
 
 
@@ -440,7 +451,6 @@ void MainWindow::on_buttonNext_clicked()
             resetAdd();
         }
     } else { // at the last app
-        enableAdd();
         if (ui->buttonSelectApp->text() != tr("Select...") || !ui->lineEditCommand->text().isEmpty()) {
             ui->buttonSave->setEnabled(true);
             ui->buttonDelete->setEnabled(true);
@@ -453,6 +463,9 @@ void MainWindow::on_buttonNext_clicked()
             return;
         }
     }
+    ui->buttonPrev->setEnabled(true);
+    ui->buttonDelete->setEnabled(true);
+
 }
 
 void MainWindow::on_buttonDelete_clicked()
@@ -551,6 +564,7 @@ void MainWindow::on_buttonSelectApp_clicked()
     }
     displayIcon(file, index);
     ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
+    ifNotDoneDisableBackDelete();
 }
 
 void MainWindow::editDock()
@@ -628,6 +642,7 @@ void MainWindow::on_buttonSelectIcon_clicked()
             displayIcon(QString(), index);
         }
     }
+    ifNotDoneDisableBackDelete();
 }
 
 void MainWindow::on_lineEditCommand_textEdited(const QString)
@@ -637,5 +652,6 @@ void MainWindow::on_lineEditCommand_textEdited(const QString)
         ui->buttonNext->setEnabled(true);
         changed = true;
     }
+    ifNotDoneDisableBackDelete();
 }
 

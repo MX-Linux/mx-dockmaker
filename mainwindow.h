@@ -50,6 +50,7 @@ public:
     void cleanup();
     void deleteDock();
     void displayIcon(const QString &app_name, int location);
+    void ifNotDoneDisableBackDelete();
     void editDock();
     void enableAdd();
     void enableNext();
