@@ -55,18 +55,6 @@ bool MainWindow::isDockInMenu(const QString &file_name)
     return getDockName(file_name) == dock_name;
 }
 
-bool MainWindow::isCompleteInfo()
-{
-    if (ui->buttonSelectApp->text().endsWith(".desktop") || (ui->buttonSelectIcon->text() != tr("Select icon...") && !ui->lineEditCommand->text().isEmpty())) {
-        ui->buttonNext->setEnabled(true);
-        ui->buttonSave->setEnabled(true);
-        return true;
-    }
-    ui->buttonNext->setEnabled(false);
-    ui->buttonSave->setEnabled(false);
-    return false;
-}
-
 void MainWindow::displayIcon(const QString &app_name, int location)
 {
     QPalette pal = palette();
@@ -90,6 +78,7 @@ void MainWindow::displayIcon(const QString &app_name, int location)
 // setup versious items first time program runs
 void MainWindow::setup()
 {
+    changed = false;
     connect(qApp, &QApplication::aboutToQuit, this, &MainWindow::cleanup);
     this->setWindowTitle("MX Dockmaker");
     ui->labelUsage->setText(tr("1. Add applications to the dock one at a time\n"
@@ -413,25 +402,31 @@ void MainWindow::on_buttonHelp_clicked()
 void MainWindow::on_comboSize_currentIndexChanged(const QString)
 {
     displayIcon(ui->buttonSelectApp->text(), index);
-    isCompleteInfo();
+    changed = true;
+    ui->buttonNext->setEnabled(true);
+    ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
 }
 
 void MainWindow::on_comboBgColor_currentIndexChanged(const QString)
 {
-    isCompleteInfo();
+    changed = true;
+    ui->buttonNext->setEnabled(true);
+    ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
 }
 
 void MainWindow::on_comboBorderColor_currentIndexChanged(const QString)
 {
-    isCompleteInfo();
+    changed = true;
+    ui->buttonNext->setEnabled(true);
+    ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
 }
 
 
 void MainWindow::on_buttonNext_clicked()
 {
-    blockAllSignals(true);
+    //blockAllSignals(true);
+    ui->buttonSave->setEnabled(changed);
     ui->buttonNext->setEnabled(false);
-    ui->buttonPrev->setEnabled(false);
 
     if (index < apps.size()) {
         updateApp(index);
@@ -493,6 +488,7 @@ void MainWindow::on_buttonDelete_clicked()
         index -= 1;
         showApp(index);
     }
+    changed = true;
     ui->buttonSave->setEnabled(true);
 }
 
@@ -551,17 +547,18 @@ void MainWindow::on_buttonSelectApp_clicked()
         file_name = file;
         ui->buttonSelectApp->setText(file);
         ui->buttonNext->setEnabled(true);
+        changed = true;
     }
-    isCompleteInfo();
     displayIcon(file, index);
+    ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
 }
 
 void MainWindow::editDock()
 {
     QString selected_dock = QFileDialog::getOpenFileName(this, tr("Select a dock file"), QDir::homePath() + "/.fluxbox/scripts");
     if (!QFileInfo::exists(selected_dock)) {
-        QMessageBox::warning(this, tr("No file selected"), tr("You haven't selected any dock file to edit.\nCreating a new dock instead."));
-        newDock();
+        QMessageBox::warning(nullptr, tr("No file selected"), tr("You haven't selected any dock file to edit.\nCreating a new dock instead."));
+        setup();
         return;
     }
     QFile file(selected_dock);
@@ -598,9 +595,15 @@ void MainWindow::on_buttonPrev_clicked()
     ui->buttonNext->setEnabled(false);
     ui->buttonPrev->setEnabled(false);
 
-    updateApp(index);
+    ui->buttonSave->setEnabled(changed);
+
+    if (ui->buttonNext->text() != tr("Add application")) {
+        updateApp(index);
+    }
+
     index -= 1;
     showApp(index);
+    enableNext();
 }
 
 void MainWindow::on_radioDesktop_toggled(bool checked)
@@ -615,6 +618,7 @@ void MainWindow::on_radioDesktop_toggled(bool checked)
 
 void MainWindow::on_buttonSelectIcon_clicked()
 {
+    ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
     QString selected = QFileDialog::getOpenFileName(this, tr("Select icon"), "/usr/share/icons", tr("Icons (*.png *.jpg *.bmp *.xpm *.svg)"));
     QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
@@ -624,13 +628,14 @@ void MainWindow::on_buttonSelectIcon_clicked()
             displayIcon(QString(), index);
         }
     }
-    isCompleteInfo();
 }
 
 void MainWindow::on_lineEditCommand_textEdited(const QString)
 {
+    ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
     if(ui->buttonSelectIcon->text() != tr("Select icon...")) {
         ui->buttonNext->setEnabled(true);
+        changed = true;
     }
 }
 
