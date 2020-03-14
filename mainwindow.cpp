@@ -235,7 +235,7 @@ void MainWindow::cleanup()
 void MainWindow::deleteDock()
 {
     QString selected = QFileDialog::getOpenFileName(this, tr("Select dock to delete"), QDir::homePath() + "/.fluxbox/scripts");
-    if (!selected.isEmpty() && QMessageBox::question(this, tr("Confirmation"),
+    if (!selected.isEmpty() && QMessageBox::question(nullptr, tr("Confirmation"),
                                                      tr("Are you sure you want to delete %1?").arg(selected), tr("&Delete"), tr("&Cancel")) == 0) {
         QFile::remove(selected);
         cmd.run("sed -ni '\\|" + selected + "|!p' " + QDir::homePath() + "/.fluxbox/menu-mx", true);
@@ -435,7 +435,7 @@ void MainWindow::on_comboBorderColor_currentIndexChanged(const QString)
 
 void MainWindow::on_buttonNext_clicked()
 {
-    //blockAllSignals(true);
+    blockAllSignals(true);
     ui->buttonSave->setEnabled(changed);
     ui->buttonNext->setEnabled(false);
 
