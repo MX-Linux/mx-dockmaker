@@ -124,14 +124,21 @@ void MainWindow::setup()
     mbox->addButton(tr("&Edit"), QMessageBox::NoRole);
     mbox->addButton(tr("&Create"), QMessageBox::NoRole);
 
-    switch (mbox->exec()) {
+    this->hide();
+    int ret = mbox->exec();
+
+    switch (ret) {
     case 1:
+        this->show();
         deleteDock();
         setup();
         return;
-    case 2: editDock();
+    case 2:
+        this->show();
+        editDock();
         break;
-    case 3: newDock();
+    case 3:
+        newDock();
         break;
     default:
         QTimer::singleShot(0, qApp, &QGuiApplication::quit);
@@ -234,7 +241,7 @@ void MainWindow::cleanup()
 
 void MainWindow::deleteDock()
 {
-    QString selected = QFileDialog::getOpenFileName(this, tr("Select dock to delete"), QDir::homePath() + "/.fluxbox/scripts");
+    QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select dock to delete"), QDir::homePath() + "/.fluxbox/scripts");
     if (!selected.isEmpty() && QMessageBox::question(nullptr, tr("Confirmation"),
                                                      tr("Are you sure you want to delete %1?").arg(selected), tr("&Delete"), tr("&Cancel")) == 0) {
         QFile::remove(selected);
@@ -569,7 +576,7 @@ void MainWindow::on_buttonSelectApp_clicked()
 
 void MainWindow::editDock()
 {
-    QString selected_dock = QFileDialog::getOpenFileName(this, tr("Select a dock file"), QDir::homePath() + "/.fluxbox/scripts");
+    QString selected_dock = QFileDialog::getOpenFileName(nullptr, tr("Select a dock file"), QDir::homePath() + "/.fluxbox/scripts");
     if (!QFileInfo::exists(selected_dock)) {
         QMessageBox::warning(nullptr, tr("No file selected"), tr("You haven't selected any dock file to edit.\nCreating a new dock instead."));
         setup();
@@ -578,7 +585,7 @@ void MainWindow::editDock()
     QFile file(selected_dock);
     if(!file.open(QIODevice::ReadOnly)) {
         qDebug() << "Could not open file:" << file.fileName();
-        QMessageBox::warning(this, tr("Could not open file"), tr("Could not open selected file.\nCreating a new dock instead."));
+        QMessageBox::warning(nullptr, tr("Could not open file"), tr("Could not open selected file.\nCreating a new dock instead."));
         newDock();
         return;
     }
@@ -596,6 +603,7 @@ void MainWindow::editDock()
 void MainWindow::newDock()
 {
     dock_name = inputDockName();
+    this->show();
     apps.clear();
     list_icons.clear();
 
