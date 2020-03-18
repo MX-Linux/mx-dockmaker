@@ -91,7 +91,7 @@ void MainWindow::setup()
     this->setWindowTitle("MX Dockmaker");
     ui->labelUsage->setText(tr("1. Add applications to the dock one at a time\n"
                                "2. Select a .desktop file or enter a command for the application you want\n"
-                               "3. Select icon attributes for size, background (black is standad) and border\n"
+                               "3. Select icon attributes for size, background (black is standard) and border\n"
                                "4. Press \"Add application\" to continue or \"Save\" to finish"));
     this->adjustSize();
 
