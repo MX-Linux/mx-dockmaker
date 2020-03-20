@@ -381,7 +381,7 @@ void MainWindow::on_buttonSave_clicked()
     QMessageBox::information(this, tr("Dock saved"), tr("The dock has been saved.\n\n"
                                                         "To edit the newly created dock please select 'Edit an existing dock'."));
 
-    cmd.run(file.fileName() + "&", true);
+    cmd.run("pkill wmalauncher;" + file.fileName() + "&", true);
 
     index = 0;
     apps.clear();
