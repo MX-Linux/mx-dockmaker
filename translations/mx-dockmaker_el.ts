@@ -155,6 +155,14 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../mainwindow.cpp" line="92"/>
+        <source>1. Add applications to the dock one at a time
+2. Select a .desktop file or enter a command for the application you want
+3. Select icon attributes for size, background (black is standard) and border
+4. Press &quot;Add application&quot; to continue or &quot;Save&quot; to finish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../mainwindow.cpp" line="114"/>
         <location filename="../mainwindow.cpp" line="523"/>
         <source>white</source>
@@ -189,14 +197,6 @@
         <location filename="../mainwindow.cpp" line="123"/>
         <location filename="../mainwindow.cpp" line="246"/>
         <source>&amp;Delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="92"/>
-        <source>1. Add applications to the dock one at a time
-2. Select a .desktop file or enter a command for the application you want
-3. Select icon attributes for size, background (black is standad) and border
-4. Press &quot;Add application&quot; to continue or &quot;Save&quot; to finish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
