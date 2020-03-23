@@ -160,12 +160,12 @@ QString MainWindow::findIcon(const QString &icon_name)
         QString dir = "/usr/share/icons/" + out;
         if (QFileInfo::exists(dir)) {
             for (const QString &ext : extList) {
-                out = cmd.getCmdOut("find " + dir + " -iname " + icon_name + ext, true);
+                out = cmd.getCmdOut("find " + dir + " -iname " + icon_name + ext);
                 if (!out.isEmpty()) {
                     QStringList files = out.split("\n");
                     return findLargest(files);
                 } else {
-                    out = cmd.getCmdOut("find " + QDir::homePath() + "/usr/share/icons/hicolor /usr/share/pixmaps -iname " + icon_name + ext, true);
+                    out = cmd.getCmdOut("find " + dir + " /usr/share/icons/hicolor /usr/share/pixmaps -iname " + icon_name + ext);
                     if (!out.isEmpty()) {
                         QStringList files = out.split("\n");
                         return findLargest(files);
@@ -563,7 +563,7 @@ void MainWindow::showApp(int idx)
 
 void MainWindow::on_buttonSelectApp_clicked()
 {
-    QString selected = QFileDialog::getOpenFileName(this, tr("Select .desktop file"), "/usr/share/applications", tr("Desktop Files (*.desktop)"));
+    QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select .desktop file"), "/usr/share/applications", tr("Desktop Files (*.desktop)"));
     QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
         file_name = file;
@@ -643,7 +643,7 @@ void MainWindow::on_radioDesktop_toggled(bool checked)
 void MainWindow::on_buttonSelectIcon_clicked()
 {
     ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
-    QString selected = QFileDialog::getOpenFileName(this, tr("Select icon"), "/usr/share/icons", tr("Icons (*.png *.jpg *.bmp *.xpm *.svg)"));
+    QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select icon"), "/usr/share/icons", tr("Icons (*.png *.jpg *.bmp *.xpm *.svg)"));
     QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
         ui->buttonSelectIcon->setText(selected);
