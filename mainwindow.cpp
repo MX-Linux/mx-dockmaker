@@ -643,7 +643,7 @@ void MainWindow::on_radioDesktop_toggled(bool checked)
 void MainWindow::on_buttonSelectIcon_clicked()
 {
     ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
-    QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select icon"), "/usr/share/icons", tr("Icons (*.png *.jpg *.bmp *.xpm *.svg)"));
+    QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select icon"), "/usr/share/icons/Moka", tr("Icons (*.png *.jpg *.bmp *.xpm *.svg)"));
     QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
         ui->buttonSelectIcon->setText(selected);

@@ -20,7 +20,7 @@
       <bool>true</bool>
      </property>
      <property name="title">
-      <string>Fluxbox Slit Location</string>
+      <string>Dock Location</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="0" column="1">
