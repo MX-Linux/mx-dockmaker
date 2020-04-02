@@ -451,6 +451,7 @@ void MainWindow::on_buttonNext_clicked()
 
     if (index < apps.size()) {
         updateApp(index);
+        list_icons.at(index)->setFrameStyle(QFrame::NoFrame);
         index += 1;
         ui->buttonDelete->setEnabled(true);
         ui->buttonPrev->setEnabled(true);
@@ -558,6 +559,8 @@ void MainWindow::showApp(int idx)
         ui->buttonNext->setEnabled(true);
         ui->buttonPrev->setEnabled(true);
     }
+    list_icons.at(index)->setFrameStyle(QFrame::Sunken|QFrame::Panel);
+    list_icons.at(index)->setLineWidth(2);
     blockAllSignals(false);
 }
 
@@ -623,9 +626,9 @@ void MainWindow::on_buttonPrev_clicked()
     ui->buttonSave->setEnabled(changed);
 
     if (ui->buttonNext->text() != tr("Add application")) {
+        list_icons.at(index)->setFrameStyle(QFrame::NoFrame);
         updateApp(index);
     }
-
     index -= 1;
     showApp(index);
     enableNext();
