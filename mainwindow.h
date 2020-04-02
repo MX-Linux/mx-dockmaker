@@ -71,6 +71,7 @@ public:
 public slots:
 
 private slots:
+    void itemChanged();
     void on_buttonSave_clicked();
     void on_buttonAbout_clicked();
     void on_buttonHelp_clicked();
@@ -91,7 +92,8 @@ private:
     QProcess proc;
     Cmd cmd;
 
-    bool changed;
+    bool added = false;
+    bool changed = false;
     int index = 0;
     QList<QLabel *> list_icons;
     QString dock_name;

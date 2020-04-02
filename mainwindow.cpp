@@ -85,16 +85,25 @@ void MainWindow::displayIcon(const QString &app_name, int location)
 
 void MainWindow::ifNotDoneDisableButtons()
 {
-    if(ui->buttonNext->text() == tr("Add application") && ui->buttonNext->isEnabled()) {
-        ui->buttonPrev->setEnabled(false);
-        ui->buttonDelete->setEnabled(false);
+    if (ui->buttonSelectApp->text() != tr("Select...") || !ui->lineEditCommand->text().isEmpty()) {
+        ui->buttonSave->setEnabled(true);
+        ui->buttonPrev->setEnabled(true);
+        ui->buttonNext->setEnabled(true);
+    } else {
         ui->buttonSave->setEnabled(false);
+        ui->buttonPrev->setEnabled(false);
+        ui->buttonNext->setEnabled(false);
+    }
+
+    if(ui->buttonNext->text() == tr("Add application") && changed) {
+        ui->buttonDelete->setEnabled(false);
     }
 }
 
 // setup versious items first time program runs
 void MainWindow::setup()
 {
+    added = false;
     changed = false;
     connect(qApp, &QApplication::aboutToQuit, this, &MainWindow::cleanup);
     this->setWindowTitle("MX Dockmaker");
@@ -111,8 +120,9 @@ void MainWindow::setup()
     }
     ui->comboSize->setCurrentIndex(ui->comboSize->findText("48x48"));
 
-    QStringList color_list({"apricot", "beige", "black", "blue", "brown", "cyan", "gray", "green",
-                           "lavender", "lime", "magenta", "maroon", "mint", "navy", "olive",
+    // "apricot", "mint" removed because not availalbe in Qt, might add back if needed
+    QStringList color_list({"beige", "black", "blue", "brown", "cyan", "gray", "green",
+                           "lavender", "lime", "magenta", "maroon", "navy", "olive",
                            "orange", "pink", "purple", "red", "teal", "white", "yellow"});
 
     ui->comboBgColor->addItems(color_list);
@@ -222,6 +232,22 @@ QString MainWindow::pickSlitLocation()
 
     pick->exec();
     return pick->button;
+}
+
+void MainWindow::itemChanged()
+{
+    changed = true;
+    if (!apps.isEmpty() && ui->buttonNext->text() != tr("Add application")) updateApp(index);
+    if (ui->buttonNext->text() == tr("Add application") && !added) {
+        addApp(index);
+        added = true;
+    }
+    ui->buttonNext->setEnabled(true);
+    ui->buttonSave->setDisabled(ui->buttonNext->text() == tr("Add application") && ui->buttonNext->isEnabled());
+    ifNotDoneDisableButtons();
+    if (!list_icons.empty()) {
+        list_icons.at(index)->setStyleSheet("background-color: " + ui->comboBgColor->currentText() + ";border: 4px solid " + ui->comboBorderColor->currentText() + ";");
+    }
 }
 
 void MainWindow::updateApp(int idx)
@@ -424,41 +450,23 @@ void MainWindow::on_buttonHelp_clicked()
 
 void MainWindow::on_comboSize_currentIndexChanged(const QString)
 {
-    displayIcon(ui->buttonSelectApp->text(), index);
-    changed = true;
-    if (!apps.isEmpty() && ui->buttonNext->text() != tr("Add application")) updateApp(index);
-    ui->buttonNext->setEnabled(true);
-    ui->buttonSave->setDisabled(ui->buttonNext->text() == tr("Add application") && ui->buttonNext->isEnabled());
-    ifNotDoneDisableButtons();
+    itemChanged();
 }
 
 void MainWindow::on_comboBgColor_currentIndexChanged(const QString)
 {
-    changed = true;
-    if (!apps.isEmpty() && ui->buttonNext->text() != tr("Add application")) updateApp(index);
-    ui->buttonNext->setEnabled(true);
-    ui->buttonSave->setDisabled(ui->buttonNext->text() == tr("Add application") && ui->buttonNext->isEnabled());
-    ifNotDoneDisableButtons();
-    if (!list_icons.empty()) {
-        list_icons.at(index)->setStyleSheet("background-color: " + ui->comboBgColor->currentText() + ";border: 4px solid " + ui->comboBorderColor->currentText()+ ";");
-    }
+    itemChanged();
 }
 
 void MainWindow::on_comboBorderColor_currentIndexChanged(const QString)
 {
-    changed = true;
-    if (!apps.isEmpty() && ui->buttonNext->text() != tr("Add application")) updateApp(index);
-    ui->buttonNext->setEnabled(true);
-    ui->buttonSave->setDisabled(ui->buttonNext->text() == tr("Add application") && ui->buttonNext->isEnabled());
-    ifNotDoneDisableButtons();
-    if (!list_icons.empty()) {
-        list_icons.at(index)->setStyleSheet("background-color: " + ui->comboBgColor->currentText() + ";border: 4px solid " + ui->comboBorderColor->currentText());
-    }
+    itemChanged();
 }
 
 
 void MainWindow::on_buttonNext_clicked()
 {
+    added = false;
     blockAllSignals(true);
     ui->buttonSave->setEnabled(changed);
     ui->buttonNext->setEnabled(false);
@@ -471,7 +479,6 @@ void MainWindow::on_buttonNext_clicked()
         if (index < apps.size()) {
             showApp(index);
         } else {
-            enableAdd();
             resetAdd();
         }
     } else { // at the last app
@@ -496,6 +503,7 @@ void MainWindow::on_buttonNext_clicked()
 
 void MainWindow::on_buttonDelete_clicked()
 {
+    added = false;
     if (!apps.isEmpty()) {
         blockAllSignals(true);
 
@@ -516,7 +524,6 @@ void MainWindow::on_buttonDelete_clicked()
         index = 0;
         ui->buttonDelete->setEnabled(false);
         ui->buttonSave->setEnabled(false);
-        enableAdd();
         ui->buttonPrev->setEnabled(false);
         resetAdd();
     } else if (index == 0) {
@@ -593,8 +600,7 @@ void MainWindow::on_buttonSelectApp_clicked()
         changed = true;
     }
     displayIcon(file, index);
-    ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
-    ifNotDoneDisableButtons();
+    itemChanged();
 }
 
 void MainWindow::editDock()
@@ -637,16 +643,16 @@ void MainWindow::newDock()
 
 void MainWindow::on_buttonPrev_clicked()
 {
+    added = false;
     ui->buttonNext->setEnabled(false);
     ui->buttonPrev->setEnabled(false);
 
     ui->buttonSave->setEnabled(changed);
 
-    if (ui->buttonNext->text() != tr("Add application")) {
+    if (ui->buttonNext->text() != tr("Add application") || ui->buttonNext->isEnabled()) {
         updateApp(index);
     }
-    --index;
-    showApp(index);
+    showApp(--index);
     enableNext();
 }
 
