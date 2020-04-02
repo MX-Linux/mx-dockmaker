@@ -80,6 +80,7 @@ void MainWindow::ifNotDoneDisableBackDelete()
     if(ui->buttonNext->text() == tr("Add application") && ui->buttonNext->isEnabled()) {
         ui->buttonPrev->setEnabled(false);
         ui->buttonDelete->setEnabled(false);
+        ui->buttonSave->setEnabled(false);
     }
 }
 
@@ -160,12 +161,12 @@ QString MainWindow::findIcon(const QString &icon_name)
         QString dir = "/usr/share/icons/" + out;
         if (QFileInfo::exists(dir)) {
             for (const QString &ext : extList) {
-                out = cmd.getCmdOut("find " + dir + " -iname " + icon_name + ext);
+                out = cmd.getCmdOut("find " + dir + " -iname " + icon_name + ext, true);
                 if (!out.isEmpty()) {
                     QStringList files = out.split("\n");
                     return findLargest(files);
                 } else {
-                    out = cmd.getCmdOut("find " + dir + " /usr/share/icons/hicolor /usr/share/pixmaps -iname " + icon_name + ext);
+                    out = cmd.getCmdOut("find " + dir + " /usr/share/icons/hicolor /usr/share/pixmaps -iname " + icon_name + ext, true);
                     if (!out.isEmpty()) {
                         QStringList files = out.split("\n");
                         return findLargest(files);
@@ -259,14 +260,14 @@ void MainWindow::blockAllSignals(bool block)
 
 void MainWindow::enableAdd()
 {
-    ui->buttonNext->setIcon(QIcon::fromTheme("forward"));
+    ui->buttonNext->setIcon(QIcon::fromTheme("go-jump"));
     ui->buttonNext->setText(tr("Add application"));
     ui->buttonDelete->setText(tr("Delete last application"));
 }
 
 void MainWindow::enableNext()
 {
-    ui->buttonNext->setIcon(QIcon::fromTheme("next"));
+    ui->buttonNext->setIcon(QIcon::fromTheme("go-next"));
     ui->buttonNext->setText(tr("Next"));
     ui->buttonNext->setEnabled(true);
     ui->buttonDelete->setText(tr("Delete this application"));
@@ -421,7 +422,7 @@ void MainWindow::on_comboSize_currentIndexChanged(const QString)
     displayIcon(ui->buttonSelectApp->text(), index);
     changed = true;
     ui->buttonNext->setEnabled(true);
-    ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
+    ui->buttonSave->setDisabled(ui->buttonNext->text() == tr("Add application") && ui->buttonNext->isEnabled());
     ifNotDoneDisableBackDelete();
 }
 
@@ -429,7 +430,7 @@ void MainWindow::on_comboBgColor_currentIndexChanged(const QString)
 {
     changed = true;
     ui->buttonNext->setEnabled(true);
-    ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
+    ui->buttonSave->setDisabled(ui->buttonNext->text() == tr("Add application") && ui->buttonNext->isEnabled());
     ifNotDoneDisableBackDelete();
 }
 
@@ -437,7 +438,7 @@ void MainWindow::on_comboBorderColor_currentIndexChanged(const QString)
 {
     changed = true;
     ui->buttonNext->setEnabled(true);
-    ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
+    ui->buttonSave->setDisabled(ui->buttonNext->text() == tr("Add application") && ui->buttonNext->isEnabled());
     ifNotDoneDisableBackDelete();
 }
 
@@ -549,10 +550,10 @@ void MainWindow::showApp(int idx)
             enableNext();
         }
     } else if (index == apps.size()) {
-        ui->buttonNext->setIcon(QIcon::fromTheme("forward"));
+        ui->buttonNext->setIcon(QIcon::fromTheme("go-jump"));
         ui->buttonNext->setText(tr("Add application"));
     } else {
-        ui->buttonNext->setIcon(QIcon::fromTheme("next"));
+        ui->buttonNext->setIcon(QIcon::fromTheme("go-next"));
         ui->buttonNext->setText(tr("Next"));
         ui->buttonNext->setEnabled(true);
         ui->buttonPrev->setEnabled(true);

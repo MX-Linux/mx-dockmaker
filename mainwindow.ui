@@ -96,7 +96,7 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>164</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -104,8 +104,7 @@
             <string>Add application</string>
            </property>
            <property name="icon">
-            <iconset theme="forward">
-             <normaloff>.</normaloff>.</iconset>
+            <iconset theme="go-jump"/>
            </property>
           </widget>
          </item>
@@ -134,8 +133,7 @@
             <string>Delete last added application</string>
            </property>
            <property name="icon">
-            <iconset theme="delete">
-             <normaloff>.</normaloff>.</iconset>
+            <iconset theme="edit-delete-symbolic"/>
            </property>
           </widget>
          </item>
@@ -213,8 +211,7 @@
             <string>Back</string>
            </property>
            <property name="icon">
-            <iconset theme="previous">
-             <normaloff>.</normaloff>.</iconset>
+            <iconset theme="go-previous"/>
            </property>
           </widget>
          </item>
@@ -241,19 +238,6 @@
         </layout>
        </widget>
       </item>
-      <item row="2" column="1" rowspan="3">
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
       <item row="4" column="0">
        <spacer name="verticalSpacer_2">
         <property name="orientation">
@@ -274,6 +258,19 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout"/>
        </widget>
+      </item>
+      <item row="3" column="1" rowspan="2">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>
@@ -442,8 +439,7 @@
         <string>Save</string>
        </property>
        <property name="icon">
-        <iconset theme="filesave">
-         <normaloff>.</normaloff>.</iconset>
+        <iconset theme="document-save-symbolic"/>
        </property>
        <property name="shortcut">
         <string/>
