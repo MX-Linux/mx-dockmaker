@@ -465,8 +465,7 @@ void MainWindow::on_buttonNext_clicked()
 
     if (index < apps.size()) {
         updateApp(index);
-        list_icons.at(index)->setFrameStyle(QFrame::NoFrame);
-        index += 1;
+        ++index;
         ui->buttonDelete->setEnabled(true);
         ui->buttonPrev->setEnabled(true);
         if (index < apps.size()) {
@@ -481,7 +480,7 @@ void MainWindow::on_buttonNext_clicked()
             ui->buttonDelete->setEnabled(true);
             ui->buttonPrev->setEnabled(true);
             addApp(index);
-            index += 1;
+            ++index;
             resetAdd();
         } else {
             QMessageBox::critical(this, windowTitle(), tr("Please select a file."));
@@ -504,7 +503,7 @@ void MainWindow::on_buttonDelete_clicked()
             apps.pop_back();
             delete ui->groupPreview->layout()->itemAt(index - 1)->widget();
             list_icons.removeLast();
-            index -= 1; // decrement index because buttonBack doesn't decreament when showing "Delete last application"
+            --index; // decrement index because buttonBack doesn't decreament when showing "Delete last application"
         } else {
             delete ui->groupPreview->layout()->itemAt(index)->widget();
             list_icons.removeAt(index);
@@ -525,7 +524,7 @@ void MainWindow::on_buttonDelete_clicked()
         showApp(index);
     } else {
         ui->buttonSave->setEnabled(true);
-        index -= 1;
+        --index;
         showApp(index);
     }
     changed = true;
@@ -644,10 +643,9 @@ void MainWindow::on_buttonPrev_clicked()
     ui->buttonSave->setEnabled(changed);
 
     if (ui->buttonNext->text() != tr("Add application")) {
-        list_icons.at(index)->setFrameStyle(QFrame::NoFrame);
         updateApp(index);
     }
-    index -= 1;
+    --index;
     showApp(index);
     enableNext();
 }
