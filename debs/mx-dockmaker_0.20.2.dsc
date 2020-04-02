@@ -12,20 +12,20 @@ Build-Depends: debhelper (>= 9.2), qtbase5-dev, qttools5-dev-tools
 Package-List:
  mx-dockmaker deb admin optional arch=any
 Checksums-Sha1:
- 59ee71032739f24b5261ed12506f75219295fe4c 35316 mx-dockmaker_0.20.2.tar.xz
+ f3107b0ee8ee2a253bf6a0ae1aad7e72744f31d6 35236 mx-dockmaker_0.20.2.tar.xz
 Checksums-Sha256:
- 2c26583a34c8651adfc3adb6e933bdc026584b03eef530188afdfa2ee7194cbe 35316 mx-dockmaker_0.20.2.tar.xz
+ ddf79eda8ecb1899f1a302c94ac1739614f04cbd070090fcd5d202ef48ca9df4 35236 mx-dockmaker_0.20.2.tar.xz
 Files:
- fd1380e4edf4c5af283e7cfed3972e17 35316 mx-dockmaker_0.20.2.tar.xz
+ 35dd280fdd4729e1e518a4a461b3f3be 35236 mx-dockmaker_0.20.2.tar.xz
 
 -----BEGIN PGP SIGNATURE-----
 
-iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAl6GaVoTHGFkcmlhbkBt
-eGxpbnV4Lm9yZwAKCRBwk4x4BnnumBA5B/9yi9r9Bg/RmO2gkPNWDHQGRWrvmK2P
-cJK2cm6phMXkffG+HVYxuIx+qJXvBz8dtdFsxdwJfTaK7ONUZSdhkI+SA55KiPJO
-i8lzqZHu1tID2ML2sGnSEKLThbUWVbqiuSs4I5Uno0/LE90JpqGpnUo/pssG0Hda
-m2Bw3YFM/t/0ojTLJNhBsuEx0nfuy3285Dqht5inW4xKrYs5j5g4WOC4yhPSZWgR
-fHjn3KsM5FgRE0JZkNskwS+SWFSlntYdUsrXId5/C2NsdKMOeQvArglDMC/0MCHm
-McFzO0m+ZdMrJgQ2Vhk11X8amEJczrqVflIpBr3y94/+7Ak88kgOoEdb
-=IMit
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAl6GeMITHGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumIJiCAC1aCsHJr6qehIeS08MqP2NOYJ6eI0H
+3OJBcVVVzrZ6Nz1Na6IkwT8PkXFP+PbM246N9LIRTZHEzWzbSYlEiDx2LLLMFbfq
+UDNdmQbpX1xLWOM2l2SiQgmKm4U2jLL60K12z7wCHc1wtFNSVlHqdVJ+Lc2aw6/w
+e4ACRyQ4MBC8DVFuAUN2GSkZ2XVO4vdBmKXbEGat5X4CMtn7zutO7k9kRrQAZ7QS
+KaqwQjIz/o20WnlWIoMO9Wt5PtpprH1O8f3uHO3WmFy6X2X772eRQZRsr+c1UUI2
+dEWsOQoW8+FT7lOGVSsVyxMSsTny0n8i2b+v9Bh5NeYym9NyKVx7cxFA
+=Dpx/
 -----END PGP SIGNATURE-----

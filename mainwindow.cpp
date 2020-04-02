@@ -87,7 +87,7 @@ void MainWindow::ifNotDoneDisableButtons()
 {
     if (ui->buttonSelectApp->text() != tr("Select...") || !ui->lineEditCommand->text().isEmpty()) {
         ui->buttonSave->setEnabled(true);
-        ui->buttonPrev->setEnabled(true);
+        if (index != 0) ui->buttonPrev->setEnabled(true);
         ui->buttonNext->setEnabled(true);
     } else {
         ui->buttonSave->setEnabled(false);
@@ -242,10 +242,10 @@ void MainWindow::itemChanged()
         addApp(index);
         added = true;
     }
-    ui->buttonNext->setEnabled(true);
-    ui->buttonSave->setDisabled(ui->buttonNext->text() == tr("Add application") && ui->buttonNext->isEnabled());
     ifNotDoneDisableButtons();
+
     if (!list_icons.empty()) {
+        displayIcon(ui->buttonSelectApp->text(), index);
         list_icons.at(index)->setStyleSheet("background-color: " + ui->comboBgColor->currentText() + ";border: 4px solid " + ui->comboBorderColor->currentText() + ";");
     }
 }
@@ -506,18 +506,15 @@ void MainWindow::on_buttonDelete_clicked()
     added = false;
     if (!apps.isEmpty()) {
         blockAllSignals(true);
-
         if (ui->buttonDelete->text() == tr("Delete last application")) {
             apps.pop_back();
-            delete ui->groupPreview->layout()->itemAt(index - 1)->widget();
+            delete ui->groupPreview->layout()->itemAt(--index)->widget();
             list_icons.removeLast();
-            --index; // decrement index because buttonBack doesn't decreament when showing "Delete last application"
         } else {
             delete ui->groupPreview->layout()->itemAt(index)->widget();
             list_icons.removeAt(index);
             apps.removeAt(index);
         }
-
         blockAllSignals(false);
     }
     if (apps.isEmpty()) {
@@ -531,11 +528,9 @@ void MainWindow::on_buttonDelete_clicked()
         showApp(index);
     } else {
         ui->buttonSave->setEnabled(true);
-        --index;
-        showApp(index);
+        showApp(--index);
     }
     changed = true;
-    ui->buttonSave->setEnabled(true);
 }
 
 void MainWindow::resetAdd()
@@ -673,6 +668,8 @@ void MainWindow::on_buttonSelectIcon_clicked()
     QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
         ui->buttonSelectIcon->setText(selected);
+        ui->buttonSelectIcon->setToolTip(selected);
+        ui->buttonSelectIcon->setStyleSheet("text-align: left;");
         if (!ui->lineEditCommand->text().isEmpty()) {
             ui->buttonNext->setEnabled(true);
             displayIcon(QString(), index);

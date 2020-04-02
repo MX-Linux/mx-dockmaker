@@ -193,22 +193,6 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="1" colspan="4">
-          <widget class="QToolButton" name="buttonSelectApp">
-           <property name="text">
-            <string>Select...</string>
-           </property>
-           <property name="popupMode">
-            <enum>QToolButton::DelayedPopup</enum>
-           </property>
-           <property name="autoRaise">
-            <bool>false</bool>
-           </property>
-           <property name="arrowType">
-            <enum>Qt::NoArrow</enum>
-           </property>
-          </widget>
-         </item>
          <item row="4" column="0">
           <widget class="QLabel" name="label_4">
            <property name="text">
@@ -252,10 +236,23 @@
          <item row="2" column="1">
           <widget class="QLineEdit" name="lineEditCommand"/>
          </item>
-         <item row="2" column="3">
-          <widget class="QToolButton" name="buttonSelectIcon">
+         <item row="2" column="3" colspan="2">
+          <widget class="QPushButton" name="buttonSelectIcon">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="text">
             <string>Select icon...</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1" colspan="2">
+          <widget class="QPushButton" name="buttonSelectApp">
+           <property name="text">
+            <string>Select...</string>
            </property>
           </widget>
          </item>
