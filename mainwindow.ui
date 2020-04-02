@@ -70,6 +70,27 @@
       <number>0</number>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
+      <item row="4" column="0">
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="3" column="0" alignment="Qt::AlignLeft">
+       <widget class="QGroupBox" name="groupPreview">
+        <property name="title">
+         <string>Dock Preview</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout"/>
+       </widget>
+      </item>
       <item row="1" column="0" rowspan="2">
        <widget class="QGroupBox" name="groupAdd">
         <property name="title">
@@ -104,7 +125,8 @@
             <string>Add application</string>
            </property>
            <property name="icon">
-            <iconset theme="go-jump"/>
+            <iconset theme="go-jump">
+             <normaloff>.</normaloff>.</iconset>
            </property>
           </widget>
          </item>
@@ -133,7 +155,8 @@
             <string>Delete last added application</string>
            </property>
            <property name="icon">
-            <iconset theme="edit-delete-symbolic"/>
+            <iconset theme="edit-delete-symbolic">
+             <normaloff>.</normaloff>.</iconset>
            </property>
           </widget>
          </item>
@@ -211,7 +234,8 @@
             <string>Back</string>
            </property>
            <property name="icon">
-            <iconset theme="go-previous"/>
+            <iconset theme="go-previous">
+             <normaloff>.</normaloff>.</iconset>
            </property>
           </widget>
          </item>
@@ -237,40 +261,6 @@
          </item>
         </layout>
        </widget>
-      </item>
-      <item row="4" column="0">
-       <spacer name="verticalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="3" column="0" alignment="Qt::AlignLeft">
-       <widget class="QGroupBox" name="groupPreview">
-        <property name="title">
-         <string>Dock Preview</string>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout"/>
-       </widget>
-      </item>
-      <item row="3" column="1" rowspan="2">
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
       </item>
      </layout>
     </widget>
@@ -439,7 +429,8 @@
         <string>Save</string>
        </property>
        <property name="icon">
-        <iconset theme="document-save-symbolic"/>
+        <iconset theme="document-save-symbolic">
+         <normaloff>.</normaloff>.</iconset>
        </property>
        <property name="shortcut">
         <string/>

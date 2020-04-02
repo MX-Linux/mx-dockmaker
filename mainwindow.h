@@ -45,6 +45,7 @@ public:
 
     bool isDockInMenu(const QString &file_name);
 
+    void addApp(int idx);
     void addDockToMenu(const QString &file_name);
     void blockAllSignals(bool enable);
     void cleanup();

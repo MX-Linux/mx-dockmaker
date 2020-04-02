@@ -55,6 +55,12 @@ bool MainWindow::isDockInMenu(const QString &file_name)
     return getDockName(file_name) == dock_name;
 }
 
+void MainWindow::addApp(int idx)
+{
+    apps.push_back(QStringList({ui->buttonSelectApp->text(), ui->lineEditCommand->text(), ui->buttonSelectIcon->text(), ui->comboSize->currentText(), ui->comboBgColor->currentText(), ui->comboBorderColor->currentText()}));
+    displayIcon(ui->buttonSelectApp->text(), idx);
+}
+
 void MainWindow::displayIcon(const QString &app_name, int location)
 {
     QPalette pal = palette();
@@ -72,7 +78,9 @@ void MainWindow::displayIcon(const QString &app_name, int location)
         list_icons << new QLabel(this);
     }
     list_icons.at(location)->setPixmap(pix);
+    list_icons.at(location)->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     ui->groupPreview->layout()->addWidget(list_icons.last());
+    list_icons.at(location)->setStyleSheet("background-color: " + ui->comboBgColor->currentText() + ";border: 4px solid " + ui->comboBorderColor->currentText() + ";");
 }
 
 void MainWindow::ifNotDoneDisableButtons()
@@ -101,7 +109,6 @@ void MainWindow::setup()
     while (ui->groupPreview->layout()->count() > 0) {
         delete ui->groupPreview->layout()->itemAt(0)->widget();
     }
-
     ui->comboSize->setCurrentIndex(ui->comboSize->findText("48x48"));
 
     QStringList color_list({"apricot", "beige", "black", "blue", "brown", "cyan", "gray", "green",
@@ -219,13 +226,8 @@ QString MainWindow::pickSlitLocation()
 
 void MainWindow::updateApp(int idx)
 {
-    if (idx == apps.size()) {
-        apps.push_back(QStringList({ui->buttonSelectApp->text(), ui->lineEditCommand->text(), ui->buttonSelectIcon->text(), ui->comboSize->currentText(), ui->comboBgColor->currentText(), ui->comboBorderColor->currentText()}));
-        displayIcon(ui->buttonSelectApp->text(), idx);
-    } else {
-        apps.replace(idx, QStringList({ui->buttonSelectApp->text(), ui->lineEditCommand->text(), ui->buttonSelectIcon->text(), ui->comboSize->currentText(), ui->comboBgColor->currentText(), ui->comboBorderColor->currentText()}));
-        displayIcon(ui->buttonSelectApp->text(), idx);
-    }
+    apps.replace(idx, QStringList({ui->buttonSelectApp->text(), ui->lineEditCommand->text(), ui->buttonSelectIcon->text(), ui->comboSize->currentText(), ui->comboBgColor->currentText(), ui->comboBorderColor->currentText()}));
+    displayIcon(ui->buttonSelectApp->text(), idx);
 }
 
 void MainWindow::addDockToMenu(const QString &file_name)
@@ -279,6 +281,8 @@ void MainWindow::parseFile(QFile &file)
     QString line;
     QCommandLineParser parser;
 
+    blockAllSignals(true);
+
     const QStringList possible_locations({"TopLeft",    "TopCenter",    "TopRight",
                                           "LeftTop",                    "RightTop",
                                           "LeftCenter",                 "RightCenter",
@@ -306,7 +310,6 @@ void MainWindow::parseFile(QFile &file)
             }
             continue;
         }
-
         if (line.startsWith("wmalauncher")) {
             ui->buttonNext->setEnabled(true);
             parser.process(line.split(" "));
@@ -332,6 +335,7 @@ void MainWindow::parseFile(QFile &file)
     }
     changed = false;
     showApp(index = 0);
+
 }
 
 
@@ -422,6 +426,7 @@ void MainWindow::on_comboSize_currentIndexChanged(const QString)
 {
     displayIcon(ui->buttonSelectApp->text(), index);
     changed = true;
+    if (!apps.isEmpty() && ui->buttonNext->text() != tr("Add application")) updateApp(index);
     ui->buttonNext->setEnabled(true);
     ui->buttonSave->setDisabled(ui->buttonNext->text() == tr("Add application") && ui->buttonNext->isEnabled());
     ifNotDoneDisableButtons();
@@ -430,21 +435,25 @@ void MainWindow::on_comboSize_currentIndexChanged(const QString)
 void MainWindow::on_comboBgColor_currentIndexChanged(const QString)
 {
     changed = true;
+    if (!apps.isEmpty() && ui->buttonNext->text() != tr("Add application")) updateApp(index);
     ui->buttonNext->setEnabled(true);
     ui->buttonSave->setDisabled(ui->buttonNext->text() == tr("Add application") && ui->buttonNext->isEnabled());
     ifNotDoneDisableButtons();
+    if (!list_icons.empty()) {
+        list_icons.at(index)->setStyleSheet("background-color: " + ui->comboBgColor->currentText() + ";border: 4px solid " + ui->comboBorderColor->currentText()+ ";");
+    }
 }
 
 void MainWindow::on_comboBorderColor_currentIndexChanged(const QString)
 {
     changed = true;
+    if (!apps.isEmpty() && ui->buttonNext->text() != tr("Add application")) updateApp(index);
     ui->buttonNext->setEnabled(true);
     ui->buttonSave->setDisabled(ui->buttonNext->text() == tr("Add application") && ui->buttonNext->isEnabled());
     ifNotDoneDisableButtons();
-//    if (!list_icons.empty()) {
-//        qDebug() << "changeing stylesheet at" << index;
-//        list_icons.at(index)->setStyleSheet({"border 2px solid black;"});
-//    }
+    if (!list_icons.empty()) {
+        list_icons.at(index)->setStyleSheet("background-color: " + ui->comboBgColor->currentText() + ";border: 4px solid " + ui->comboBorderColor->currentText());
+    }
 }
 
 
@@ -466,13 +475,12 @@ void MainWindow::on_buttonNext_clicked()
             enableAdd();
             resetAdd();
         }
-        blockAllSignals(true);
     } else { // at the last app
         if (ui->buttonSelectApp->text() != tr("Select...") || !ui->lineEditCommand->text().isEmpty()) {
             ui->buttonSave->setEnabled(true);
             ui->buttonDelete->setEnabled(true);
             ui->buttonPrev->setEnabled(true);
-            updateApp(index);
+            addApp(index);
             index += 1;
             resetAdd();
         } else {
@@ -549,8 +557,8 @@ void MainWindow::showApp(int idx)
         ui->lineEditCommand->setText(apps.at(idx).at(1));
         ui->buttonSelectIcon->setText(apps.at(idx).at(2));
     }
-    blockAllSignals(true);
 
+    blockAllSignals(true);
     ui->buttonSelectApp->setText(apps.at(idx).at(0));
     ui->comboSize->setCurrentIndex(ui->comboSize->findText(apps.at(idx).at(3)));
     ui->comboBgColor->setCurrentIndex(ui->comboBgColor->findText(apps.at(idx).at(4)));
@@ -570,8 +578,7 @@ void MainWindow::showApp(int idx)
         ui->buttonNext->setEnabled(true);
         ui->buttonPrev->setEnabled(true);
     }
-    list_icons.at(index)->setFrameStyle(QFrame::Sunken|QFrame::Panel);
-    list_icons.at(index)->setLineWidth(2);
+    list_icons.at(index)->setStyleSheet(list_icons.at(index)->styleSheet() + "border-width: 7px;");
     blockAllSignals(false);
 }
 
