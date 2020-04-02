@@ -584,7 +584,7 @@ void MainWindow::showApp(int idx)
         ui->buttonNext->setEnabled(true);
         ui->buttonPrev->setEnabled(true);
     }
-    list_icons.at(index)->setStyleSheet(list_icons.at(index)->styleSheet() + "border-width: 7px;");
+    list_icons.at(index)->setStyleSheet(list_icons.at(index)->styleSheet() + "border-width: 10px;");
     blockAllSignals(false);
 }
 

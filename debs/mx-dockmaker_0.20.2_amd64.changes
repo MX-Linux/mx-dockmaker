@@ -1,3 +1,6 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
 Format: 1.8
 Date: Thu, 06 Feb 2020 12:50:39 -0500
 Source: mx-dockmaker
@@ -15,20 +18,32 @@ Changes:
  .
    * initial release
 Checksums-Sha1:
- ee5e1f4d4b52ec2845a565da36d491f1dfca327c 567 mx-dockmaker_0.20.2.dsc
- 58fb2143a1deddb50df1c4d19379a64173f015fb 35256 mx-dockmaker_0.20.2.tar.xz
- 5e676c7e29a2c62d3b24f3b0a931fb95bc789e5d 1064984 mx-dockmaker-dbgsym_0.20.2_amd64.deb
- ca0b9deb13ebed33600305f93302661fd1be6eb7 10294 mx-dockmaker_0.20.2_amd64.buildinfo
- fd237a65e99c1b327f11117fbab0ed207fe96272 65784 mx-dockmaker_0.20.2_amd64.deb
+ e283393765672d895c9f7ad52ed9126d2d26a2ed 1129 mx-dockmaker_0.20.2.dsc
+ 59ee71032739f24b5261ed12506f75219295fe4c 35316 mx-dockmaker_0.20.2.tar.xz
+ 0b1fd62f705558bbd3c13e2cd1e9cfd024ee93c4 1065880 mx-dockmaker-dbgsym_0.20.2_amd64.deb
+ c31f93d8c09ce3ebfcc0a702f2b5a77838f7ef7b 10859 mx-dockmaker_0.20.2_amd64.buildinfo
+ 3842174249c64a8d2573a347403875178a7814f2 65392 mx-dockmaker_0.20.2_amd64.deb
 Checksums-Sha256:
- edff5de8a51b7e6ad611968c227d040a7568d89376916dabe8650522dfcd56b4 567 mx-dockmaker_0.20.2.dsc
- 9dd03afcef0c666b995564a609fa795658c73a3122eca834c3d73f48861df35e 35256 mx-dockmaker_0.20.2.tar.xz
- f9f026512d00d07b5a43ff25d5eadbd216e13e737e123d97a26984c73996827f 1064984 mx-dockmaker-dbgsym_0.20.2_amd64.deb
- 801f094d6b8838f056c49c82a5bb694031ac020afc97e02a4557f1d48a810f38 10294 mx-dockmaker_0.20.2_amd64.buildinfo
- 2e5c9e2adcdcad06752b417b092c4ff49dd1f70303476a512b78f5a10bbca1d5 65784 mx-dockmaker_0.20.2_amd64.deb
+ 84340444177d036795facabad90f898e97ca5e4a3fc81ac3441c94f539563e33 1129 mx-dockmaker_0.20.2.dsc
+ 2c26583a34c8651adfc3adb6e933bdc026584b03eef530188afdfa2ee7194cbe 35316 mx-dockmaker_0.20.2.tar.xz
+ 83f716a5c06b93fcdd21b71aef26823fceda45b511cbe8457c676b9751dd74e7 1065880 mx-dockmaker-dbgsym_0.20.2_amd64.deb
+ 71f142e8a005bfd7c1e39c7095d99ebf158bf4fab55ef4eb55cbd0021f7891a5 10859 mx-dockmaker_0.20.2_amd64.buildinfo
+ 9632e34f882aa7d63e3431222571116297d25fc931bd54ad68b3296c31a190ac 65392 mx-dockmaker_0.20.2_amd64.deb
 Files:
- 1a44ecc7240537a8ecd46ac5df7c8961 567 admin optional mx-dockmaker_0.20.2.dsc
- 0937f0b4fa25e5c7e030e226ddd8ee97 35256 admin optional mx-dockmaker_0.20.2.tar.xz
- c9583d67a37115ab95df6bed558d3b4c 1064984 debug optional mx-dockmaker-dbgsym_0.20.2_amd64.deb
- 3ac1b24f28881a87d51a81dd905b314c 10294 admin optional mx-dockmaker_0.20.2_amd64.buildinfo
- 45320c366341e6a873cc728901703faa 65784 admin optional mx-dockmaker_0.20.2_amd64.deb
+ 8660036149e2e71707d049cb61f82f95 1129 admin optional mx-dockmaker_0.20.2.dsc
+ fd1380e4edf4c5af283e7cfed3972e17 35316 admin optional mx-dockmaker_0.20.2.tar.xz
+ 24a13932ac87db3abd59ab6a314de558 1065880 debug optional mx-dockmaker-dbgsym_0.20.2_amd64.deb
+ ebc8cd157ea3a322823859eddbfd500b 10859 admin optional mx-dockmaker_0.20.2_amd64.buildinfo
+ 8c2eb06d8b235a54f000a06fafe2dd14 65392 admin optional mx-dockmaker_0.20.2_amd64.deb
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAl6GaYATHGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumF5GCADW3MWmZ/aE4d9ROl52DRrgUqGYjmtv
+LCnUYDiSnajX/pO1z7DqumxQIgmCsBjqZAn+cMdZ6xNkhjr984lL6einm13Ivk9z
+vYYRZRR5V+L4x7ox7vu6gY/rjo1V2aki2wNPDZZZ91qTKIbqtNOcDxbatxBXCite
+icU9kRplKT8xZErxYwA4kPhh/kZEoKb4MFnucsbul67vgmg9dNH0pgzXCetAJmqV
+7cvrdfeo/64l5xVgSPkgZqk26311u5TdpxYuq3kIl0v8N0c/SyKmiCETolvzGxZl
+P/f76/dkpnQcq1PLHDc+PYioy9ElY0ikIu76yakWGj3doPmg7to7LE/N
+=tA5T
+-----END PGP SIGNATURE-----
