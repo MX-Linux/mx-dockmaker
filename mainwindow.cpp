@@ -333,10 +333,11 @@ void MainWindow::moveDock()
         return;
     }
     QTextStream out(&file);
-    out << text.replace(re, new_line);
 
-    // if location line not found add it at the end
+    // if location line not found add it at the beginning
     if (!re.match(text).hasMatch()) out << "\n#set up slit location\n" + new_line + "\n";
+
+    out << text.replace(re, new_line);
 
     file.close();
     cmd.run("pkill wmalauncher;" + file.fileName() + "&", true);
