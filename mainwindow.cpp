@@ -264,6 +264,7 @@ void MainWindow::deleteDock()
                                                      tr("Are you sure you want to delete %1?").arg(selected), tr("&Delete"), tr("&Cancel")) == 0) {
         QFile::remove(selected);
         cmd.run("sed -ni '\\|" + selected + "|!p' " + QDir::homePath() + "/.fluxbox/menu-mx", true);
+        cmd.run("pkill wmalauncher", true);
     }
     this->show();
 }
