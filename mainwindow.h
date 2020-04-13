@@ -45,22 +45,20 @@ public:
 
     bool isDockInMenu(const QString &file_name);
 
-    void addApp(int idx);
     void addDockToMenu(const QString &file_name);
-    void blockAllSignals(bool enable);
+    void blockComboSignals(bool enable);
     void cleanup();
     void deleteDock();
     void displayIcon(const QString &app_name, int location);
     void ifNotDoneDisableButtons();
     void editDock();
-    void enableAdd();
     void enableNext();
     void newDock();
     void parseFile(QFile &file);
     void resetAdd();
     void setup();
     void showApp(int i);
-    void updateApp(int idx);
+    void updateAppList(int idx);
 
     QString findIcon(const QString &icon_name);
     QString findLargest(const QStringList &files);
@@ -92,7 +90,6 @@ private:
     QProcess proc;
     Cmd cmd;
 
-    bool added = false;
     bool changed = false;
     int index = 0;
     QList<QLabel *> list_icons;

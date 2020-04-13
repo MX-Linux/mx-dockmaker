@@ -55,12 +55,6 @@ bool MainWindow::isDockInMenu(const QString &file_name)
     return getDockName(file_name) == dock_name;
 }
 
-void MainWindow::addApp(int idx)
-{
-    apps.push_back(QStringList({ui->buttonSelectApp->text(), ui->lineEditCommand->text(), ui->buttonSelectIcon->text(), ui->comboSize->currentText(), ui->comboBgColor->currentText(), ui->comboBorderColor->currentText()}));
-    displayIcon(ui->buttonSelectApp->text(), idx);
-}
-
 void MainWindow::displayIcon(const QString &app_name, int location)
 {
     QPalette pal = palette();
@@ -95,7 +89,7 @@ void MainWindow::ifNotDoneDisableButtons()
         ui->buttonNext->setEnabled(false);
     }
 
-    if(ui->buttonNext->text() == tr("Add application") && changed) {
+    if(ui->buttonNext->text() == tr("Add application") && !ui->buttonNext->isEnabled()) {
         ui->buttonDelete->setEnabled(false);
     }
 }
@@ -103,7 +97,6 @@ void MainWindow::ifNotDoneDisableButtons()
 // setup versious items first time program runs
 void MainWindow::setup()
 {
-    added = false;
     changed = false;
     connect(qApp, &QApplication::aboutToQuit, this, &MainWindow::cleanup);
     this->setWindowTitle("MX Dockmaker");
@@ -113,7 +106,7 @@ void MainWindow::setup()
                                "4. Press \"Add application\" to continue or \"Save\" to finish"));
     this->adjustSize();
 
-    blockAllSignals(true);
+    blockComboSignals(true);
 
     while (ui->groupPreview->layout()->count() > 0) {
         delete ui->groupPreview->layout()->itemAt(0)->widget();
@@ -131,7 +124,7 @@ void MainWindow::setup()
     ui->comboBgColor->setCurrentIndex(ui->comboBgColor->findText(tr("black")));
     ui->comboBorderColor->setCurrentIndex(ui->comboBorderColor->findText(tr("white")));
 
-    blockAllSignals(false);
+    blockComboSignals(false);
 
     QMessageBox *mbox = new QMessageBox(nullptr);
     mbox->setText(tr("This tool allows you to create a new dock with one or more applications. You can also edit or delete a dock created earlier."));
@@ -143,14 +136,13 @@ void MainWindow::setup()
     mbox->addButton(tr("&Create"), QMessageBox::NoRole);
 
     this->hide();
-    int ret = mbox->exec();
 
-    switch (ret) {
+    switch (mbox->exec()) {
     case 1:
         this->show();
         deleteDock();
         setup();
-        return;
+        break;
     case 2:
         this->show();
         editDock();
@@ -161,9 +153,6 @@ void MainWindow::setup()
     default:
         QTimer::singleShot(0, qApp, &QGuiApplication::quit);
     }
-
-    on_radioDesktop_toggled(true);
-    ui->buttonSave->setEnabled(false);
     delete mbox;
 }
 
@@ -237,11 +226,8 @@ QString MainWindow::pickSlitLocation()
 void MainWindow::itemChanged()
 {
     changed = true;
-    if (!apps.isEmpty() && ui->buttonNext->text() != tr("Add application")) updateApp(index);
-    if (ui->buttonNext->text() == tr("Add application") && !added) {
-        addApp(index);
-        added = true;
-    }
+    updateAppList(index);
+
     ifNotDoneDisableButtons();
 
     if (!list_icons.empty()) {
@@ -250,9 +236,11 @@ void MainWindow::itemChanged()
     }
 }
 
-void MainWindow::updateApp(int idx)
+void MainWindow::updateAppList(int idx)
 {
-    apps.replace(idx, QStringList({ui->buttonSelectApp->text(), ui->lineEditCommand->text(), ui->buttonSelectIcon->text(), ui->comboSize->currentText(), ui->comboBgColor->currentText(), ui->comboBorderColor->currentText()}));
+    QStringList app_info = QStringList({ui->buttonSelectApp->text(), ui->lineEditCommand->text(), ui->buttonSelectIcon->text(),
+                                        ui->comboSize->currentText(), ui->comboBgColor->currentText(), ui->comboBorderColor->currentText()});
+    (idx < apps.size()) ? apps.replace(idx, app_info) : apps.push_back(app_info);
     displayIcon(ui->buttonSelectApp->text(), idx);
 }
 
@@ -270,27 +258,22 @@ void MainWindow::cleanup()
 
 void MainWindow::deleteDock()
 {
+    this->hide();
     QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select dock to delete"), QDir::homePath() + "/.fluxbox/scripts");
     if (!selected.isEmpty() && QMessageBox::question(nullptr, tr("Confirmation"),
                                                      tr("Are you sure you want to delete %1?").arg(selected), tr("&Delete"), tr("&Cancel")) == 0) {
         QFile::remove(selected);
         cmd.run("sed -ni '\\|" + selected + "|!p' " + QDir::homePath() + "/.fluxbox/menu-mx", true);
     }
+    this->show();
 }
 
 // block/unblock all relevant signals when loading stuff into GUI
-void MainWindow::blockAllSignals(bool block)
+void MainWindow::blockComboSignals(bool block)
 {
     ui->comboSize->blockSignals(block);
     ui->comboBgColor->blockSignals(block);
     ui->comboBorderColor->blockSignals(block);
-}
-
-void MainWindow::enableAdd()
-{
-    ui->buttonNext->setIcon(QIcon::fromTheme("go-jump"));
-    ui->buttonNext->setText(tr("Add application"));
-    ui->buttonDelete->setText(tr("Delete last application"));
 }
 
 void MainWindow::enableNext()
@@ -298,7 +281,6 @@ void MainWindow::enableNext()
     ui->buttonNext->setIcon(QIcon::fromTheme("go-next"));
     ui->buttonNext->setText(tr("Next"));
     ui->buttonNext->setEnabled(true);
-    ui->buttonDelete->setText(tr("Delete this application"));
 }
 
 
@@ -307,7 +289,7 @@ void MainWindow::parseFile(QFile &file)
     QString line;
     QCommandLineParser parser;
 
-    blockAllSignals(true);
+    blockComboSignals(true);
 
     const QStringList possible_locations({"TopLeft",    "TopCenter",    "TopRight",
                                           "LeftTop",                    "RightTop",
@@ -337,31 +319,36 @@ void MainWindow::parseFile(QFile &file)
             continue;
         }
         if (line.startsWith("wmalauncher")) {
-            ui->buttonNext->setEnabled(true);
             parser.process(line.split(" "));
             if (!parser.value("desktop-file").isEmpty()) {
                 ui->radioDesktop->setChecked(true);
                 ui->buttonSelectApp->setText(parser.value("desktop-file"));
+                ui->buttonSelectIcon->setToolTip(QString());
+                ui->buttonSelectIcon->setStyleSheet("text-align: left;");
             } else if (!parser.value("command").isEmpty()) {
                 ui->radioCommand->setChecked(true);
-                QString arg = parser.positionalArguments().first();
+                QStringList args = parser.positionalArguments();
+
                 // remove various other positional arguments
-                arg.remove("&");
-                arg.remove("sleep");
-                arg.remove("0.1");
-                ui->lineEditCommand->setText(parser.value("command") + (arg.isEmpty() ? QString() : " " + arg));
-                ui->buttonSelectApp->setText(parser.value("command").remove("\""));
+                args.removeAll("&");
+                args.removeAll("sleep");
+                args.removeAll("0.1");
+
+                ui->lineEditCommand->setText(parser.value("command") + (args.size() == 0 ? QString() : " " + args.join(" ")));
                 ui->buttonSelectIcon->setText(parser.value("icon"));
+                ui->buttonSelectIcon->setToolTip(parser.value("icon"));
+                ui->buttonSelectIcon->setStyleSheet("text-align: right;");
+            } else {
+                qDebug() << "Cannot parse --command line";
             }
             ui->comboSize->setCurrentIndex(ui->comboSize->findText(parser.value("window-size") + "x" + parser.value("window-size")));
             ui->comboBgColor->setCurrentIndex(ui->comboBgColor->findText(parser.value("background-color")));
             ui->comboBorderColor->setCurrentIndex(ui->comboBorderColor->findText(parser.value("border-color")));
-            ui->buttonNext->click();
+            updateAppList(index++);
         }
     }
     changed = false;
     showApp(index = 0);
-
 }
 
 
@@ -466,56 +453,32 @@ void MainWindow::on_comboBorderColor_currentIndexChanged(const QString)
 
 void MainWindow::on_buttonNext_clicked()
 {
-    added = false;
-    blockAllSignals(true);
+    blockComboSignals(true);
     ui->buttonSave->setEnabled(changed);
     ui->buttonNext->setEnabled(false);
 
-    if (index < apps.size()) {
-        updateApp(index);
-        ++index;
-        ui->buttonDelete->setEnabled(true);
-        ui->buttonPrev->setEnabled(true);
-        if (index < apps.size()) {
-            showApp(index);
-        } else {
-            resetAdd();
-        }
-    } else { // at the last app
-        if (ui->buttonSelectApp->text() != tr("Select...") || !ui->lineEditCommand->text().isEmpty()) {
-            ui->buttonSave->setEnabled(true);
-            ui->buttonDelete->setEnabled(true);
-            ui->buttonPrev->setEnabled(true);
-            addApp(index);
-            ++index;
-            resetAdd();
-        } else {
-            QMessageBox::critical(this, windowTitle(), tr("Please select a file."));
-            ui->buttonSave->setEnabled(false);
-            blockAllSignals(false);
-            return;
-        }
-    }
-    ui->buttonPrev->setEnabled(true);
+    updateAppList(index++);
     ui->buttonDelete->setEnabled(true);
-    blockAllSignals(false);
+    ui->buttonPrev->setEnabled(true);
+    if (index < apps.size()) {
+        showApp(index);
+        if (index == apps.size() - 1) ui->buttonNext->setEnabled(true);
+    } else {
+        resetAdd();
+    }
+
+    ui->buttonPrev->setEnabled(true);
+    blockComboSignals(false);
 }
 
 void MainWindow::on_buttonDelete_clicked()
 {
-    added = false;
     if (!apps.isEmpty()) {
-        blockAllSignals(true);
-        if (ui->buttonDelete->text() == tr("Delete last application")) {
-            apps.pop_back();
-            delete ui->groupPreview->layout()->itemAt(--index)->widget();
-            list_icons.removeLast();
-        } else {
-            delete ui->groupPreview->layout()->itemAt(index)->widget();
-            list_icons.removeAt(index);
-            apps.removeAt(index);
-        }
-        blockAllSignals(false);
+        blockComboSignals(true);
+        delete ui->groupPreview->layout()->itemAt(index)->widget();
+        list_icons.removeAt(index);
+        apps.removeAt(index);
+        blockComboSignals(false);
     }
     if (apps.isEmpty()) {
         index = 0;
@@ -535,16 +498,22 @@ void MainWindow::on_buttonDelete_clicked()
 
 void MainWindow::resetAdd()
 {
-    enableAdd();
     ui->buttonSelectApp->setText(tr("Select..."));
     ui->radioDesktop->click();
     ui->radioDesktop->toggled(true);
-    blockAllSignals(true);
+
+    blockComboSignals(true);
     ui->comboSize->setCurrentIndex(ui->comboSize->findText("48x48"));
     ui->comboBgColor->setCurrentIndex(ui->comboBgColor->findText(tr("black")));
     ui->comboBorderColor->setCurrentIndex(ui->comboBorderColor->findText(tr("white")));
+    blockComboSignals(false);
+
+    ui->buttonNext->setIcon(QIcon::fromTheme("go-jump"));
+    ui->buttonNext->setText(tr("Add application"));
     ui->buttonNext->setEnabled(false);
-    blockAllSignals(false);
+    ui->buttonDelete->setEnabled(false);
+    ui->buttonSelectIcon->setToolTip(QString());
+    ui->buttonSelectIcon->setStyleSheet("text-align: left;");
 }
 
 void MainWindow::showApp(int idx)
@@ -552,35 +521,39 @@ void MainWindow::showApp(int idx)
     if (apps.at(idx).at(0).endsWith(".desktop")) {
         ui->radioDesktop->click();
         ui->radioDesktop->toggled(true);
+        ui->buttonSelectIcon->setToolTip(QString());
+        ui->buttonSelectIcon->setStyleSheet("text-align: left;");
     } else {
         ui->radioCommand->click();
         ui->radioDesktop->toggled(false);
         ui->lineEditCommand->setText(apps.at(idx).at(1));
         ui->buttonSelectIcon->setText(apps.at(idx).at(2));
+        ui->buttonSelectIcon->setToolTip(apps.at(idx).at(2));
+        ui->buttonSelectIcon->setStyleSheet("text-align: right;");
     }
 
-    blockAllSignals(true);
     ui->buttonSelectApp->setText(apps.at(idx).at(0));
+
+    blockComboSignals(true);
     ui->comboSize->setCurrentIndex(ui->comboSize->findText(apps.at(idx).at(3)));
     ui->comboBgColor->setCurrentIndex(ui->comboBgColor->findText(apps.at(idx).at(4)));
     ui->comboBorderColor->setCurrentIndex(ui->comboBorderColor->findText(apps.at(idx).at(5)));
+    blockComboSignals(false);
 
-    if (index == 0) {
-        ui->buttonPrev->setEnabled(false);
-        if (index < apps.size()) {
-            enableNext();
-        }
-    } else if (index == apps.size()) {
+    if (idx >= apps.size() - 1) {
         ui->buttonNext->setIcon(QIcon::fromTheme("go-jump"));
         ui->buttonNext->setText(tr("Add application"));
     } else {
         ui->buttonNext->setIcon(QIcon::fromTheme("go-next"));
         ui->buttonNext->setText(tr("Next"));
-        ui->buttonNext->setEnabled(true);
-        ui->buttonPrev->setEnabled(true);
     }
-    list_icons.at(index)->setStyleSheet(list_icons.at(index)->styleSheet() + "border-width: 10px;");
-    blockAllSignals(false);
+
+    ui->buttonNext->setEnabled(true);
+    ui->buttonPrev->setEnabled(true);
+    if (idx == 0) ui->buttonPrev->setEnabled(false);
+
+    list_icons.at(idx)->setStyleSheet(list_icons.at(idx)->styleSheet() + "border-width: 10px;");
+    ui->buttonDelete->setEnabled(true);
 }
 
 
@@ -592,14 +565,13 @@ void MainWindow::on_buttonSelectApp_clicked()
         file_name = file;
         ui->buttonSelectApp->setText(file);
         ui->buttonNext->setEnabled(true);
-        changed = true;
+        itemChanged();
     }
-    displayIcon(file, index);
-    itemChanged();
 }
 
 void MainWindow::editDock()
 {
+    this->hide();
     QString selected_dock = QFileDialog::getOpenFileName(nullptr, tr("Select a dock file"), QDir::homePath() + "/.fluxbox/scripts");
     if (!QFileInfo::exists(selected_dock)) {
         QMessageBox::warning(nullptr, tr("No file selected"), tr("You haven't selected any dock file to edit.\nCreating a new dock instead."));
@@ -622,6 +594,7 @@ void MainWindow::editDock()
     ui->labelUsage->setText(tr("1. Edit applications one at a time using the Back and Next buttons\n"
                                "2. Add or delete applications as you like\n"
                                "3. When finished click Save"));
+    this->show();
 }
 
 void MainWindow::newDock()
@@ -638,17 +611,13 @@ void MainWindow::newDock()
 
 void MainWindow::on_buttonPrev_clicked()
 {
-    added = false;
     ui->buttonNext->setEnabled(false);
     ui->buttonPrev->setEnabled(false);
-
     ui->buttonSave->setEnabled(changed);
-
-    if (ui->buttonNext->text() != tr("Add application") || ui->buttonNext->isEnabled()) {
-        updateApp(index);
+    if (index < apps.size() || ui->buttonNext->isEnabled()) { // when done editting
+        updateAppList(index);
     }
     showApp(--index);
-    enableNext();
 }
 
 void MainWindow::on_radioDesktop_toggled(bool checked)
@@ -669,11 +638,8 @@ void MainWindow::on_buttonSelectIcon_clicked()
     if (!file.isEmpty()) {
         ui->buttonSelectIcon->setText(selected);
         ui->buttonSelectIcon->setToolTip(selected);
-        ui->buttonSelectIcon->setStyleSheet("text-align: left;");
-        if (!ui->lineEditCommand->text().isEmpty()) {
-            ui->buttonNext->setEnabled(true);
-            displayIcon(QString(), index);
-        }
+        ui->buttonSelectIcon->setStyleSheet("text-align: right;");
+        updateAppList(index);
     }
    ifNotDoneDisableButtons();
 }
@@ -684,6 +650,9 @@ void MainWindow::on_lineEditCommand_textEdited(const QString)
     if(ui->buttonSelectIcon->text() != tr("Select icon...")) {
         ui->buttonNext->setEnabled(true);
         changed = true;
+    } else {
+        ui->buttonNext->setEnabled(false);
+        return;
     }
     ifNotDoneDisableButtons();
 }

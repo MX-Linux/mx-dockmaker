@@ -152,7 +152,7 @@
             <bool>false</bool>
            </property>
            <property name="text">
-            <string>Delete last added application</string>
+            <string>Delete this application</string>
            </property>
            <property name="icon">
             <iconset theme="edit-delete-symbolic">
