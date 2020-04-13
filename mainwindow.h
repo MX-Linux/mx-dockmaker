@@ -53,6 +53,7 @@ public:
     void ifNotDoneDisableButtons();
     void editDock();
     void enableNext();
+    void moveDock();
     void newDock();
     void parseFile(QFile &file);
     void resetAdd();

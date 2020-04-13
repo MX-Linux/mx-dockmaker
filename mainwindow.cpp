@@ -131,6 +131,7 @@ void MainWindow::setup()
     mbox->setIcon(QMessageBox::Question);
     mbox->setWindowTitle(tr("Operation mode"));
     mbox->addButton(tr("&Close"), QMessageBox::NoRole);
+    mbox->addButton(tr("&Move"), QMessageBox::NoRole);
     mbox->addButton(tr("&Delete"), QMessageBox::NoRole);
     mbox->addButton(tr("&Edit"), QMessageBox::NoRole);
     mbox->addButton(tr("&Create"), QMessageBox::NoRole);
@@ -139,15 +140,18 @@ void MainWindow::setup()
 
     switch (mbox->exec()) {
     case 1:
+        moveDock();
+        break;
+    case 2:
         this->show();
         deleteDock();
         setup();
         break;
-    case 2:
+    case 3:
         this->show();
         editDock();
         break;
-    case 3:
+    case 4:
         newDock();
         break;
     default:
@@ -284,6 +288,61 @@ void MainWindow::enableNext()
     ui->buttonNext->setEnabled(true);
 }
 
+void MainWindow::moveDock()
+{
+    this->hide();
+    const QStringList possible_locations({"TopLeft",    "TopCenter",    "TopRight",
+                                          "LeftTop",                    "RightTop",
+                                          "LeftCenter",                 "RightCenter",
+                                          "LeftBottom",                 "RightBottom",
+                                          "BottomLeft", "BottomCenter", "BottomRight"});
+
+    QString selected_dock = QFileDialog::getOpenFileName(nullptr, tr("Select dock to move"), QDir::homePath() + "/.fluxbox/scripts");
+    if (selected_dock.isEmpty()) {
+        setup();
+        return;
+    }
+
+    QFile file(selected_dock);
+
+    if(!file.open(QFile::Text | QFile::ReadOnly)) {
+        qDebug() << "Could not open file:" << file.fileName();
+        QMessageBox::warning(nullptr, tr("Could not open file"), tr("Could not open file"));
+        setup();
+        return;
+    }
+    QString text = file.readAll();
+    file.close();
+
+    // find location
+    QRegularExpression re(possible_locations.join("|"));
+    QRegularExpressionMatch match = re.match(text);
+    if (match.hasMatch()) slit_location = match.captured();
+
+    // select location
+    slit_location = pickSlitLocation();
+
+    // replace string
+    re.setPattern("sed -i.*");
+    QString new_line = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + slit_location + "/' $HOME/.fluxbox/init";
+
+    if(!file.open(QFile::Text | QFile::ReadWrite | QFile::Truncate)) {
+        qDebug() << "Could not open file:" << file.fileName();
+        QMessageBox::warning(nullptr, tr("Could not open file"), tr("Could not open file"));
+        setup();
+        return;
+    }
+    QTextStream out(&file);
+    out << text.replace(re, new_line);
+
+    // if location line not found add it at the end
+    if (!re.match(text).hasMatch()) out << "\n#set up slit location\n" + new_line + "\n";
+
+    file.close();
+    cmd.run("pkill wmalauncher;" + file.fileName() + "&", true);
+    setup();
+    this->show();
+}
 
 void MainWindow::parseFile(QFile &file)
 {
@@ -341,6 +400,7 @@ void MainWindow::parseFile(QFile &file)
                 ui->buttonSelectIcon->setStyleSheet("text-align: right;");
             } else {
                 qDebug() << "Cannot parse --command line";
+                continue;
             }
             ui->comboSize->setCurrentIndex(ui->comboSize->findText(parser.value("window-size") + "x" + parser.value("window-size")));
             ui->comboBgColor->setCurrentIndex(ui->comboBgColor->findText(parser.value("background-color")));
@@ -370,7 +430,7 @@ void MainWindow::on_buttonSave_clicked()
     }
     QFile file(file_name);
     cmd.run("cp " + file_name + " " + file_name + ".~", true);
-    if(!file.open(QIODevice::WriteOnly)) {
+    if(!file.open(QFile::Text | QFile::WriteOnly)) {
         qDebug() << "Could not open file:" << file.fileName();
         return;
     }
@@ -580,7 +640,7 @@ void MainWindow::editDock()
         return;
     }
     QFile file(selected_dock);
-    if(!file.open(QIODevice::ReadOnly)) {
+    if(!file.open(QFile::Text | QFile::ReadOnly)) {
         qDebug() << "Could not open file:" << file.fileName();
         QMessageBox::warning(nullptr, tr("Could not open file"), tr("Could not open selected file.\nCreating a new dock instead."));
         newDock();
