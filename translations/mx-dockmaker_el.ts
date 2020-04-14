@@ -1,457 +1,469 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="el_GR">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="el" version="2.0">
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../mainwindow.ui" line="14"/>
+        <location filename="mainwindow.ui" line="14"/>
         <source>Program_Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Program_Name</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="97"/>
-        <source>Add New Application</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="103"/>
-        <source>Command</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="199"/>
-        <source>Background</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="192"/>
-        <source>Size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="185"/>
-        <source>Border</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="125"/>
-        <location filename="../mainwindow.cpp" line="92"/>
-        <location filename="../mainwindow.cpp" line="574"/>
-        <location filename="../mainwindow.cpp" line="607"/>
-        <source>Add application</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="29"/>
+        <location filename="mainwindow.ui" line="29"/>
         <source>Usage</source>
-        <translation type="unfinished"></translation>
+        <translation>Χρήση</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="255"/>
-        <location filename="../mainwindow.cpp" line="82"/>
-        <location filename="../mainwindow.cpp" line="563"/>
-        <location filename="../mainwindow.cpp" line="691"/>
+        <location filename="mainwindow.ui" line="76"/>
+        <source>Add New Application</source>
+        <translation>Προσθήκη νέας εφαρμογής</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="82"/>
+        <source>Command</source>
+        <translation>Εντολή</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="104"/>
+        <location filename="mainwindow.cpp" line="80"/>
+        <location filename="mainwindow.cpp" line="263"/>
+        <location filename="mainwindow.cpp" line="553"/>
+        <location filename="mainwindow.cpp" line="624"/>
+        <source>Add application</source>
+        <translation>Προσθήκη εφαρμογής</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="134"/>
+        <source>Delete last added application</source>
+        <translation>Διαγραφή της τελευταίας προσθήκης</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="164"/>
+        <source>Border</source>
+        <translation>Border</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="171"/>
+        <source>Size</source>
+        <translation>Μέγεθος</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="178"/>
+        <location filename="mainwindow.cpp" line="463"/>
+        <location filename="mainwindow.cpp" line="520"/>
+        <location filename="mainwindow.cpp" line="639"/>
         <source>Select...</source>
-        <translation type="unfinished"></translation>
+        <translation>Επιλέξτε...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="229"/>
-        <source>File</source>
-        <translation type="unfinished"></translation>
+        <location filename="mainwindow.ui" line="194"/>
+        <source>Background</source>
+        <translation>Φόντο</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="248"/>
-        <location filename="../mainwindow.cpp" line="692"/>
-        <location filename="../mainwindow.cpp" line="712"/>
-        <source>Select icon...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="89"/>
-        <source>Dock Preview</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="294"/>
-        <source>Display help </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="297"/>
-        <source>Help</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="304"/>
-        <source>Alt+H</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="333"/>
-        <source>About this application</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="336"/>
-        <source>About...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="343"/>
-        <source>Alt+B</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="375"/>
-        <source>Quit application</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="378"/>
-        <source>Close</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="385"/>
-        <source>Alt+N</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="426"/>
-        <source>Save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="287"/>
-        <location filename="../mainwindow.cpp" line="610"/>
-        <source>Next</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="218"/>
+        <location filename="mainwindow.ui" line="213"/>
         <source>Back</source>
-        <translation type="unfinished"></translation>
+        <translation>Πίσω</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="429"/>
-        <source>Save file</source>
-        <translation type="unfinished"></translation>
+        <location filename="mainwindow.ui" line="224"/>
+        <source>File</source>
+        <translation>Αρχείο</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="462"/>
-        <source>Dock saved</source>
-        <translation type="unfinished"></translation>
+        <location filename="mainwindow.ui" line="237"/>
+        <location filename="mainwindow.cpp" line="640"/>
+        <location filename="mainwindow.cpp" line="661"/>
+        <source>Select icon...</source>
+        <translation>Επιλέξτε εικονίδιο ...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="124"/>
-        <location filename="../mainwindow.cpp" line="569"/>
-        <source>black</source>
-        <translation type="unfinished"></translation>
+        <location filename="mainwindow.ui" line="273"/>
+        <source>Dock Preview</source>
+        <translation>Προεπισκόπηση</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="103"/>
+        <location filename="mainwindow.ui" line="310"/>
+        <source>Display help </source>
+        <translation>Εμφάνιση βοήθειας</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="313"/>
+        <source>Help</source>
+        <translation>Βοήθεια </translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="320"/>
+        <source>Alt+H</source>
+        <translation>Alt+H </translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="349"/>
+        <source>About this application</source>
+        <translation>Περί της εφαρμογής</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="352"/>
+        <source>About...</source>
+        <translation>Περί...</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="359"/>
+        <source>Alt+B</source>
+        <translation>Alt+B</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="391"/>
+        <source>Quit application</source>
+        <translation>Κλείσιμο εφαρμογής</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="394"/>
+        <source>Close</source>
+        <translation>Κλείσιμο</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="401"/>
+        <source>Alt+N</source>
+        <translation>Alt+N</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="442"/>
+        <source>Save</source>
+        <translation>Αποθήκευση</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="92"/>
         <source>1. Add applications to the dock one at a time
 2. Select a .desktop file or enter a command for the application you want
 3. Select icon attributes for size, background (black is standard) and border
 4. Press &quot;Add application&quot; to continue or &quot;Save&quot; to finish</source>
-        <translation type="unfinished"></translation>
+        <translation>1. Προσθέστε εφαρμογές στο dock ένα-ενα
+2. Επιλέξτε ένα αρχείο .desktop ή πληκτρολογήστε μια εντολή για την εφαρμογή που θέλετε
+3. Επιλέξτε τα εικονίδια για το μέγεθος, το φόντο (το μαύρο είναι στάνταρ) και border
+4. Πατήστε &quot;Προσθήκη εφαρμογής&quot; για να συνεχίσετε ή &quot;Αποθήκευση&quot; για να τελειώσετε</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="125"/>
-        <location filename="../mainwindow.cpp" line="570"/>
+        <location filename="mainwindow.cpp" line="113"/>
+        <location filename="mainwindow.cpp" line="524"/>
+        <source>black</source>
+        <translation>μαύρο</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="114"/>
+        <location filename="mainwindow.cpp" line="525"/>
         <source>white</source>
-        <translation type="unfinished"></translation>
+        <translation>λευκό</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="130"/>
+        <location filename="mainwindow.cpp" line="119"/>
         <source>This tool allows you to create a new dock with one or more applications. You can also edit or delete a dock created earlier.</source>
-        <translation type="unfinished"></translation>
+        <translation>Αυτό το εργαλείο σάς επιτρέπει να δημιουργήσετε ένα νέο dock με μία ή περισσότερες εφαρμογές. Μπορείτε επίσης να επεξεργαστείτε ή να διαγράψετε ένα dock που δημιουργήθηκε νωρίτερα.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="132"/>
+        <location filename="mainwindow.cpp" line="121"/>
         <source>Operation mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Λειτουργία </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="134"/>
-        <source>&amp;Move</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="266"/>
-        <source>Select dock to delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="267"/>
-        <source>Confirmation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="268"/>
-        <source>Are you sure you want to delete %1?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="135"/>
-        <location filename="../mainwindow.cpp" line="268"/>
-        <source>&amp;Delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="133"/>
+        <location filename="mainwindow.cpp" line="122"/>
         <source>&amp;Close</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Κλείσιμο</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="136"/>
+        <location filename="mainwindow.cpp" line="123"/>
+        <location filename="mainwindow.cpp" line="246"/>
+        <source>&amp;Delete</source>
+        <translation>&amp;Διαγραφή</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="124"/>
         <source>&amp;Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Επεξεργασία</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="137"/>
+        <location filename="mainwindow.cpp" line="125"/>
         <source>&amp;Create</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Δημιουργία</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="213"/>
+        <location filename="mainwindow.cpp" line="202"/>
         <source>Dock name</source>
-        <translation type="unfinished"></translation>
+        <translation>Όνομα του dock</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="214"/>
+        <location filename="mainwindow.cpp" line="203"/>
         <source>Enter the name to show in the Menu:</source>
-        <translation type="unfinished"></translation>
+        <translation>Εισαγάγετε το όνομα που θέλετε να εμφανίζεται στο μενού:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="268"/>
+        <location filename="mainwindow.cpp" line="244"/>
+        <source>Select dock to delete</source>
+        <translation>Επιλέξτε το dock για διαγραφή</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="245"/>
+        <source>Confirmation</source>
+        <translation>Επιβεβαίωση</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="246"/>
+        <source>Are you sure you want to delete %1?</source>
+        <translation>Είστε βέβαιοι ότι θέλετε να διαγράψετε το %1;</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="246"/>
         <source>&amp;Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ακύρωση</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="155"/>
+        <location filename="mainwindow.cpp" line="264"/>
+        <location filename="mainwindow.cpp" line="485"/>
+        <source>Delete last application</source>
+        <translation>Διαγράψτε την τελευταία εφαρμογή</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="270"/>
+        <location filename="mainwindow.cpp" line="556"/>
+        <source>Next</source>
+        <translation>Επόμενο</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="272"/>
         <source>Delete this application</source>
-        <translation type="unfinished"></translation>
+        <translation>Διαγράψτε αυτήν την εφαρμογή</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="428"/>
+        <location filename="mainwindow.cpp" line="347"/>
         <source>Overwrite?</source>
-        <translation type="unfinished"></translation>
+        <translation>Αντικατάσταση;</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="428"/>
+        <location filename="mainwindow.cpp" line="347"/>
         <source>Do you want to overwrite the dock file?</source>
-        <translation type="unfinished"></translation>
+        <translation>Θέλετε να αντικαταστήσετε το αρχείο dock;</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="462"/>
+        <location filename="mainwindow.cpp" line="348"/>
+        <source>Save file</source>
+        <translation>Αποθηκεύσετε το αρχείο</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="381"/>
+        <source>Dock saved</source>
+        <translation>Το dock έχει αποθηκευτεί</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="381"/>
         <source>The dock has been saved.
 
 To edit the newly created dock please select &apos;Edit an existing dock&apos;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Το dock έχει αποθηκευτεί
+
+Για να επεξεργαστείτε το νεοσύστατο dock, επιλέξτε &apos;Επεξεργασία υπάρχουσου dock&apos;.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="481"/>
+        <location filename="mainwindow.cpp" line="400"/>
         <source>About %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Περί %1</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="483"/>
+        <location filename="mainwindow.cpp" line="402"/>
         <source>Version: </source>
-        <translation type="unfinished"></translation>
+        <translation>Έκδοση:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="484"/>
+        <location filename="mainwindow.cpp" line="403"/>
         <source>Description goes here</source>
-        <translation type="unfinished"></translation>
+        <translation>Η περιγραφή εδώ</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="486"/>
+        <location filename="mainwindow.cpp" line="405"/>
         <source>Copyright (c) MX Linux</source>
-        <translation type="unfinished"></translation>
+        <translation>Πνευματικά δικαιώματα (c)  MX Linux </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="487"/>
+        <location filename="mainwindow.cpp" line="406"/>
         <source>%1 License</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Άδεια</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="496"/>
+        <location filename="mainwindow.cpp" line="415"/>
         <source>%1 Help</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Βοήθεια</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="624"/>
+        <location filename="mainwindow.cpp" line="471"/>
+        <source>Please select a file.</source>
+        <translation>Επιλέξτε ένα αρχείο.</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="566"/>
         <source>Select .desktop file</source>
-        <translation type="unfinished"></translation>
+        <translation>Επιλέξτε το αρχείο .desktop</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="624"/>
+        <location filename="mainwindow.cpp" line="566"/>
         <source>Desktop Files (*.desktop)</source>
-        <translation type="unfinished"></translation>
+        <translation>Αρχεία επιφάνειας εργασίας (*.desktop)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="637"/>
+        <location filename="mainwindow.cpp" line="581"/>
         <source>Select a dock file</source>
-        <translation type="unfinished"></translation>
+        <translation>Επιλέξτε ένα αρχείο dock</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="656"/>
+        <location filename="mainwindow.cpp" line="583"/>
+        <source>No file selected</source>
+        <translation>Δεν έχει επιλεγεί αρχείο</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="583"/>
+        <source>You haven't selected any dock file to edit.
+Creating a new dock instead.</source>
+        <translation>Δεν έχετε επιλέξει κανένα αρχείο dock για επεξεργασία.
+Δημιουργία νέο dock.</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="590"/>
+        <source>Could not open file</source>
+        <translation>Δεν ήταν δυνατό το άνοιγμα αρχείου</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="590"/>
+        <source>Could not open selected file.
+Creating a new dock instead.</source>
+        <translation>Δεν ήταν δυνατό το άνοιγμα του επιλεγμένου αρχείου.
+Δημιουργία νέο dock. </translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="600"/>
         <source>1. Edit applications one at a time using the Back and Next buttons
 2. Add or delete applications as you like
 3. When finished click Save</source>
-        <translation type="unfinished"></translation>
+        <translation>1. Επεξεργαστείτε τις εφαρμογές χρησιμοποιώντας τα κουμπιά Πίσω και Επόμενο
+2. Προσθέστε ή διαγράψτε εφαρμογές όπως θέλετε
+3. Όταν τελειώσετε, πατήστε Αποθήκευση</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="698"/>
+        <location filename="mainwindow.cpp" line="646"/>
         <source>Select icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Επιλέξτε εικονίδιο</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="698"/>
+        <location filename="mainwindow.cpp" line="646"/>
         <source>Icons (*.png *.jpg *.bmp *.xpm *.svg)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="639"/>
-        <source>No file selected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="300"/>
-        <source>Select dock to move</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="639"/>
-        <source>You haven&apos;t selected any dock file to edit.
-Creating a new dock instead.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="310"/>
-        <location filename="../mainwindow.cpp" line="331"/>
-        <location filename="../mainwindow.cpp" line="646"/>
-        <source>Could not open file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="646"/>
-        <source>Could not open selected file.
-Creating a new dock instead.</source>
-        <translation type="unfinished"></translation>
+        <translation>Αρχεία εικόνας (*.png *.jpg *.bmp *.xpm *.svg)</translation>
     </message>
 </context>
 <context>
     <name>PickLocation</name>
     <message>
-        <location filename="../picklocation.ui" line="14"/>
+        <location filename="picklocation.ui" line="14"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>Διάλογος</translation>
     </message>
     <message>
-        <location filename="../picklocation.ui" line="23"/>
+        <location filename="picklocation.ui" line="23"/>
         <source>Dock Location</source>
-        <translation type="unfinished"></translation>
+        <translation>Τοποθεσία του dock</translation>
     </message>
     <message>
-        <location filename="../picklocation.ui" line="29"/>
+        <location filename="picklocation.ui" line="29"/>
         <source>TopCenter</source>
-        <translation type="unfinished"></translation>
+        <translation>Επάνω κέντρο</translation>
     </message>
     <message>
-        <location filename="../picklocation.ui" line="45"/>
+        <location filename="picklocation.ui" line="45"/>
         <source>BottomLeft</source>
-        <translation type="unfinished"></translation>
+        <translation>Κάτω αριστερά</translation>
     </message>
     <message>
-        <location filename="../picklocation.ui" line="61"/>
+        <location filename="picklocation.ui" line="61"/>
         <source>BottomCenter</source>
-        <translation type="unfinished"></translation>
+        <translation>Κάτω κέντρο</translation>
     </message>
     <message>
-        <location filename="../picklocation.ui" line="80"/>
+        <location filename="picklocation.ui" line="80"/>
         <source>TopLeft</source>
-        <translation type="unfinished"></translation>
+        <translation>Επάνω αριστερά</translation>
     </message>
     <message>
-        <location filename="../picklocation.ui" line="96"/>
+        <location filename="picklocation.ui" line="96"/>
         <source>TopRight</source>
-        <translation type="unfinished"></translation>
+        <translation>Επάνω δεξιά</translation>
     </message>
     <message>
-        <location filename="../picklocation.ui" line="112"/>
+        <location filename="picklocation.ui" line="112"/>
         <source>LeftCenter</source>
-        <translation type="unfinished"></translation>
+        <translation>Κέντρο αριστερά </translation>
     </message>
     <message>
-        <location filename="../picklocation.ui" line="128"/>
+        <location filename="picklocation.ui" line="128"/>
         <source>RightCenter</source>
-        <translation type="unfinished"></translation>
+        <translation>Κέντρο δεξιά</translation>
     </message>
     <message>
-        <location filename="../picklocation.ui" line="144"/>
+        <location filename="picklocation.ui" line="144"/>
         <source>BottomRight</source>
-        <translation type="unfinished"></translation>
+        <translation>Κάτω δεξιά</translation>
     </message>
     <message>
-        <location filename="../picklocation.ui" line="160"/>
+        <location filename="picklocation.ui" line="160"/>
         <source>RightTop</source>
-        <translation type="unfinished"></translation>
+        <translation>Επάνω δεξιά</translation>
     </message>
     <message>
-        <location filename="../picklocation.ui" line="173"/>
+        <location filename="picklocation.ui" line="173"/>
         <source>LeftTop</source>
-        <translation type="unfinished"></translation>
+        <translation>Πάνω αριστερά</translation>
     </message>
     <message>
-        <location filename="../picklocation.ui" line="189"/>
+        <location filename="picklocation.ui" line="189"/>
         <source>LeftBottom</source>
-        <translation type="unfinished"></translation>
+        <translation>Κάτω αριστερά</translation>
     </message>
     <message>
-        <location filename="../picklocation.ui" line="205"/>
+        <location filename="picklocation.ui" line="205"/>
         <source>RightBottom</source>
-        <translation type="unfinished"></translation>
+        <translation>Κάτω δεξιά</translation>
     </message>
     <message>
-        <location filename="../picklocation.cpp" line="9"/>
+        <location filename="picklocation.cpp" line="9"/>
         <source>Select dock location</source>
-        <translation type="unfinished"></translation>
+        <translation>Επιλέξτε την τοποθεσία του dock</translation>
     </message>
 </context>
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../about.cpp" line="32"/>
+        <location filename="about.cpp" line="32"/>
         <source>License</source>
-        <translation type="unfinished"></translation>
+        <translation>Άδεια</translation>
     </message>
     <message>
-        <location filename="../about.cpp" line="33"/>
-        <location filename="../about.cpp" line="43"/>
+        <location filename="about.cpp" line="33"/>
+        <location filename="about.cpp" line="43"/>
         <source>Changelog</source>
-        <translation type="unfinished"></translation>
+        <translation>Καταγραφή αλλαγών</translation>
     </message>
     <message>
-        <location filename="../about.cpp" line="34"/>
+        <location filename="about.cpp" line="34"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Ακύρωση</translation>
     </message>
     <message>
-        <location filename="../about.cpp" line="51"/>
+        <location filename="about.cpp" line="51"/>
         <source>&amp;Close</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Κλείσιμο</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="52"/>
+        <location filename="main.cpp" line="52"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Σφάλμα</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="53"/>
+        <location filename="main.cpp" line="53"/>
         <source>You must run this program as normal user.</source>
-        <translation type="unfinished"></translation>
+        <translation>Πρέπει να τρέξετε αυτή την εφαρμογή ως κανονικός χρήστης</translation>
     </message>
 </context>
 </TS>
