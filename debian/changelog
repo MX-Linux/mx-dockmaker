@@ -1,3 +1,9 @@
+mx-dockmaker (20.4) mx; urgency=medium
+
+  * new build with translations
+
+ -- Adrian <adrian@mxlinux.org>  Tue, 14 Apr 2020 23:45:12 -0400
+
 mx-dockmaker (0.20.2) mx; urgency=medium
 
   * initial release

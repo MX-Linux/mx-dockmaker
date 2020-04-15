@@ -67,7 +67,6 @@ TRANSLATIONS += translations/mx-dockmaker_am.ts \
                 translations/mx-dockmaker_id.ts \
                 translations/mx-dockmaker_is.ts \
                 translations/mx-dockmaker_it.ts \
-                translations/mx-dockmaker_ja_JP.ts \
                 translations/mx-dockmaker_ja.ts \
                 translations/mx-dockmaker_kk.ts \
                 translations/mx-dockmaker_ko.ts \
