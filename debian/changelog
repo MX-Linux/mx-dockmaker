@@ -1,3 +1,10 @@
+mx-dockmaker (20.4.1) mx; urgency=medium
+
+  * fix location buttons in case of localization
+  * postinst replaces placeholder in menu-mx with mx-dockmaker command
+
+ -- Adrian <adrian@mxlinux.org>  Thu, 16 Apr 2020 11:19:02 -0400
+
 mx-dockmaker (20.4) mx; urgency=medium
 
   * new build with translations

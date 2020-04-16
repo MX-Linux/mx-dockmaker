@@ -22,11 +22,24 @@ PickLocation::PickLocation(QString location, QWidget *parent) :
     buttonGroup->addButton(ui->buttonRT, 11);
     buttonGroup->addButton(ui->buttonRB, 12);
 
+    ui->buttonTL->setProperty("location", "TopLeft");
+    ui->buttonTC->setProperty("location", "TopCenter");
+    ui->buttonTR->setProperty("location", "TopRight");
+    ui->buttonLC->setProperty("location", "LeftCenter");
+    ui->buttonRC->setProperty("location", "RightCenter");
+    ui->buttonBL->setProperty("location", "BottomLeft");
+    ui->buttonBC->setProperty("location", "BottomCenter");
+    ui->buttonBR->setProperty("location", "BottomRight");
+    ui->buttonLT->setProperty("location", "LeftTop");
+    ui->buttonLB->setProperty("location", "LeftBottom");
+    ui->buttonRT->setProperty("location", "RightTop");
+    ui->buttonRB->setProperty("location", "RightBottom");
+
     connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked), this, &PickLocation::onGroupButton);
 
     bool found = false;
     for (QAbstractButton *button : buttonGroup->buttons()) {
-        if (location == button->text()) {
+        if (location == button->property("location").toString()) {
             button->click();
             found = true;
             return;
@@ -44,6 +57,6 @@ PickLocation::~PickLocation()
 
 void PickLocation::onGroupButton(int button_id)
 {
-    button = buttonGroup->button(button_id)->text();
+    button = buttonGroup->button(button_id)->property("location").toString();
 }
 
