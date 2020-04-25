@@ -26,8 +26,8 @@
     <message>
         <location filename="../mainwindow.ui" line="125"/>
         <location filename="../mainwindow.cpp" line="92"/>
-        <location filename="../mainwindow.cpp" line="574"/>
-        <location filename="../mainwindow.cpp" line="607"/>
+        <location filename="../mainwindow.cpp" line="575"/>
+        <location filename="../mainwindow.cpp" line="608"/>
         <source>Add application</source>
         <translation>Afegeix una aplicació</translation>
     </message>
@@ -48,8 +48,8 @@
     <message>
         <location filename="../mainwindow.ui" line="255"/>
         <location filename="../mainwindow.cpp" line="82"/>
-        <location filename="../mainwindow.cpp" line="563"/>
-        <location filename="../mainwindow.cpp" line="691"/>
+        <location filename="../mainwindow.cpp" line="564"/>
+        <location filename="../mainwindow.cpp" line="692"/>
         <source>Select...</source>
         <translation>Trieu...</translation>
     </message>
@@ -70,8 +70,8 @@
     </message>
     <message>
         <location filename="../mainwindow.ui" line="248"/>
-        <location filename="../mainwindow.cpp" line="692"/>
-        <location filename="../mainwindow.cpp" line="712"/>
+        <location filename="../mainwindow.cpp" line="693"/>
+        <location filename="../mainwindow.cpp" line="713"/>
         <source>Select icon...</source>
         <translation>Trieu una icona...</translation>
     </message>
@@ -143,13 +143,13 @@
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="124"/>
-        <location filename="../mainwindow.cpp" line="569"/>
+        <location filename="../mainwindow.cpp" line="570"/>
         <source>black</source>
         <translation>negre </translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="125"/>
-        <location filename="../mainwindow.cpp" line="570"/>
+        <location filename="../mainwindow.cpp" line="571"/>
         <source>white</source>
         <translation>blanc </translation>
     </message>
@@ -225,7 +225,7 @@
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="287"/>
-        <location filename="../mainwindow.cpp" line="610"/>
+        <location filename="../mainwindow.cpp" line="611"/>
         <source>Next</source>
         <translation>Següent</translation>
     </message>
@@ -250,12 +250,12 @@
         <translation>Desa el fitxer</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="462"/>
+        <location filename="../mainwindow.cpp" line="463"/>
         <source>Dock saved</source>
         <translation>Acoblador desat</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="462"/>
+        <location filename="../mainwindow.cpp" line="463"/>
         <source>The dock has been saved.
 
 To edit the newly created dock please select &apos;Edit an existing dock&apos;.</source>
@@ -264,32 +264,32 @@ To edit the newly created dock please select &apos;Edit an existing dock&apos;.<
 Per editar l&apos;acoblador que acabeu de crear trieu &apos;Edita un acoblador existent&apos;.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="481"/>
+        <location filename="../mainwindow.cpp" line="482"/>
         <source>About %1</source>
         <translation>Quant a %1</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="483"/>
+        <location filename="../mainwindow.cpp" line="484"/>
         <source>Version: </source>
         <translation>Versió: </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="484"/>
+        <location filename="../mainwindow.cpp" line="485"/>
         <source>Description goes here</source>
         <translation>Aquí hi va la descripció</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="486"/>
+        <location filename="../mainwindow.cpp" line="487"/>
         <source>Copyright (c) MX Linux</source>
         <translation>Copyright (c) MX Linux</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="487"/>
+        <location filename="../mainwindow.cpp" line="488"/>
         <source>%1 License</source>
         <translation>Llicència de %1</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="496"/>
+        <location filename="../mainwindow.cpp" line="497"/>
         <source>%1 Help</source>
         <translation>Ajuda de %1</translation>
     </message>
@@ -298,27 +298,27 @@ Per editar l&apos;acoblador que acabeu de crear trieu &apos;Edita un acoblador e
         <translation type="vanished">Si us plau, trieu un fitxer.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="624"/>
+        <location filename="../mainwindow.cpp" line="625"/>
         <source>Select .desktop file</source>
         <translation>trieu un fitxer .desktop</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="624"/>
+        <location filename="../mainwindow.cpp" line="625"/>
         <source>Desktop Files (*.desktop)</source>
         <translation>Fitxers d&apos;escriptori (*.desktop)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="637"/>
+        <location filename="../mainwindow.cpp" line="638"/>
         <source>Select a dock file</source>
         <translation>Trieu un fitxer d&apos;acoblador</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="639"/>
+        <location filename="../mainwindow.cpp" line="640"/>
         <source>No file selected</source>
         <translation>No s&apos;ha triat cap fitxer</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="639"/>
+        <location filename="../mainwindow.cpp" line="640"/>
         <source>You haven&apos;t selected any dock file to edit.
 Creating a new dock instead.</source>
         <translation>No heu triat cap fitxer d&apos;acoblador per editar.
@@ -327,7 +327,7 @@ Creeu un nou acoblador en aquest cas.</translation>
     <message>
         <location filename="../mainwindow.cpp" line="310"/>
         <location filename="../mainwindow.cpp" line="331"/>
-        <location filename="../mainwindow.cpp" line="646"/>
+        <location filename="../mainwindow.cpp" line="647"/>
         <source>Could not open file</source>
         <translation>No he pogut obrir el fitxer</translation>
     </message>
@@ -337,14 +337,14 @@ Creeu un nou acoblador en aquest cas.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="646"/>
+        <location filename="../mainwindow.cpp" line="647"/>
         <source>Could not open selected file.
 Creating a new dock instead.</source>
         <translation>No he pogut obrir el fitxer seleccionat.
 En aquest cas, es crea un acoblador nou.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="656"/>
+        <location filename="../mainwindow.cpp" line="657"/>
         <source>1. Edit applications one at a time using the Back and Next buttons
 2. Add or delete applications as you like
 3. When finished click Save</source>
@@ -353,12 +353,12 @@ En aquest cas, es crea un acoblador nou.</translation>
 3. En acabar, cliqueu Desa </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="698"/>
+        <location filename="../mainwindow.cpp" line="699"/>
         <source>Select icon</source>
         <translation>Trieu una icona</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="698"/>
+        <location filename="../mainwindow.cpp" line="699"/>
         <source>Icons (*.png *.jpg *.bmp *.xpm *.svg)</source>
         <translation>Icones (*.png *.jpg *.bmp *.xpm *.svg)</translation>
     </message>

@@ -428,6 +428,7 @@ void MainWindow::on_buttonSave_clicked()
     if(!QFileInfo::exists(file_name) || QMessageBox::No == QMessageBox::question(this, tr("Overwrite?"), tr("Do you want to overwrite the dock file?"))) {
         file_name = QFileDialog::getSaveFileName(this, tr("Save file"), QDir::homePath() + "/.fluxbox/scripts");
         if (file_name.isEmpty()) return;
+        if (!file_name.endsWith(".mxdk")) file_name += ".mxdk";
     }
     QFile file(file_name);
     cmd.run("cp " + file_name + " " + file_name + ".~", true);

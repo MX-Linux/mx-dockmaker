@@ -26,8 +26,8 @@
     <message>
         <location filename="../mainwindow.ui" line="125"/>
         <location filename="../mainwindow.cpp" line="92"/>
-        <location filename="../mainwindow.cpp" line="574"/>
-        <location filename="../mainwindow.cpp" line="607"/>
+        <location filename="../mainwindow.cpp" line="575"/>
+        <location filename="../mainwindow.cpp" line="608"/>
         <source>Add application</source>
         <translation>Προσθήκη εφαρμογής</translation>
     </message>
@@ -48,8 +48,8 @@
     <message>
         <location filename="../mainwindow.ui" line="255"/>
         <location filename="../mainwindow.cpp" line="82"/>
-        <location filename="../mainwindow.cpp" line="563"/>
-        <location filename="../mainwindow.cpp" line="691"/>
+        <location filename="../mainwindow.cpp" line="564"/>
+        <location filename="../mainwindow.cpp" line="692"/>
         <source>Select...</source>
         <translation>Επιλέξτε...</translation>
     </message>
@@ -70,8 +70,8 @@
     </message>
     <message>
         <location filename="../mainwindow.ui" line="248"/>
-        <location filename="../mainwindow.cpp" line="692"/>
-        <location filename="../mainwindow.cpp" line="712"/>
+        <location filename="../mainwindow.cpp" line="693"/>
+        <location filename="../mainwindow.cpp" line="713"/>
         <source>Select icon...</source>
         <translation>Επιλέξτε εικονίδιο ...</translation>
     </message>
@@ -143,13 +143,13 @@
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="124"/>
-        <location filename="../mainwindow.cpp" line="569"/>
+        <location filename="../mainwindow.cpp" line="570"/>
         <source>black</source>
         <translation>μαύρο</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="125"/>
-        <location filename="../mainwindow.cpp" line="570"/>
+        <location filename="../mainwindow.cpp" line="571"/>
         <source>white</source>
         <translation>λευκό</translation>
     </message>
@@ -225,7 +225,7 @@
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="287"/>
-        <location filename="../mainwindow.cpp" line="610"/>
+        <location filename="../mainwindow.cpp" line="611"/>
         <source>Next</source>
         <translation>Επόμενο</translation>
     </message>
@@ -250,12 +250,12 @@
         <translation>Αποθηκεύσετε το αρχείο</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="462"/>
+        <location filename="../mainwindow.cpp" line="463"/>
         <source>Dock saved</source>
         <translation>Το dock έχει αποθηκευτεί</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="462"/>
+        <location filename="../mainwindow.cpp" line="463"/>
         <source>The dock has been saved.
 
 To edit the newly created dock please select &apos;Edit an existing dock&apos;.</source>
@@ -264,32 +264,32 @@ To edit the newly created dock please select &apos;Edit an existing dock&apos;.<
 Για να επεξεργαστείτε το νεοσύστατο dock, επιλέξτε &apos;Επεξεργασία υπάρχουσου dock&apos;.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="481"/>
+        <location filename="../mainwindow.cpp" line="482"/>
         <source>About %1</source>
         <translation>Περί %1</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="483"/>
+        <location filename="../mainwindow.cpp" line="484"/>
         <source>Version: </source>
         <translation>Έκδοση:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="484"/>
+        <location filename="../mainwindow.cpp" line="485"/>
         <source>Description goes here</source>
         <translation>Η περιγραφή εδώ</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="486"/>
+        <location filename="../mainwindow.cpp" line="487"/>
         <source>Copyright (c) MX Linux</source>
         <translation>Πνευματικά δικαιώματα (c)  MX Linux </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="487"/>
+        <location filename="../mainwindow.cpp" line="488"/>
         <source>%1 License</source>
         <translation>%1 Άδεια</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="496"/>
+        <location filename="../mainwindow.cpp" line="497"/>
         <source>%1 Help</source>
         <translation>%1 Βοήθεια</translation>
     </message>
@@ -298,27 +298,27 @@ To edit the newly created dock please select &apos;Edit an existing dock&apos;.<
         <translation type="vanished">Επιλέξτε ένα αρχείο.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="624"/>
+        <location filename="../mainwindow.cpp" line="625"/>
         <source>Select .desktop file</source>
         <translation>Επιλέξτε το αρχείο .desktop</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="624"/>
+        <location filename="../mainwindow.cpp" line="625"/>
         <source>Desktop Files (*.desktop)</source>
         <translation>Αρχεία επιφάνειας εργασίας (*.desktop)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="637"/>
+        <location filename="../mainwindow.cpp" line="638"/>
         <source>Select a dock file</source>
         <translation>Επιλέξτε ένα αρχείο dock</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="639"/>
+        <location filename="../mainwindow.cpp" line="640"/>
         <source>No file selected</source>
         <translation>Δεν έχει επιλεγεί αρχείο</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="639"/>
+        <location filename="../mainwindow.cpp" line="640"/>
         <source>You haven&apos;t selected any dock file to edit.
 Creating a new dock instead.</source>
         <translation>Δεν έχετε επιλέξει κανένα αρχείο dock για επεξεργασία.
@@ -327,7 +327,7 @@ Creating a new dock instead.</source>
     <message>
         <location filename="../mainwindow.cpp" line="310"/>
         <location filename="../mainwindow.cpp" line="331"/>
-        <location filename="../mainwindow.cpp" line="646"/>
+        <location filename="../mainwindow.cpp" line="647"/>
         <source>Could not open file</source>
         <translation>Δεν ήταν δυνατό το άνοιγμα αρχείου</translation>
     </message>
@@ -337,14 +337,14 @@ Creating a new dock instead.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="646"/>
+        <location filename="../mainwindow.cpp" line="647"/>
         <source>Could not open selected file.
 Creating a new dock instead.</source>
         <translation>Δεν ήταν δυνατό το άνοιγμα του επιλεγμένου αρχείου.
 Δημιουργία νέο dock. </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="656"/>
+        <location filename="../mainwindow.cpp" line="657"/>
         <source>1. Edit applications one at a time using the Back and Next buttons
 2. Add or delete applications as you like
 3. When finished click Save</source>
@@ -353,12 +353,12 @@ Creating a new dock instead.</source>
 3. Όταν τελειώσετε, πατήστε Αποθήκευση</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="698"/>
+        <location filename="../mainwindow.cpp" line="699"/>
         <source>Select icon</source>
         <translation>Επιλέξτε εικονίδιο</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="698"/>
+        <location filename="../mainwindow.cpp" line="699"/>
         <source>Icons (*.png *.jpg *.bmp *.xpm *.svg)</source>
         <translation>Αρχεία εικόνας (*.png *.jpg *.bmp *.xpm *.svg)</translation>
     </message>

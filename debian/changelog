@@ -1,3 +1,9 @@
+mx-dockmaker (20.4.2) mx; urgency=medium
+
+  * add .mxdk default extension
+
+ -- Adrian <adrian@mxlinux.org>  Sat, 25 Apr 2020 15:46:43 -0400
+
 mx-dockmaker (20.4.1) mx; urgency=medium
 
   * fix location buttons in case of localization
