@@ -1,5 +1,5 @@
 #! /bin/sh
-set -e
 
 sed -i -- 's|\[exec\] (Dockmaker) {featherpad  /usr/share/mxflux/help/other/mx-dockmaker_status}|\[exec\] (Dockmaker) {mx-dockmaker}|' /home/*/.fluxbox/menu-mx
 
+exit 0

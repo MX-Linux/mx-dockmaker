@@ -1,0 +1,49 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Format: 1.8
+Date: Sun, 26 Apr 2020 15:41:38 -0400
+Source: mx-dockmaker
+Binary: mx-dockmaker mx-dockmaker-dbgsym
+Architecture: source amd64
+Version: 20.4.3
+Distribution: mx
+Urgency: medium
+Maintainer: Adrian <adrian@mxlinux.org>
+Changed-By: Adrian <adrian@mxlinux.org>
+Description:
+ mx-dockmaker - mx-dockmaker
+Changes:
+ mx-dockmaker (20.4.3) mx; urgency=medium
+ .
+   * ignore sed error for postinst
+Checksums-Sha1:
+ c73b7ade39821c046a24ddc27070ddcd0cf24672 1129 mx-dockmaker_20.4.3.dsc
+ c4e967ed5ed7471fcbea3fcb9fdf3b3d7dd50589 61880 mx-dockmaker_20.4.3.tar.xz
+ 33060f74d590ab71b873af27cf982e71de12b0ac 1092676 mx-dockmaker-dbgsym_20.4.3_amd64.deb
+ 783d70f073dacfba1ba039e3b1e86389c69e51cb 10859 mx-dockmaker_20.4.3_amd64.buildinfo
+ d3ec93049c9dc723c58128a76762db25b81caf83 94428 mx-dockmaker_20.4.3_amd64.deb
+Checksums-Sha256:
+ 4f39304e3e4fd48e7fe1d9a551dd44c89efd3495d2584200e0c82718b7f7085e 1129 mx-dockmaker_20.4.3.dsc
+ ef8507942d41e41a9d2b381b8aea0569795cea4f2fc3875f513fbb00388f0fc2 61880 mx-dockmaker_20.4.3.tar.xz
+ 77ba23e075a707dfaf848acaa23c8a49bfca11fe7847ed4a63d3d4d282942c1a 1092676 mx-dockmaker-dbgsym_20.4.3_amd64.deb
+ a8a8ba8d40d814fb91051cd592223ef9c86ee99c9f4707c2fcc5bbdbf52b2ed4 10859 mx-dockmaker_20.4.3_amd64.buildinfo
+ acda66512d3e8bda42f1c8487d4cca4eb6819fafce997ae8a521ebc387ad50fb 94428 mx-dockmaker_20.4.3_amd64.deb
+Files:
+ 56006121f4876b0c13a1df2a4f4bc98f 1129 admin optional mx-dockmaker_20.4.3.dsc
+ b50b938d1f181532b427c6f0dfc9c565 61880 admin optional mx-dockmaker_20.4.3.tar.xz
+ ea35df3f1bddb399b29c2d17dcbb4b39 1092676 debug optional mx-dockmaker-dbgsym_20.4.3_amd64.deb
+ 5a9896af8271093b64c8676d349ac92a 10859 admin optional mx-dockmaker_20.4.3_amd64.buildinfo
+ d5e9fce57139950489fc5a16afa9359c 94428 admin optional mx-dockmaker_20.4.3_amd64.deb
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAl6l5QATHGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumIuaCACTnqoevAQgFEcjL3mQddamD+k4cvoV
+Fh7H458JvAEzWfsG2M9AXNe06qtb8NsBX2b1hBUMDQQl0cIvHkqDLmg0KHlkqO/c
+Hzbs2w5ssOOq2EMxofGfGLUI0bpO2nuhXOCjSDuyFj48yqdWn6s+gmzRrOmgC5wz
+o712uCLJzqRbPtXVDpXTbX5oTBKyDQouORJ+UBWKBzcRbVUyqUZXLLDT9RZXVZ8n
+hlvMG7lOjOF71Pp0V0dIZ7YV7A9jIIhUfTXeNOhzWKnzIYOeaeBL73Vz9ZwpKEu2
+iud0/UVsmqSX1pAmObHcpA06VscTbstBJb9qyDBPODsilvsiAPvRbZQI
+=TUv6
+-----END PGP SIGNATURE-----
