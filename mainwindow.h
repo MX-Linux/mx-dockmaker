@@ -95,6 +95,7 @@ private:
     int index = 0;
     QList<QLabel *> list_icons;
     QString dock_name;
+    QString file_content;
     QString file_name;
     QString slit_location;
     QList<QStringList> apps;

@@ -20,7 +20,6 @@
  * along with this package. If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
 
-#include <QCommandLineParser>
 #include <QDebug>
 #include <QFileDialog>
 #include <QInputDialog>
@@ -117,6 +116,8 @@ void MainWindow::setup()
     QStringList color_list({"beige", "black", "blue", "brown", "cyan", "gray", "green",
                            "lavender", "lime", "magenta", "maroon", "navy", "olive",
                            "orange", "pink", "purple", "red", "teal", "white", "yellow"});
+
+    file_content = "";
 
     ui->comboBgColor->addItems(color_list);
     ui->comboBorderColor->addItems(color_list);
@@ -243,14 +244,15 @@ void MainWindow::itemChanged()
 void MainWindow::updateAppList(int idx)
 {
     QStringList app_info = QStringList({ui->buttonSelectApp->text(), ui->lineEditCommand->text(), ui->buttonSelectIcon->text(),
-                                        ui->comboSize->currentText(), ui->comboBgColor->currentText(), ui->comboBorderColor->currentText()});
+                                        ui->comboSize->currentText(), ui->comboBgColor->currentText(), ui->comboBorderColor->currentText(),
+                                        ui->buttonSelectApp->property("extra_options").toString()});
     (idx < apps.size()) ? apps.replace(idx, app_info) : apps.push_back(app_info);
     displayIcon(ui->buttonSelectApp->text(), idx);
 }
 
 void MainWindow::addDockToMenu(const QString &file_name)
 {
-    cmd.run("sed -i '/\\[submenu\\] (Docks & launchers)/a \\\\t\\t\\t[exec] (" + dock_name + ") {" +
+    cmd.run("sed -i '/\\[submenu\\] (Docks)/a \\\\t\\t\\t[exec] (" + dock_name + ") {" +
             file_name + "}' " + QDir::homePath() + "/.fluxbox/menu-mx", true);
 }
 
@@ -347,9 +349,6 @@ void MainWindow::moveDock()
 
 void MainWindow::parseFile(QFile &file)
 {
-    QString line;
-    QCommandLineParser parser;
-
     blockComboSignals(true);
 
     const QStringList possible_locations({"TopLeft",    "TopCenter",    "TopRight",
@@ -358,15 +357,9 @@ void MainWindow::parseFile(QFile &file)
                                           "LeftBottom",                 "RightBottom",
                                           "BottomLeft", "BottomCenter", "BottomRight"});
 
-    parser.addOptions({
-                          {{"d", "desktop-file"}, "", "d"},
-                          {{"k", "background-color"}, "", "k", "black"},
-                          {{"b", "border-color"}, "", "b", "white"},
-                          {{"w", "window-size"}, "", "w", "48x48"},
-                          {{"x", "exit-on-right-click"}, "", "x"},
-                          {{"c", "command"}, "", "c"},
-                          {{"i", "icon"}, "", "i"}
-                      });
+    QString line;
+    QStringList options;
+
     while (!file.atEnd()) {
         line = file.readLine().trimmed();
 
@@ -380,33 +373,45 @@ void MainWindow::parseFile(QFile &file)
             continue;
         }
         if (line.startsWith("wmalauncher")) {
-            parser.process(line.split(" "));
-            if (!parser.value("desktop-file").isEmpty()) {
-                ui->radioDesktop->setChecked(true);
-                ui->buttonSelectApp->setText(parser.value("desktop-file"));
-                ui->buttonSelectIcon->setToolTip(QString());
-                ui->buttonSelectIcon->setStyleSheet("text-align: left;");
-            } else if (!parser.value("command").isEmpty()) {
-                ui->radioCommand->setChecked(true);
-                QStringList args = parser.positionalArguments();
+            ui->buttonSelectApp->setProperty("extra_options", QString());
+            line.remove(QRegularExpression("^wmalauncher"));
+            line.remove(QRegularExpression("\\s*&.*sleep.*$"));
 
-                // remove various other positional arguments
-                args.removeAll("&");
-                args.removeAll("sleep");
-                args.removeAll("0.1");
+            options = line.split(QRegularExpression(" --| -"));
+            options.removeAll(QString());
 
-                ui->lineEditCommand->setText(parser.value("command") + (args.size() == 0 ? QString() : " " + args.join(" ")));
-                ui->buttonSelectIcon->setText(parser.value("icon"));
-                ui->buttonSelectIcon->setToolTip(parser.value("icon"));
-                ui->buttonSelectIcon->setStyleSheet("text-align: right;");
-            } else {
-                qDebug() << "Cannot parse --command line";
-                continue;
+            for (const QString &option: options) {
+                QStringList tokens = option.split(" ");
+                if ((tokens.at(0) == "d") | (tokens.at(0) == "desktop-file")) {
+                    ui->radioDesktop->setChecked(true);
+                    if (tokens.size() > 1) ui->buttonSelectApp->setText(tokens.at(1));
+                    ui->buttonSelectIcon->setToolTip(QString());
+                    ui->buttonSelectIcon->setStyleSheet("text-align: left;");
+                } else if ((tokens.at(0) ==  "c") | (tokens.at(0) == "command")) {
+                    ui->radioCommand->setChecked(true);
+                    if (tokens.size() > 1) ui->lineEditCommand->setText(tokens.mid(1).join(" "));
+                    ui->buttonSelectIcon->setStyleSheet("text-align: right;");
+                } else if ((tokens.at(0) == "i") | (tokens.at(0) == "icon")) {
+                    if (tokens.size() > 1) {
+                        ui->buttonSelectIcon->setText(tokens.mid(1).join(" "));
+                        ui->buttonSelectIcon->setToolTip(tokens.mid(1).join(" "));
+                    }
+                } else if ((tokens.at(0) == "k") | (tokens.at(0) == "background-color")) {
+                    if (tokens.size() > 1) ui->comboBgColor->setCurrentIndex(ui->comboBgColor->findText(tokens.at(1)));
+                } else if ((tokens.at(0) == "b") | (tokens.at(0) == "border-color")) {
+                    if (tokens.size() > 1) ui->comboBorderColor->setCurrentIndex(ui->comboBorderColor->findText(tokens.at(1)));
+                } else if ((tokens.at(0) == "w") | (tokens.at(0) == "window-size")) {
+                    if (tokens.size() > 1) ui->comboSize->setCurrentIndex(ui->comboSize->findText(tokens.at(1) + "x" + tokens.at(1)));
+                } else if ((tokens.at(0) == "x") | (tokens.at(0) == "exit-on-right-click")) {
+                    // not used right now
+                } else { // other not handled options, add them as a propriety to the app button
+                    ui->buttonSelectApp->setProperty("extra_options", ui->buttonSelectApp->property("extra_options").toString()
+                                                     + ((tokens.at(0).length() > 1) ? " --" : " -") + tokens.join(" "));
+                }
             }
-            ui->comboSize->setCurrentIndex(ui->comboSize->findText(parser.value("window-size") + "x" + parser.value("window-size")));
-            ui->comboBgColor->setCurrentIndex(ui->comboBgColor->findText(parser.value("background-color")));
-            ui->comboBorderColor->setCurrentIndex(ui->comboBorderColor->findText(parser.value("border-color")));
             updateAppList(index++);
+        } else {
+            file_content.append(line + "\n"); // add lines to the file_content, skipping wmalauncher lines
         }
     }
     changed = false;
@@ -438,17 +443,21 @@ void MainWindow::on_buttonSave_clicked()
     }
     QTextStream stream(&file);
 
-    // build and write string
-    stream << "#!/bin/bash\n\n";
-    stream << "#set up slit location\n";
-    stream << "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + slit_location + "/' $HOME/.fluxbox/init\n\n";
-    stream << "fluxbox-remote restart\n\n";
-    stream << "#commands for dock launchers\n";
+    if (file_content.isEmpty()) {
+        // build and write string
+        stream << "#!/bin/bash\n\n";
+        stream << "#set up slit location\n";
+        stream << "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + slit_location + "/' $HOME/.fluxbox/init\n\n";
+        stream << "fluxbox-remote restart; sleep 1\n\n";
+        stream << "#commands for dock launchers\n";
+    } else {
+        stream << file_content;
+    }
 
     for (int i = 0; i < apps.size(); ++i) {
         QString command = (apps.at(i).at(0).endsWith(".desktop")) ? "--desktop-file " + apps.at(i).at(0) : "--command " + apps.at(i).at(1) + " --icon " + apps.at(i).at(2);
         stream << "wmalauncher " + command + " --background-color " + apps.at(i).at(4) + " --border-color " +
-                  apps.at(i).at(5) + " --window-size " + apps.at(i).at(3).section("x", 0, 0) + " -x & sleep 0.1\n";
+                  apps.at(i).at(5) + " --window-size " + apps.at(i).at(3).section("x", 0, 0) + apps.at(i).at(6) + " -x & sleep 0.1\n";
     }
     file.close();
     chmod(file_name.toUtf8(), 00744);
@@ -562,6 +571,7 @@ void MainWindow::on_buttonDelete_clicked()
 void MainWindow::resetAdd()
 {
     ui->buttonSelectApp->setText(tr("Select..."));
+    ui->buttonSelectApp->setProperty("extra_options", QString());
     ui->radioDesktop->click();
     ui->radioDesktop->toggled(true);
 
@@ -601,6 +611,7 @@ void MainWindow::showApp(int idx)
     ui->comboSize->setCurrentIndex(ui->comboSize->findText(apps.at(idx).at(3)));
     ui->comboBgColor->setCurrentIndex(ui->comboBgColor->findText(apps.at(idx).at(4)));
     ui->comboBorderColor->setCurrentIndex(ui->comboBorderColor->findText(apps.at(idx).at(5)));
+    ui->buttonSelectApp->setProperty("extra_options", apps.at(idx).at(6));
     blockComboSignals(false);
 
     if (idx >= apps.size() - 1) {
@@ -628,6 +639,7 @@ void MainWindow::on_buttonSelectApp_clicked()
         file_name = file;
         ui->buttonSelectApp->setText(file);
         ui->buttonNext->setEnabled(true);
+        ui->buttonSelectApp->setProperty("extra_options", QString()); // reset extra options when changing the app.
         itemChanged();
     }
 }
@@ -711,6 +723,7 @@ void MainWindow::on_lineEditCommand_textEdited(const QString)
 {
     ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
     if(ui->buttonSelectIcon->text() != tr("Select icon...")) {
+        ui->buttonSelectApp->setProperty("extra_options", QString()); // reset extra options when changing the command
         ui->buttonNext->setEnabled(true);
         changed = true;
     } else {
