@@ -1,3 +1,12 @@
+mx-dockmaker (20.5) mx; urgency=medium
+
+  * preserve script content when editing a dock
+  * non-handled options should not create parsing problems
+  * preserve extra not-handled options
+  * add dock item in (Docks) not (Docks & launchers)
+
+ -- Adrian <adrian@mxlinux.org>  Sat, 02 May 2020 17:50:31 -0400
+
 mx-dockmaker (20.4.3) mx; urgency=medium
 
   * ignore sed error for postinst

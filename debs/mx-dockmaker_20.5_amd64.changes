@@ -1,0 +1,52 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Format: 1.8
+Date: Sat, 02 May 2020 17:50:31 -0400
+Source: mx-dockmaker
+Binary: mx-dockmaker mx-dockmaker-dbgsym
+Architecture: source amd64
+Version: 20.5
+Distribution: mx
+Urgency: medium
+Maintainer: Adrian <adrian@mxlinux.org>
+Changed-By: Adrian <adrian@mxlinux.org>
+Description:
+ mx-dockmaker - mx-dockmaker
+Changes:
+ mx-dockmaker (20.5) mx; urgency=medium
+ .
+   * preserve script content when editing a dock
+   * non-handled options should not create parsing problems
+   * preserve extra not-handled options
+   * add dock item in (Docks) not (Docks & launchers)
+Checksums-Sha1:
+ 8c4a0724e6bc25648b99655d80ec8a6c42c94d8e 1121 mx-dockmaker_20.5.dsc
+ dda05d61f47f0a9672e91b8a365fd1f9becc9ec2 62164 mx-dockmaker_20.5.tar.xz
+ 812ce44c06818ec77b2972ad97f79bd854fd9574 1090644 mx-dockmaker-dbgsym_20.5_amd64.deb
+ ec4560387548897d581b57d01a03a7cba7286277 10837 mx-dockmaker_20.5_amd64.buildinfo
+ 0213188f33264123a0d4f4ba03e62aa4922b6680 94024 mx-dockmaker_20.5_amd64.deb
+Checksums-Sha256:
+ b738c70222986f4c58708771b30c59ee540b2f64234040ea89d00a14328fc58f 1121 mx-dockmaker_20.5.dsc
+ fa15796a64d7d0df4b2bbb92b3e429a006f507d867c7f41874ecc4b20ce216d1 62164 mx-dockmaker_20.5.tar.xz
+ b45f4cac3763392edc4261c769b737bbbc4efe988fca31b3c715e2b6e1c679d5 1090644 mx-dockmaker-dbgsym_20.5_amd64.deb
+ 16ad926c06bf941dfac974625acda8f6fa66eb8a6741bd5a357eccf30774fcb8 10837 mx-dockmaker_20.5_amd64.buildinfo
+ 6733e3396f842077ff7e975127886e0fa1c780a1d2b7c53a7d51babf1249ce58 94024 mx-dockmaker_20.5_amd64.deb
+Files:
+ 555e99a661a6d8018792892c9a600596 1121 admin optional mx-dockmaker_20.5.dsc
+ 6314f31a1f5f317e1b2129b61a4b8697 62164 admin optional mx-dockmaker_20.5.tar.xz
+ 53c2608d722cf0fd085245d8efea5eb7 1090644 debug optional mx-dockmaker-dbgsym_20.5_amd64.deb
+ 667f99f2f0d3a640139c6c28ab4db303 10837 admin optional mx-dockmaker_20.5_amd64.buildinfo
+ 6d0c883b369d873de6cf48f34095bb6b 94024 admin optional mx-dockmaker_20.5_amd64.deb
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAl6t7KcTHGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumE9vB/43XqG+pQlmxu/+UvCQnYUQal3CTtQM
+zRPzbhUplVBscGZXrybnillXt5uhU8PD9MK3tAGjBWcIItKA8VuY4/qjfF3zmYTt
+WeBPphA2K1OmbDU4qw3f72ky7TivwUgzXbAyblDBv7+g4JSXyOfTkadNXzNFEjFg
+j8ijv3rDHi7gIHxT4J85b6/uu0Kafcx1ts7AfpJD2TZs7DLJnW4MWw5+MPSO+PmD
+j/9ncV6sWieidWq7BzVhQjd0QCFqLhZ3PqBNpvAfQ7nCqRYBtNjn8Ql760zM97Tr
+YxHce6LPUuagJ0Q0BVS/ENurHk6Y3YBsqUHivM7aEVmaRTkUkel9yD5p
+=nWmr
+-----END PGP SIGNATURE-----
