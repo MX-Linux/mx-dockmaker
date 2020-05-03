@@ -337,6 +337,13 @@ Skapar istället en ny docka.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../mainwindow.cpp" line="302"/>
+        <location filename="../mainwindow.cpp" line="434"/>
+        <location filename="../mainwindow.cpp" line="650"/>
+        <source>Dock Files (*.mxdk);;All Files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../mainwindow.cpp" line="659"/>
         <source>Could not open selected file.
 Creating a new dock instead.</source>
