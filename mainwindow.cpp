@@ -299,7 +299,7 @@ void MainWindow::moveDock()
                                           "LeftBottom",                 "RightBottom",
                                           "BottomLeft", "BottomCenter", "BottomRight"});
 
-    QString selected_dock = QFileDialog::getOpenFileName(nullptr, tr("Select dock to move"), QDir::homePath() + "/.fluxbox/scripts");
+    QString selected_dock = QFileDialog::getOpenFileName(nullptr, tr("Select dock to move"), QDir::homePath() + "/.fluxbox/scripts", tr("Dock Files (*.mxdk);;All Files (*.*)"));
     if (selected_dock.isEmpty()) {
         setup();
         return;
@@ -431,7 +431,7 @@ void MainWindow::on_buttonSave_clicked()
     }
 
     if(!QFileInfo::exists(file_name) || QMessageBox::No == QMessageBox::question(this, tr("Overwrite?"), tr("Do you want to overwrite the dock file?"))) {
-        file_name = QFileDialog::getSaveFileName(this, tr("Save file"), QDir::homePath() + "/.fluxbox/scripts");
+        file_name = QFileDialog::getSaveFileName(this, tr("Save file"), QDir::homePath() + "/.fluxbox/scripts", tr("Dock Files (*.mxdk);;All Files (*.*)"));
         if (file_name.isEmpty()) return;
         if (!file_name.endsWith(".mxdk")) file_name += ".mxdk";
     }
@@ -647,7 +647,7 @@ void MainWindow::on_buttonSelectApp_clicked()
 void MainWindow::editDock()
 {
     this->hide();
-    QString selected_dock = QFileDialog::getOpenFileName(nullptr, tr("Select a dock file"), QDir::homePath() + "/.fluxbox/scripts");
+    QString selected_dock = QFileDialog::getOpenFileName(nullptr, tr("Select a dock file"), QDir::homePath() + "/.fluxbox/scripts", tr("Dock Files (*.mxdk);;All Files (*.*)"));
     if (!QFileInfo::exists(selected_dock)) {
         QMessageBox::warning(nullptr, tr("No file selected"), tr("You haven't selected any dock file to edit.\nCreating a new dock instead."));
         setup();
