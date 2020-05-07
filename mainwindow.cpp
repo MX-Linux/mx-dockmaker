@@ -135,7 +135,7 @@ void MainWindow::setup()
     mbox->addButton(tr("&Move"), QMessageBox::NoRole);
     mbox->addButton(tr("&Delete"), QMessageBox::NoRole);
     mbox->addButton(tr("&Edit"), QMessageBox::NoRole);
-    mbox->addButton(tr("&Create"), QMessageBox::NoRole);
+    mbox->addButton(tr("C&reate"), QMessageBox::NoRole);
 
     this->hide();
 
