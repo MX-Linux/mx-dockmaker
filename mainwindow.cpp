@@ -457,7 +457,7 @@ void MainWindow::on_buttonSave_clicked()
     for (int i = 0; i < apps.size(); ++i) {
         QString command = (apps.at(i).at(0).endsWith(".desktop")) ? "--desktop-file " + apps.at(i).at(0) : "--command " + apps.at(i).at(1) + " --icon " + apps.at(i).at(2);
         stream << "wmalauncher " + command + " --background-color " + apps.at(i).at(4) + " --border-color " +
-                  apps.at(i).at(5) + " --window-size " + apps.at(i).at(3).section("x", 0, 0) + apps.at(i).at(6) + " -x & sleep 0.1\n";
+                  apps.at(i).at(5) + " --window-size " + apps.at(i).at(3).section("x", 0, 0) + apps.at(i).at(6) + "& sleep 0.1\n";
     }
     file.close();
     chmod(file_name.toUtf8(), 00744);

@@ -1,3 +1,9 @@
+mx-dockmaker (20.6) mx; urgency=medium
+
+  * remove -x option for wmalauncher command
+
+ -- Adrian <adrian@mxlinux.org>  Mon, 29 Jun 2020 14:45:04 -0400
+
 mx-dockmaker (20.5) mx; urgency=medium
 
   * preserve script content when editing a dock
