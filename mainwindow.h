@@ -40,7 +40,7 @@ class MainWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr, QString file = QString());
     ~MainWindow();
 
     bool isDockInMenu(const QString &file_name);
@@ -51,13 +51,13 @@ public:
     void deleteDock();
     void displayIcon(const QString &app_name, int location);
     void ifNotDoneDisableButtons();
-    void editDock();
+    void editDock(QString file_arg = QString());
     void enableNext();
     void moveDock();
     void newDock();
     void parseFile(QFile &file);
     void resetAdd();
-    void setup();
+    void setup(QString file = QString());
     void showApp(int i);
     void updateAppList(int idx);
 

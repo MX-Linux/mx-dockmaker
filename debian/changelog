@@ -1,3 +1,10 @@
+mx-dockmaker (20.8) mx; urgency=medium
+
+  * open .mxdk files by right-clicking or by passing file name as argument
+  * filter .mxdk files when deleting dock
+
+ -- Adrian <adrian@mxlinux.org>  Sat, 29 Aug 2020 18:34:25 -0400
+
 mx-dockmaker (20.6) mx; urgency=medium
 
   * remove -x option for wmalauncher command

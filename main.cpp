@@ -44,7 +44,12 @@ int main(int argc, char *argv[])
     a.installTranslator(&appTran);
 
     if (getuid() != 0) {
-        MainWindow w;
+
+        QString file;
+        if (qApp->arguments().length() >= 2 && QFile::exists(qApp->arguments().at(1))) {
+            file = qApp->arguments().at(1);
+        }
+        MainWindow w(nullptr, file);
         w.show();
         return a.exec();
     } else {

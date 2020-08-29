@@ -33,14 +33,14 @@
 #include "ui_mainwindow.h"
 #include "version.h"
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent, QString file) :
     QDialog(parent),
     ui(new Ui::MainWindow)
 {
     qDebug() << "Program Version:" << VERSION;
     ui->setupUi(this);
     setWindowFlags(Qt::Window); // for the close, min and max buttons
-    setup();
+    setup(file);
 }
 
 MainWindow::~MainWindow()
@@ -94,7 +94,7 @@ void MainWindow::ifNotDoneDisableButtons()
 }
 
 // setup versious items first time program runs
-void MainWindow::setup()
+void MainWindow::setup(QString file)
 {
     changed = false;
     connect(qApp, &QApplication::aboutToQuit, this, &MainWindow::cleanup);
@@ -126,6 +126,11 @@ void MainWindow::setup()
     ui->comboBorderColor->setCurrentIndex(ui->comboBorderColor->findText(tr("white")));
 
     blockComboSignals(false);
+
+    if (!file.isEmpty() && QFile::exists(file)) {
+        editDock(file);
+        return;
+    }
 
     QMessageBox *mbox = new QMessageBox(nullptr);
     mbox->setText(tr("This tool allows you to create a new dock with one or more applications. You can also edit or delete a dock created earlier."));
@@ -265,7 +270,7 @@ void MainWindow::cleanup()
 void MainWindow::deleteDock()
 {
     this->hide();
-    QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select dock to delete"), QDir::homePath() + "/.fluxbox/scripts");
+    QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select dock to delete"), QDir::homePath() + "/.fluxbox/scripts", tr("Dock Files (*.mxdk);;All Files (*.*)"));
     if (!selected.isEmpty() && QMessageBox::question(nullptr, tr("Confirmation"),
                                                      tr("Are you sure you want to delete %1?").arg(selected), tr("&Delete"), tr("&Cancel")) == 0) {
         QFile::remove(selected);
@@ -342,7 +347,7 @@ void MainWindow::moveDock()
     out << text.replace(re, new_line);
 
     file.close();
-    cmd.run("pkill wmalauncher;" + file.fileName() + "&", true);
+    cmd.run("pkill wmalauncher;" + file.fileName() + ";disown", true);
     setup();
     this->show();
 }
@@ -472,7 +477,7 @@ void MainWindow::on_buttonSave_clicked()
     QMessageBox::information(this, tr("Dock saved"), tr("The dock has been saved.\n\n"
                                                         "To edit the newly created dock please select 'Edit an existing dock'."));
 
-    cmd.run("pkill wmalauncher;" + file.fileName() + "&", true);
+    cmd.run("pkill wmalauncher;" + file.fileName() + ";disown", true);
 
     index = 0;
     apps.clear();
@@ -644,10 +649,16 @@ void MainWindow::on_buttonSelectApp_clicked()
     }
 }
 
-void MainWindow::editDock()
+void MainWindow::editDock(QString file_arg)
 {
     this->hide();
-    QString selected_dock = QFileDialog::getOpenFileName(nullptr, tr("Select a dock file"), QDir::homePath() + "/.fluxbox/scripts", tr("Dock Files (*.mxdk);;All Files (*.*)"));
+
+    QString selected_dock;
+    if (!file_arg.isEmpty() && QFile::exists(file_arg)) {
+        selected_dock = file_arg;
+    } else {
+        selected_dock = QFileDialog::getOpenFileName(nullptr, tr("Select a dock file"), QDir::homePath() + "/.fluxbox/scripts", tr("Dock Files (*.mxdk);;All Files (*.*)"));
+    }
     if (!QFileInfo::exists(selected_dock)) {
         QMessageBox::warning(nullptr, tr("No file selected"), tr("You haven't selected any dock file to edit.\nCreating a new dock instead."));
         setup();

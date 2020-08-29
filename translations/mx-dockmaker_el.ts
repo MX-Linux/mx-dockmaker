@@ -26,8 +26,8 @@
     <message>
         <location filename="../mainwindow.ui" line="125"/>
         <location filename="../mainwindow.cpp" line="91"/>
-        <location filename="../mainwindow.cpp" line="585"/>
-        <location filename="../mainwindow.cpp" line="619"/>
+        <location filename="../mainwindow.cpp" line="590"/>
+        <location filename="../mainwindow.cpp" line="624"/>
         <source>Add application</source>
         <translation>Προσθήκη εφαρμογής</translation>
     </message>
@@ -48,8 +48,8 @@
     <message>
         <location filename="../mainwindow.ui" line="255"/>
         <location filename="../mainwindow.cpp" line="81"/>
-        <location filename="../mainwindow.cpp" line="573"/>
-        <location filename="../mainwindow.cpp" line="704"/>
+        <location filename="../mainwindow.cpp" line="578"/>
+        <location filename="../mainwindow.cpp" line="715"/>
         <source>Select...</source>
         <translation>Επιλέξτε...</translation>
     </message>
@@ -70,8 +70,8 @@
     </message>
     <message>
         <location filename="../mainwindow.ui" line="248"/>
-        <location filename="../mainwindow.cpp" line="705"/>
-        <location filename="../mainwindow.cpp" line="725"/>
+        <location filename="../mainwindow.cpp" line="716"/>
+        <location filename="../mainwindow.cpp" line="736"/>
         <source>Select icon...</source>
         <translation>Επιλέξτε εικονίδιο ...</translation>
     </message>
@@ -143,44 +143,44 @@
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="125"/>
-        <location filename="../mainwindow.cpp" line="580"/>
+        <location filename="../mainwindow.cpp" line="585"/>
         <source>black</source>
         <translation>μαύρο</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="126"/>
-        <location filename="../mainwindow.cpp" line="581"/>
+        <location filename="../mainwindow.cpp" line="586"/>
         <source>white</source>
         <translation>λευκό</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="131"/>
+        <location filename="../mainwindow.cpp" line="136"/>
         <source>This tool allows you to create a new dock with one or more applications. You can also edit or delete a dock created earlier.</source>
         <translation>Αυτό το εργαλείο σάς επιτρέπει να δημιουργήσετε ένα νέο dock με μία ή περισσότερες εφαρμογές. Μπορείτε επίσης να επεξεργαστείτε ή να διαγράψετε ένα dock που δημιουργήθηκε νωρίτερα.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="133"/>
+        <location filename="../mainwindow.cpp" line="138"/>
         <source>Operation mode</source>
         <translation>Λειτουργία </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="134"/>
+        <location filename="../mainwindow.cpp" line="139"/>
         <source>&amp;Close</source>
         <translation>&amp;Κλείσιμο</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="135"/>
+        <location filename="../mainwindow.cpp" line="140"/>
         <source>&amp;Move</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="136"/>
-        <location filename="../mainwindow.cpp" line="270"/>
+        <location filename="../mainwindow.cpp" line="141"/>
+        <location filename="../mainwindow.cpp" line="275"/>
         <source>&amp;Delete</source>
         <translation>&amp;Διαγραφή</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="137"/>
+        <location filename="../mainwindow.cpp" line="142"/>
         <source>&amp;Edit</source>
         <translation>&amp;Επεξεργασία</translation>
     </message>
@@ -189,32 +189,32 @@
         <translation type="vanished">&amp;Δημιουργία</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="214"/>
+        <location filename="../mainwindow.cpp" line="219"/>
         <source>Dock name</source>
         <translation>Όνομα του dock</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="215"/>
+        <location filename="../mainwindow.cpp" line="220"/>
         <source>Enter the name to show in the Menu:</source>
         <translation>Εισαγάγετε το όνομα που θέλετε να εμφανίζεται στο μενού:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="268"/>
+        <location filename="../mainwindow.cpp" line="273"/>
         <source>Select dock to delete</source>
         <translation>Επιλέξτε το dock για διαγραφή</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="269"/>
+        <location filename="../mainwindow.cpp" line="274"/>
         <source>Confirmation</source>
         <translation>Επιβεβαίωση</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="270"/>
+        <location filename="../mainwindow.cpp" line="275"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>Είστε βέβαιοι ότι θέλετε να διαγράψετε το %1;</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="270"/>
+        <location filename="../mainwindow.cpp" line="275"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Ακύρωση</translation>
     </message>
@@ -223,8 +223,8 @@
         <translation type="vanished">Διαγράψτε την τελευταία εφαρμογή</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="289"/>
-        <location filename="../mainwindow.cpp" line="622"/>
+        <location filename="../mainwindow.cpp" line="294"/>
+        <location filename="../mainwindow.cpp" line="627"/>
         <source>Next</source>
         <translation>Επόμενο</translation>
     </message>
@@ -234,27 +234,27 @@
         <translation>Διαγράψτε αυτήν την εφαρμογή</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="433"/>
+        <location filename="../mainwindow.cpp" line="438"/>
         <source>Overwrite?</source>
         <translation>Αντικατάσταση;</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="433"/>
+        <location filename="../mainwindow.cpp" line="438"/>
         <source>Do you want to overwrite the dock file?</source>
         <translation>Θέλετε να αντικαταστήσετε το αρχείο dock;</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="434"/>
+        <location filename="../mainwindow.cpp" line="439"/>
         <source>Save file</source>
         <translation>Αποθηκεύσετε το αρχείο</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="472"/>
+        <location filename="../mainwindow.cpp" line="477"/>
         <source>Dock saved</source>
         <translation>Το dock έχει αποθηκευτεί</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="472"/>
+        <location filename="../mainwindow.cpp" line="477"/>
         <source>The dock has been saved.
 
 To edit the newly created dock please select &apos;Edit an existing dock&apos;.</source>
@@ -263,32 +263,32 @@ To edit the newly created dock please select &apos;Edit an existing dock&apos;.<
 Για να επεξεργαστείτε το νεοσύστατο dock, επιλέξτε &apos;Επεξεργασία υπάρχουσου dock&apos;.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="491"/>
+        <location filename="../mainwindow.cpp" line="496"/>
         <source>About %1</source>
         <translation>Περί %1</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="493"/>
+        <location filename="../mainwindow.cpp" line="498"/>
         <source>Version: </source>
         <translation>Έκδοση:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="494"/>
+        <location filename="../mainwindow.cpp" line="499"/>
         <source>Description goes here</source>
         <translation>Η περιγραφή εδώ</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="496"/>
+        <location filename="../mainwindow.cpp" line="501"/>
         <source>Copyright (c) MX Linux</source>
         <translation>Πνευματικά δικαιώματα (c)  MX Linux </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="497"/>
+        <location filename="../mainwindow.cpp" line="502"/>
         <source>%1 License</source>
         <translation>%1 Άδεια</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="506"/>
+        <location filename="../mainwindow.cpp" line="511"/>
         <source>%1 Help</source>
         <translation>%1 Βοήθεια</translation>
     </message>
@@ -297,65 +297,66 @@ To edit the newly created dock please select &apos;Edit an existing dock&apos;.<
         <translation type="vanished">Επιλέξτε ένα αρχείο.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="636"/>
+        <location filename="../mainwindow.cpp" line="641"/>
         <source>Select .desktop file</source>
         <translation>Επιλέξτε το αρχείο .desktop</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="636"/>
+        <location filename="../mainwindow.cpp" line="641"/>
         <source>Desktop Files (*.desktop)</source>
         <translation>Αρχεία επιφάνειας εργασίας (*.desktop)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="650"/>
+        <location filename="../mainwindow.cpp" line="660"/>
         <source>Select a dock file</source>
         <translation>Επιλέξτε ένα αρχείο dock</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="652"/>
+        <location filename="../mainwindow.cpp" line="663"/>
         <source>No file selected</source>
         <translation>Δεν έχει επιλεγεί αρχείο</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="652"/>
+        <location filename="../mainwindow.cpp" line="663"/>
         <source>You haven&apos;t selected any dock file to edit.
 Creating a new dock instead.</source>
         <translation>Δεν έχετε επιλέξει κανένα αρχείο dock για επεξεργασία.
 Δημιουργία νέο dock.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="312"/>
-        <location filename="../mainwindow.cpp" line="333"/>
-        <location filename="../mainwindow.cpp" line="659"/>
+        <location filename="../mainwindow.cpp" line="317"/>
+        <location filename="../mainwindow.cpp" line="338"/>
+        <location filename="../mainwindow.cpp" line="670"/>
         <source>Could not open file</source>
         <translation>Δεν ήταν δυνατό το άνοιγμα αρχείου</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="138"/>
+        <location filename="../mainwindow.cpp" line="143"/>
         <source>C&amp;reate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="302"/>
+        <location filename="../mainwindow.cpp" line="307"/>
         <source>Select dock to move</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="302"/>
-        <location filename="../mainwindow.cpp" line="434"/>
-        <location filename="../mainwindow.cpp" line="650"/>
+        <location filename="../mainwindow.cpp" line="273"/>
+        <location filename="../mainwindow.cpp" line="307"/>
+        <location filename="../mainwindow.cpp" line="439"/>
+        <location filename="../mainwindow.cpp" line="660"/>
         <source>Dock Files (*.mxdk);;All Files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="659"/>
+        <location filename="../mainwindow.cpp" line="670"/>
         <source>Could not open selected file.
 Creating a new dock instead.</source>
         <translation>Δεν ήταν δυνατό το άνοιγμα του επιλεγμένου αρχείου.
 Δημιουργία νέο dock. </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="669"/>
+        <location filename="../mainwindow.cpp" line="680"/>
         <source>1. Edit applications one at a time using the Back and Next buttons
 2. Add or delete applications as you like
 3. When finished click Save</source>
@@ -364,12 +365,12 @@ Creating a new dock instead.</source>
 3. Όταν τελειώσετε, πατήστε Αποθήκευση</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="711"/>
+        <location filename="../mainwindow.cpp" line="722"/>
         <source>Select icon</source>
         <translation>Επιλέξτε εικονίδιο</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="711"/>
+        <location filename="../mainwindow.cpp" line="722"/>
         <source>Icons (*.png *.jpg *.bmp *.xpm *.svg)</source>
         <translation>Αρχεία εικόνας (*.png *.jpg *.bmp *.xpm *.svg)</translation>
     </message>
@@ -476,12 +477,12 @@ Creating a new dock instead.</source>
         <translation>&amp;Κλείσιμο</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="52"/>
+        <location filename="../main.cpp" line="57"/>
         <source>Error</source>
         <translation>Σφάλμα</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="53"/>
+        <location filename="../main.cpp" line="58"/>
         <source>You must run this program as normal user.</source>
         <translation>Πρέπει να τρέξετε αυτή την εφαρμογή ως κανονικός χρήστης</translation>
     </message>
