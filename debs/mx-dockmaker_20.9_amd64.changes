@@ -1,0 +1,50 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Format: 1.8
+Date: Sun, 13 Sep 2020 15:31:28 -0400
+Source: mx-dockmaker
+Binary: mx-dockmaker
+Architecture: source amd64
+Version: 20.9
+Distribution: mx
+Urgency: medium
+Maintainer: Adrian <adrian@mxlinux.org>
+Changed-By: Adrian <adrian@mxlinux.org>
+Description:
+ mx-dockmaker - mx-dockmaker
+Changes:
+ mx-dockmaker (20.9) mx; urgency=medium
+ .
+   * select icons with mouse click
+   * fixed reloading icons on Next or Prev
+Checksums-Sha1:
+ 91c2ce2b3124a05be3b16f1226556090de72b733 1121 mx-dockmaker_20.9.dsc
+ 357d65395514f3d7f263fab6f73e0904dff54e2c 63840 mx-dockmaker_20.9.tar.xz
+ 462ef290b7ff471d27c89eaca9012896ec8cd79c 915014 mx-dockmaker-dbgsym_20.9_amd64.deb
+ f8499ec3633b0565a6dc2ec45eda16b89c2761ed 10694 mx-dockmaker_20.9_amd64.buildinfo
+ 5765c0a8e422480ef087fe09a9b4787e0b8947bc 94830 mx-dockmaker_20.9_amd64.deb
+Checksums-Sha256:
+ 834613fd8b0be4ec61d4ef7f7214e18cc89aae42bd356d6f6374bc54a012e02a 1121 mx-dockmaker_20.9.dsc
+ be371dbb039dc739ef03ccc6a768ec9cecec6d8ce0473165c26382b53a6888ea 63840 mx-dockmaker_20.9.tar.xz
+ 7727223eb3576e49008a93260e3ae00d0576a68bbc91cc111ee7b41a596bf5b8 915014 mx-dockmaker-dbgsym_20.9_amd64.deb
+ 569ec4f278a051d0e03d74c4e26bf48518051198bdef015ccda3e0fc0ef352db 10694 mx-dockmaker_20.9_amd64.buildinfo
+ 928f4fd1bbded93f67946f79ff725b352f055355e1d54b7eb9139a6d8115e542 94830 mx-dockmaker_20.9_amd64.deb
+Files:
+ b118c520cc1b0035b53293d2c8d30131 1121 admin optional mx-dockmaker_20.9.dsc
+ 74465bd58172dd90cdc8437d019ec85c 63840 admin optional mx-dockmaker_20.9.tar.xz
+ bfbee7167bd1aa7b9da84f854b651b36 915014 debug extra mx-dockmaker-dbgsym_20.9_amd64.deb
+ 01dfa3a5f18f600e52ff9c660d2a5f63 10694 admin optional mx-dockmaker_20.9_amd64.buildinfo
+ 632f55bce32fab3f616b4096b684ff58 94830 admin optional mx-dockmaker_20.9_amd64.deb
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAl9edx4THGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumBFLB/9t8tiK0m3SUVnn/O/pVGYFAb5eMXYc
+EABQKs82+dnFBXzn81sCuS/RfxTtKymbJCicxZgbUiiGf0x6+S+imX9NDi1FXAdg
+s4YKrSbkKi66ksH8850anEOuWpUOxJbcwh3L5jqGeBWTfMaePtxwYwFFGW65E++B
+Ya2fbmZo1DQpHt60NTN/JNS0IIU9qjZ2yyGbYW0MGnyaD/zKIVhl5E+9i7Fwv2No
+k1NDakqbaAzEBXWmNfoz7ZwkSll5kLntUbOD4cTF/SDxSvVFrVzDq4WVChA/xX3g
+2iqmGrxJPHeotA/COXlpwpvwzK6leTG250vzxukFMf2cm0gIsbZPShuZ
+=b9zs
+-----END PGP SIGNATURE-----

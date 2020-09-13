@@ -70,7 +70,7 @@
       <number>0</number>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="4" column="0">
+      <item row="5" column="0">
        <spacer name="verticalSpacer_2">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -83,12 +83,16 @@
         </property>
        </spacer>
       </item>
-      <item row="3" column="0" alignment="Qt::AlignLeft">
+      <item row="4" column="0" alignment="Qt::AlignLeft">
        <widget class="QGroupBox" name="groupPreview">
         <property name="title">
          <string>Dock Preview</string>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout"/>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <layout class="QHBoxLayout" name="icons"/>
+         </item>
+        </layout>
        </widget>
       </item>
       <item row="1" column="0" rowspan="2">
@@ -97,71 +101,14 @@
          <string>Add New Application</string>
         </property>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="2" column="0">
-          <widget class="QRadioButton" name="radioCommand">
-           <property name="text">
-            <string>Command</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="3" colspan="2">
-          <widget class="QPushButton" name="buttonNext">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
+         <item row="3" column="1" colspan="2">
+          <widget class="QComboBox" name="comboSize">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Add application</string>
-           </property>
-           <property name="icon">
-            <iconset theme="go-jump">
-             <normaloff>.</normaloff>.</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1" colspan="2">
-          <widget class="QComboBox" name="comboBgColor"/>
-         </item>
-         <item row="3" column="3">
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="7" column="0" colspan="5">
-          <widget class="QPushButton" name="buttonDelete">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>Delete this application</string>
-           </property>
-           <property name="icon">
-            <iconset theme="edit-delete-symbolic">
-             <normaloff>.</normaloff>.</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1" colspan="2">
-          <widget class="QComboBox" name="comboSize">
            <item>
             <property name="text">
              <string notr="true">32x32</string>
@@ -186,6 +133,23 @@
            </property>
           </widget>
          </item>
+         <item row="2" column="0">
+          <widget class="QRadioButton" name="radioCommand">
+           <property name="text">
+            <string>Command</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1" colspan="2">
+          <widget class="QComboBox" name="comboBgColor">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
          <item row="3" column="0">
           <widget class="QLabel" name="label_3">
            <property name="text">
@@ -201,25 +165,12 @@
           </widget>
          </item>
          <item row="5" column="1" colspan="2">
-          <widget class="QComboBox" name="comboBorderColor"/>
-         </item>
-         <item row="6" column="0" colspan="3">
-          <widget class="QPushButton" name="buttonPrev">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Back</string>
-           </property>
-           <property name="icon">
-            <iconset theme="go-previous">
-             <normaloff>.</normaloff>.</iconset>
+          <widget class="QComboBox" name="comboBorderColor">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
           </widget>
          </item>
@@ -251,8 +202,117 @@
          </item>
          <item row="0" column="1" colspan="2">
           <widget class="QPushButton" name="buttonSelectApp">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="text">
             <string>Select...</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="3">
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Expanding</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>400</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QFrame" name="frame_2">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="0">
+          <widget class="QPushButton" name="buttonPrev">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Back</string>
+           </property>
+           <property name="icon">
+            <iconset theme="go-previous">
+             <normaloff>.</normaloff>.</iconset>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="buttonNext">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Next</string>
+           </property>
+           <property name="icon">
+            <iconset theme="go-next"/>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QPushButton" name="buttonDelete">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Delete this application</string>
+           </property>
+           <property name="icon">
+            <iconset theme="edit-delete-symbolic">
+             <normaloff>.</normaloff>.</iconset>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QPushButton" name="buttonAdd">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Add application</string>
+           </property>
+           <property name="icon">
+            <iconset theme="add"/>
            </property>
           </widget>
          </item>
@@ -453,9 +513,6 @@
   <tabstop>comboSize</tabstop>
   <tabstop>comboBgColor</tabstop>
   <tabstop>comboBorderColor</tabstop>
-  <tabstop>buttonPrev</tabstop>
-  <tabstop>buttonNext</tabstop>
-  <tabstop>buttonDelete</tabstop>
   <tabstop>buttonAbout</tabstop>
   <tabstop>buttonHelp</tabstop>
   <tabstop>buttonSave</tabstop>

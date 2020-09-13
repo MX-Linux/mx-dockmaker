@@ -27,6 +27,7 @@
 
 #include <QFile>
 #include <QMessageBox>
+#include <QMouseEvent>
 
 #include "cmd.h"
 
@@ -50,15 +51,14 @@ public:
     void cleanup();
     void deleteDock();
     void displayIcon(const QString &app_name, int location);
-    void ifNotDoneDisableButtons();
+    bool checkDoneEditing();
     void editDock(QString file_arg = QString());
-    void enableNext();
     void moveDock();
     void newDock();
     void parseFile(QFile &file);
     void resetAdd();
     void setup(QString file = QString());
-    void showApp(int i);
+    void showApp(int i, int old_idx);
     void updateAppList(int idx);
 
     QString findIcon(const QString &icon_name);
@@ -71,6 +71,7 @@ public slots:
 
 private slots:
     void itemChanged();
+    void mousePressEvent(QMouseEvent *event);
     void on_buttonSave_clicked();
     void on_buttonAbout_clicked();
     void on_buttonHelp_clicked();
@@ -85,6 +86,8 @@ private slots:
     void on_comboSize_currentIndexChanged(const QString);
     void on_radioDesktop_toggled(bool checked);
     void on_lineEditCommand_textEdited(const QString);
+
+    void on_buttonAdd_clicked();
 
 private:
     Ui::MainWindow *ui;
