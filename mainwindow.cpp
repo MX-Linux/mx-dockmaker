@@ -239,11 +239,9 @@ void MainWindow::itemChanged()
     changed = true;
     ui->buttonSave->setEnabled(true);
     updateAppList(index);
-
     checkDoneEditing();
-
     displayIcon(ui->buttonSelectApp->text(), index);
-    list_icons.at(index)->setStyleSheet("background-color: " + ui->comboBgColor->currentText() + ";border: 4px solid " + ui->comboBorderColor->currentText() + ";");
+    list_icons.at(index)->setStyleSheet(list_icons.at(index)->styleSheet() + "border-width: 10px;");
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -263,6 +261,19 @@ void MainWindow::updateAppList(int idx)
                                         ui->buttonSelectApp->property("extra_options").toString()});
     (idx < apps.size()) ? apps.replace(idx, app_info) : apps.push_back(app_info);
 }
+
+void MainWindow::updateOptions()
+{
+    QStringList app_info = QStringList({apps.at(index).at(0), apps.at(index).at(1), apps.at(index).at(2),
+                                        ui->comboSize->currentText(), ui->comboBgColor->currentText(), ui->comboBorderColor->currentText(),
+                                        apps.at(index).at(6)});
+    (index < apps.size()) ? apps.replace(index, app_info) : apps.push_back(app_info);
+    displayIcon(ui->buttonSelectApp->text(), index);
+    list_icons.at(index)->setStyleSheet("background-color: " + ui->comboBgColor->currentText() + ";border: 10px solid " + ui->comboBorderColor->currentText() + ";");
+    checkDoneEditing();
+}
+
+
 
 void MainWindow::addDockToMenu(const QString &file_name)
 {
@@ -393,11 +404,11 @@ void MainWindow::parseFile(QFile &file)
                     ui->radioDesktop->setChecked(true);
                     if (tokens.size() > 1) ui->buttonSelectApp->setText(tokens.at(1));
                     ui->buttonSelectIcon->setToolTip(QString());
-                    ui->buttonSelectIcon->setStyleSheet("text-align: left;");
+                    ui->buttonSelectIcon->setStyleSheet("text-align: center; padding: 3px;");
                 } else if ((tokens.at(0) ==  "c") | (tokens.at(0) == "command")) {
                     ui->radioCommand->setChecked(true);
                     if (tokens.size() > 1) ui->lineEditCommand->setText(tokens.mid(1).join(" "));
-                    ui->buttonSelectIcon->setStyleSheet("text-align: right;");
+                    ui->buttonSelectIcon->setStyleSheet("text-align: right; padding: 3px;");
                 } else if ((tokens.at(0) == "i") | (tokens.at(0) == "icon")) {
                     if (tokens.size() > 1) {
                         ui->buttonSelectIcon->setText(tokens.mid(1).join(" "));
@@ -518,17 +529,17 @@ void MainWindow::on_buttonHelp_clicked()
 
 void MainWindow::on_comboSize_currentIndexChanged(const QString)
 {
-    itemChanged();
+    updateOptions();
 }
 
 void MainWindow::on_comboBgColor_currentIndexChanged(const QString)
 {
-    itemChanged();
+    updateOptions();
 }
 
 void MainWindow::on_comboBorderColor_currentIndexChanged(const QString)
 {
-    itemChanged();
+    updateOptions();
 }
 
 
@@ -581,26 +592,26 @@ void MainWindow::resetAdd()
     blockComboSignals(false);
 
     ui->buttonSelectIcon->setToolTip(QString());
-    ui->buttonSelectIcon->setStyleSheet("text-align: left;");
+    ui->buttonSelectIcon->setStyleSheet("text-align: center; padding: 3px;");
 }
 
 void MainWindow::showApp(int idx, int old_idx)
 {
+    ui->buttonSelectApp->setText(apps.at(idx).at(0));
+
     if (apps.at(idx).at(0).endsWith(".desktop") || apps.at(idx).at(1).isEmpty()) {
         ui->radioDesktop->click();
         ui->radioDesktop->toggled(true);
         ui->buttonSelectIcon->setToolTip(QString());
-        ui->buttonSelectIcon->setStyleSheet("text-align: left;");
+        ui->buttonSelectIcon->setStyleSheet("text-align: center; padding: 3px;");
     } else {
         ui->radioCommand->click();
         ui->radioDesktop->toggled(false);
         ui->lineEditCommand->setText(apps.at(idx).at(1));
         ui->buttonSelectIcon->setText(apps.at(idx).at(2));
         ui->buttonSelectIcon->setToolTip(apps.at(idx).at(2));
-        ui->buttonSelectIcon->setStyleSheet("text-align: right;");
+        ui->buttonSelectIcon->setStyleSheet("text-align: right; padding: 3px;");
     }
-
-    ui->buttonSelectApp->setText(apps.at(idx).at(0));
 
     blockComboSignals(true);
     ui->comboSize->setCurrentIndex(ui->comboSize->findText(apps.at(idx).at(3)));
@@ -609,10 +620,13 @@ void MainWindow::showApp(int idx, int old_idx)
     ui->buttonSelectApp->setProperty("extra_options", apps.at(idx).at(6));
     blockComboSignals(false);
 
-    ui->buttonNext->setDisabled(idx >= apps.size() - 1 || apps.size() == 1);
+    // set buttons
+    ui->buttonNext->setDisabled(idx == apps.size() - 1 || apps.size() == 1);
     ui->buttonPrev->setDisabled(idx == 0);
     ui->buttonAdd->setDisabled(apps.isEmpty());
     ui->buttonDelete->setEnabled(true);
+    ui->buttonMoveLeft->setDisabled(idx == 0);
+    ui->buttonMoveRight->setDisabled(idx == apps.size() - 1);
 
     if (old_idx != -1) list_icons.at(old_idx)->setStyleSheet(list_icons.at(old_idx)->styleSheet() + "border-width: 4px;");
     list_icons.at(idx)->setStyleSheet(list_icons.at(idx)->styleSheet() + "border-width: 10px;");
@@ -690,8 +704,13 @@ void MainWindow::on_radioDesktop_toggled(bool checked)
     ui->buttonSelectApp->setEnabled(checked);
     ui->lineEditCommand->setEnabled(!checked);
     ui->buttonSelectIcon->setEnabled(!checked);
-    if (!checked) ui->buttonSelectApp->setText(tr("Select..."));
-    if (checked) ui->buttonSelectIcon->setText(tr("Select icon..."));
+    if (checked) {
+        ui->buttonSelectIcon->setText(tr("Select icon..."));
+        ui->buttonSelectIcon->setStyleSheet("text-align: center; padding: 3px;");
+    } else {
+        ui->buttonSelectApp->setText(tr("Select..."));
+    }
+    checkDoneEditing();
 }
 
 void MainWindow::on_buttonSelectIcon_clicked()
@@ -702,8 +721,10 @@ void MainWindow::on_buttonSelectIcon_clicked()
     if (!file.isEmpty()) {
         ui->buttonSelectIcon->setText(selected);
         ui->buttonSelectIcon->setToolTip(selected);
-        ui->buttonSelectIcon->setStyleSheet("text-align: right;");
+        ui->buttonSelectIcon->setStyleSheet("text-align: right; padding: 3px;");
         updateAppList(index);
+        displayIcon(ui->buttonSelectIcon->text(), index);
+        list_icons.at(index)->setStyleSheet(list_icons.at(index)->styleSheet() + "border-width: 10px;");
     }
    checkDoneEditing();
 }
@@ -737,3 +758,40 @@ void MainWindow::on_buttonAdd_clicked()
     checkDoneEditing();
 }
 
+
+void MainWindow::on_buttonMoveLeft_clicked()
+{
+    if(index == 0) return;
+
+    apps.swap(index, index - 1);
+    QPixmap map = *list_icons.at(index)->pixmap();
+    list_icons.at(index)->setPixmap(*list_icons.at(index - 1)->pixmap());
+    list_icons.at(index - 1)->setPixmap(map);
+    list_icons.at(index)->setStyleSheet(list_icons.at(index - 1)->styleSheet());
+
+    --index;
+    showApp(index, index - 1);
+    displayIcon(ui->buttonSelectApp->text(), index);
+    list_icons.at(index)->setStyleSheet(list_icons.at(index)->styleSheet() + "border-width: 10px;");
+
+    ui->buttonSave->setEnabled(checkDoneEditing());
+
+}
+
+void MainWindow::on_buttonMoveRight_clicked()
+{
+    if(index == apps.size() - 1) return;
+
+    apps.swap(index, index + 1);
+    QPixmap map = *list_icons.at(index)->pixmap();
+    list_icons.at(index)->setPixmap(*list_icons.at(index + 1)->pixmap());
+    list_icons.at(index + 1)->setPixmap(map);
+    list_icons.at(index)->setStyleSheet(list_icons.at(index + 1)->styleSheet());
+
+    ++index;
+    showApp(index, index - 1);
+    displayIcon(ui->buttonSelectApp->text(), index);
+    list_icons.at(index)->setStyleSheet(list_icons.at(index)->styleSheet() + "border-width: 10px;");
+
+    ui->buttonSave->setEnabled(checkDoneEditing());
+}

@@ -1,3 +1,9 @@
+mx-dockmaker (20.9.1) mx; urgency=medium
+
+  * added buttons to move icons
+
+ -- Adrian <adrian@mxlinux.org>  Tue, 15 Sep 2020 01:59:56 -0400
+
 mx-dockmaker (20.9) mx; urgency=medium
 
   * select icons with mouse click

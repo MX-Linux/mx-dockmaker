@@ -44,6 +44,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr, QString file = QString());
     ~MainWindow();
 
+    bool checkDoneEditing();
     bool isDockInMenu(const QString &file_name);
 
     void addDockToMenu(const QString &file_name);
@@ -51,7 +52,6 @@ public:
     void cleanup();
     void deleteDock();
     void displayIcon(const QString &app_name, int location);
-    bool checkDoneEditing();
     void editDock(QString file_arg = QString());
     void moveDock();
     void newDock();
@@ -60,6 +60,7 @@ public:
     void setup(QString file = QString());
     void showApp(int i, int old_idx);
     void updateAppList(int idx);
+    void updateOptions();
 
     QString findIcon(const QString &icon_name);
     QString findLargest(const QStringList &files);
@@ -72,22 +73,23 @@ public slots:
 private slots:
     void itemChanged();
     void mousePressEvent(QMouseEvent *event);
-    void on_buttonSave_clicked();
-    void on_buttonAbout_clicked();
-    void on_buttonHelp_clicked();
 
+    void on_buttonAbout_clicked();
+    void on_buttonAdd_clicked();
     void on_buttonDelete_clicked();
+    void on_buttonHelp_clicked();
+    void on_buttonMoveLeft_clicked();
+    void on_buttonMoveRight_clicked();
     void on_buttonNext_clicked();
     void on_buttonPrev_clicked();
+    void on_buttonSave_clicked();
     void on_buttonSelectApp_clicked();
     void on_buttonSelectIcon_clicked();
     void on_comboBgColor_currentIndexChanged(const QString);
     void on_comboBorderColor_currentIndexChanged(const QString);
     void on_comboSize_currentIndexChanged(const QString);
-    void on_radioDesktop_toggled(bool checked);
     void on_lineEditCommand_textEdited(const QString);
-
-    void on_buttonAdd_clicked();
+    void on_radioDesktop_toggled(bool checked);
 
 private:
     Ui::MainWindow *ui;

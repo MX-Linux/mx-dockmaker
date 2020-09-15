@@ -14,17 +14,17 @@
         <translation>Käyttö</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="101"/>
+        <location filename="../mainwindow.ui" line="118"/>
         <source>Add New Application</source>
         <translation>Lisää uusi sovellus</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="139"/>
+        <location filename="../mainwindow.ui" line="131"/>
         <source>Command</source>
         <translation>Käsky</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="312"/>
+        <location filename="../mainwindow.ui" line="301"/>
         <source>Add application</source>
         <translation>Lisää sovellus</translation>
     </message>
@@ -33,97 +33,107 @@
         <translation type="vanished">Poista viimeksi lisätty sovellus</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="132"/>
+        <location filename="../mainwindow.ui" line="124"/>
         <source>Border</source>
         <translation>Raja</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="156"/>
+        <location filename="../mainwindow.ui" line="154"/>
         <source>Size</source>
         <translation>Koko</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="212"/>
+        <location filename="../mainwindow.ui" line="229"/>
         <location filename="../mainwindow.cpp" line="82"/>
-        <location filename="../mainwindow.cpp" line="571"/>
-        <location filename="../mainwindow.cpp" line="693"/>
+        <location filename="../mainwindow.cpp" line="582"/>
+        <location filename="../mainwindow.cpp" line="711"/>
         <source>Select...</source>
         <translation>Valitse...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="163"/>
+        <location filename="../mainwindow.ui" line="161"/>
         <source>Background</source>
         <translation>Taustakuva</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="256"/>
+        <location filename="../mainwindow.ui" line="379"/>
         <source>Back</source>
         <translation>Takaisin</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="180"/>
+        <location filename="../mainwindow.ui" line="184"/>
         <source>File</source>
         <translation>Tiedosto</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="199"/>
-        <location filename="../mainwindow.cpp" line="694"/>
-        <location filename="../mainwindow.cpp" line="714"/>
+        <location filename="../mainwindow.ui" line="216"/>
+        <location filename="../mainwindow.cpp" line="708"/>
+        <location filename="../mainwindow.cpp" line="735"/>
         <source>Select icon...</source>
         <translation>Valitse kuvake...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="89"/>
+        <location filename="../mainwindow.ui" line="106"/>
         <source>Dock Preview</source>
         <translation>Telakan esikatselu</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="354"/>
+        <location filename="../mainwindow.ui" line="315"/>
+        <source>Move right</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="328"/>
+        <source>Move left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="439"/>
         <source>Display help </source>
         <translation>Näytä ohje</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="357"/>
+        <location filename="../mainwindow.ui" line="442"/>
         <source>Help</source>
         <translation>Ohje</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="364"/>
+        <location filename="../mainwindow.ui" line="449"/>
         <source>Alt+H</source>
         <translation>Alt+H</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="393"/>
+        <location filename="../mainwindow.ui" line="478"/>
         <source>About this application</source>
         <translation>Tietoja tästä sovelluksesta</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="396"/>
+        <location filename="../mainwindow.ui" line="481"/>
         <source>About...</source>
         <translation>Tietoja...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="403"/>
+        <location filename="../mainwindow.ui" line="488"/>
         <source>Alt+B</source>
         <translation>Alt+B</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="435"/>
+        <location filename="../mainwindow.ui" line="520"/>
         <source>Quit application</source>
         <translation>Lopeta sovellus</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="438"/>
+        <location filename="../mainwindow.ui" line="523"/>
         <source>Close</source>
         <translation>Sulje</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="445"/>
+        <location filename="../mainwindow.ui" line="530"/>
         <source>Alt+N</source>
         <translation>Alt+N</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="486"/>
+        <location filename="../mainwindow.ui" line="571"/>
         <source>Save</source>
         <translation>Tallenna</translation>
     </message>
@@ -140,13 +150,13 @@
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="126"/>
-        <location filename="../mainwindow.cpp" line="579"/>
+        <location filename="../mainwindow.cpp" line="590"/>
         <source>black</source>
         <translation>musta</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="127"/>
-        <location filename="../mainwindow.cpp" line="580"/>
+        <location filename="../mainwindow.cpp" line="591"/>
         <source>white</source>
         <translation>valkoinen</translation>
     </message>
@@ -172,7 +182,7 @@
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="142"/>
-        <location filename="../mainwindow.cpp" line="284"/>
+        <location filename="../mainwindow.cpp" line="295"/>
         <source>&amp;Delete</source>
         <translation>&amp;Poista</translation>
     </message>
@@ -196,22 +206,22 @@
         <translation>Syötä päävalikossa näytettävä nimi:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="282"/>
+        <location filename="../mainwindow.cpp" line="293"/>
         <source>Select dock to delete</source>
         <translation>Valitse poistettava telakka</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="283"/>
+        <location filename="../mainwindow.cpp" line="294"/>
         <source>Confirmation</source>
         <translation>Vahvistus</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="284"/>
+        <location filename="../mainwindow.cpp" line="295"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>Oletko varma että haluat poistaa kohteen %1?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="284"/>
+        <location filename="../mainwindow.cpp" line="295"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Keskeytä</translation>
     </message>
@@ -220,37 +230,37 @@
         <translation type="vanished">Poista viimeisin sovellus</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="282"/>
+        <location filename="../mainwindow.ui" line="353"/>
         <source>Next</source>
         <translation>Seuraava</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="295"/>
+        <location filename="../mainwindow.ui" line="393"/>
         <source>Delete this application</source>
         <translation>Poista tämä sovellus</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="442"/>
+        <location filename="../mainwindow.cpp" line="453"/>
         <source>Overwrite?</source>
         <translation>Ylikirjoita?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="442"/>
+        <location filename="../mainwindow.cpp" line="453"/>
         <source>Do you want to overwrite the dock file?</source>
         <translation>Haluatko ylikirjoittaa telakkatiedoston?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="443"/>
+        <location filename="../mainwindow.cpp" line="454"/>
         <source>Save file</source>
         <translation>Tallenna tiedosto</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="481"/>
+        <location filename="../mainwindow.cpp" line="492"/>
         <source>Dock saved</source>
         <translation>Telakka tallennettu</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="481"/>
+        <location filename="../mainwindow.cpp" line="492"/>
         <source>The dock has been saved.
 
 To edit the newly created dock please select &apos;Edit an existing dock&apos;.</source>
@@ -259,32 +269,32 @@ To edit the newly created dock please select &apos;Edit an existing dock&apos;.<
 Muokataksesi äskettäin luotua telakkaa valitse &apos;muokkaa olemassaolevaa telakkaa&apos;.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="500"/>
+        <location filename="../mainwindow.cpp" line="511"/>
         <source>About %1</source>
         <translation>%1 lisätietoja</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="502"/>
+        <location filename="../mainwindow.cpp" line="513"/>
         <source>Version: </source>
         <translation>Versio: </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="503"/>
+        <location filename="../mainwindow.cpp" line="514"/>
         <source>Description goes here</source>
         <translation>Kuvaus tulee tähän</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="505"/>
+        <location filename="../mainwindow.cpp" line="516"/>
         <source>Copyright (c) MX Linux</source>
         <translation>Copyright (c) MX Linux</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="506"/>
+        <location filename="../mainwindow.cpp" line="517"/>
         <source>%1 License</source>
         <translation>%1 lupa</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="515"/>
+        <location filename="../mainwindow.cpp" line="526"/>
         <source>%1 Help</source>
         <translation>%1 Apuopas</translation>
     </message>
@@ -293,36 +303,36 @@ Muokataksesi äskettäin luotua telakkaa valitse &apos;muokkaa olemassaolevaa te
         <translation type="vanished">Valitse tiedosto.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="624"/>
+        <location filename="../mainwindow.cpp" line="638"/>
         <source>Select .desktop file</source>
         <translation>Valitse tiedosto muotoa .desktop</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="624"/>
+        <location filename="../mainwindow.cpp" line="638"/>
         <source>Desktop Files (*.desktop)</source>
         <translation>Työpöytätiedostot (*.desktop)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="643"/>
+        <location filename="../mainwindow.cpp" line="657"/>
         <source>Select a dock file</source>
         <translation>Valitse telakkatiedosto</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="646"/>
+        <location filename="../mainwindow.cpp" line="660"/>
         <source>No file selected</source>
         <translation>Tiedostoa ei valittu</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="646"/>
+        <location filename="../mainwindow.cpp" line="660"/>
         <source>You haven&apos;t selected any dock file to edit.
 Creating a new dock instead.</source>
         <translation>Et ole valinnut yhtäkään telakkatiedostoa muokattavaksi.
 Luodaan sen sijasta uusi telakka.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="319"/>
-        <location filename="../mainwindow.cpp" line="340"/>
-        <location filename="../mainwindow.cpp" line="652"/>
+        <location filename="../mainwindow.cpp" line="330"/>
+        <location filename="../mainwindow.cpp" line="351"/>
+        <location filename="../mainwindow.cpp" line="666"/>
         <source>Could not open file</source>
         <translation>Tiedostoa ei voitu avata</translation>
     </message>
@@ -332,27 +342,27 @@ Luodaan sen sijasta uusi telakka.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="309"/>
+        <location filename="../mainwindow.cpp" line="320"/>
         <source>Select dock to move</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="282"/>
-        <location filename="../mainwindow.cpp" line="309"/>
-        <location filename="../mainwindow.cpp" line="443"/>
-        <location filename="../mainwindow.cpp" line="643"/>
+        <location filename="../mainwindow.cpp" line="293"/>
+        <location filename="../mainwindow.cpp" line="320"/>
+        <location filename="../mainwindow.cpp" line="454"/>
+        <location filename="../mainwindow.cpp" line="657"/>
         <source>Dock Files (*.mxdk);;All Files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="652"/>
+        <location filename="../mainwindow.cpp" line="666"/>
         <source>Could not open selected file.
 Creating a new dock instead.</source>
         <translation>Valittua tiedostoa ei voitu avata.
 Luodaan sen sijasta uusi telakka.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="661"/>
+        <location filename="../mainwindow.cpp" line="675"/>
         <source>1. Edit applications one at a time using the Back and Next buttons
 2. Add or delete applications as you like
 3. When finished click Save</source>
@@ -361,12 +371,12 @@ Luodaan sen sijasta uusi telakka.</translation>
 3. Kun olet saanut kaiken päätökseen napsauta Tallenna</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="700"/>
+        <location filename="../mainwindow.cpp" line="719"/>
         <source>Select icon</source>
         <translation>Valitse kuvake</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="700"/>
+        <location filename="../mainwindow.cpp" line="719"/>
         <source>Icons (*.png *.jpg *.bmp *.xpm *.svg)</source>
         <translation>Kuvakkeet (*.png *.jpg *.bmp *.xpm *.svg)</translation>
     </message>
