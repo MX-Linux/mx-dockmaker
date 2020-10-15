@@ -1,0 +1,49 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Format: 1.8
+Date: Thu, 15 Oct 2020 11:06:54 -0400
+Source: mx-dockmaker
+Binary: mx-dockmaker
+Architecture: source amd64
+Version: 20.10
+Distribution: mx
+Urgency: medium
+Maintainer: Adrian <adrian@mxlinux.org>
+Changed-By: Adrian <adrian@mxlinux.org>
+Description:
+ mx-dockmaker - mx-dockmaker
+Changes:
+ mx-dockmaker (20.10) mx; urgency=medium
+ .
+   * update translations
+Checksums-Sha1:
+ 62b776a62e37a286f2614e725413add95c6e67af 1125 mx-dockmaker_20.10.dsc
+ 5615a836cfc8c4b9315cea79a47dc938ad27c5f0 66512 mx-dockmaker_20.10.tar.xz
+ 0c0761bd671b233140d75fb16e336f2260609bd6 923190 mx-dockmaker-dbgsym_20.10_amd64.deb
+ 25447040c60336f6e5461a1d6c16b3665f340da8 10708 mx-dockmaker_20.10_amd64.buildinfo
+ 5584cc9961f1e50deeb6d3c1fabcd842ab1e6e5f 100028 mx-dockmaker_20.10_amd64.deb
+Checksums-Sha256:
+ 7c4e07ab750310bbac0c079a144b7902baee136c9679943195573b05e74ba88a 1125 mx-dockmaker_20.10.dsc
+ 003e43baca12512d7dbdbc6c824d23fb6c6deef3dbef16c5c2966eb5cc66b8c3 66512 mx-dockmaker_20.10.tar.xz
+ ebd9d9265014cbb5dfe4189b02daed1a79d6cdfcee321c5bc0e05fc88a30e933 923190 mx-dockmaker-dbgsym_20.10_amd64.deb
+ 4e2f9d24803c8743c93abbdafd9863ff6e127036b573f117dc522e47ae61bee6 10708 mx-dockmaker_20.10_amd64.buildinfo
+ b557c6f79b03ff9417828bac0560e8d1bc5b18e12e32ad7dbd95297ceb6003db 100028 mx-dockmaker_20.10_amd64.deb
+Files:
+ 7d2f838433bad0f231b78cced48ba12f 1125 admin optional mx-dockmaker_20.10.dsc
+ ffb226047344ff352be8a3a599a3f0de 66512 admin optional mx-dockmaker_20.10.tar.xz
+ bdbc5793892e7c0a64218dac586ee83e 923190 debug extra mx-dockmaker-dbgsym_20.10_amd64.deb
+ 8e534585b20512ab2a3086e257e49108 10708 admin optional mx-dockmaker_20.10_amd64.buildinfo
+ 6d61be28aa95a387b6afe1573e12c446 100028 admin optional mx-dockmaker_20.10_amd64.deb
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAl+Ia3QTHGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumPDzB/403uMgdmuY6EtYn1cu5xfdK/P4lQQx
+oZiwPwkyazxb9ZxIZ00N5oYQi2pBDQm8jqUc6OnsqwBGVc2eeRlgMmsM0b4X87Yd
+VgbFU5Uwj65jikRz9A+jqTsmfBR4JM01ttaXg0MTj9pEDCnQB86zDR0GMal12QrL
+W9+Y8lxaIMj/UY6JdXXvgsGv/aKXkIpft3mKdxw0gnqF3sqRgug6NcoEaVFDqdO0
+jbMkvgPrKtVSFeAqLhbO/IJy+jcWRH1axXKJ8pWrjwtr88I7xh2vnXc9FzSwjN21
+LBPc2jZtqzWhpHPW58WbtOnpE0oqv61+6P6RQt9k5Xl5aehC8U/yIVI/
+=gK4z
+-----END PGP SIGNATURE-----
