@@ -23,32 +23,32 @@ Changes:
    * prompt for new dock name in menu if not overwriting
    * fix inconsistencies enable/disable Save button * save slit location when not initially present in script
 Checksums-Sha1:
- 14483f394366233fe3c9434889119bd91d68f499 1125 mx-dockmaker_20.11.dsc
- ca14d535827992072d0f4cda065a358a8e165f79 66860 mx-dockmaker_20.11.tar.xz
- ebef934696ace2fe4fed74152b483555377ede3c 928550 mx-dockmaker-dbgsym_20.11_amd64.deb
- 54ba8a8f48e6817027575ea8483e687d72ac325d 10708 mx-dockmaker_20.11_amd64.buildinfo
- 0b72adcd10cdadca39cb9208575d682874053dac 102286 mx-dockmaker_20.11_amd64.deb
+ 5fe40df8986cb4ae93d4111b055d248561b04f5d 1125 mx-dockmaker_20.11.dsc
+ 54ab8f7f1c396f1b605d2834d8f8ba39a89c8577 66840 mx-dockmaker_20.11.tar.xz
+ a9936d85ed75419c78838f4032b77fabe3d16474 928596 mx-dockmaker-dbgsym_20.11_amd64.deb
+ d6dd27b60e0022b49396954b50ab9631c6c97463 10708 mx-dockmaker_20.11_amd64.buildinfo
+ 9486921c7e81f888f040aa98476da89ea6d95033 102308 mx-dockmaker_20.11_amd64.deb
 Checksums-Sha256:
- bebbad2a861e1943056753786fdc941f2662a7ca7b38b5d8915114f3f5bbc185 1125 mx-dockmaker_20.11.dsc
- 955c574d6247f411cc381b09e6c8195c7319370782326934863a41e1eef62292 66860 mx-dockmaker_20.11.tar.xz
- 042e20665ce3a32ab32e59debe0c2acc5ca855c34959fd7b313dff34b4ead90b 928550 mx-dockmaker-dbgsym_20.11_amd64.deb
- efe743fd0f48688726180b96ad7a6098a8b98eaef1c20101a29be1554449deff 10708 mx-dockmaker_20.11_amd64.buildinfo
- 076aebec5b0ad09fe41c26d895db62b88e325bd17ea05d9273a34eb88c237c9f 102286 mx-dockmaker_20.11_amd64.deb
+ a63787997298902b9fced7c56b385e993fb5618d3ec9474ef0a7fc1d80c2d3d1 1125 mx-dockmaker_20.11.dsc
+ d9a769fd243067890b085c8ed35e75923faefadbac56a532a287ab4ecb32a057 66840 mx-dockmaker_20.11.tar.xz
+ cb3270aea3a1bf9ef56126bd3aabfe3c217fcc06afb51399c77ad48ede03cd43 928596 mx-dockmaker-dbgsym_20.11_amd64.deb
+ 816a8b738f9a8c85df71ff6ebb8be40de84f1e0a218e9ab24900c062695822a9 10708 mx-dockmaker_20.11_amd64.buildinfo
+ f967a43831e4ca5dba3c379629cde9bf0f3c95a2d7df14da37f0c5a0adbb6c6a 102308 mx-dockmaker_20.11_amd64.deb
 Files:
- b72fcc672bc122d42d49970e473608bc 1125 admin optional mx-dockmaker_20.11.dsc
- d686eca272c0427ab11d2e2225e70769 66860 admin optional mx-dockmaker_20.11.tar.xz
- 3916922d5e8e9148fd4ea7580341421a 928550 debug extra mx-dockmaker-dbgsym_20.11_amd64.deb
- 79b949378ffb122401daf5f802c944ce 10708 admin optional mx-dockmaker_20.11_amd64.buildinfo
- 1f12d25a21e4f7f522759a4d2d48a125 102286 admin optional mx-dockmaker_20.11_amd64.deb
+ fedac56ad94c8b0d0f0f9873a144bbcb 1125 admin optional mx-dockmaker_20.11.dsc
+ 59ff6f28499337b8dbedf7cde47e6840 66840 admin optional mx-dockmaker_20.11.tar.xz
+ 4f9317c859906b5d3aad841edddb1d1e 928596 debug extra mx-dockmaker-dbgsym_20.11_amd64.deb
+ 2a25f3c041ccb687f17a6e352e90c026 10708 admin optional mx-dockmaker_20.11_amd64.buildinfo
+ c08041cc80f925f5ceb09eeb0db74433 102308 admin optional mx-dockmaker_20.11_amd64.deb
 
 -----BEGIN PGP SIGNATURE-----
 
-iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAl+8FeMTHGFkcmlhbkBt
-eGxpbnV4Lm9yZwAKCRBwk4x4BnnumBueB/4vxufwFLStsuCGCqQdMxqFn6fqEMDG
-EFMFU6JT5ik8oBTg4IPayRMBAvDHNHwlg6anT6u+8WZiD/79N6xKcLm2J7LgGwnv
-jAYNeTLQ+dA8hKrfHfOcYOMVefMJ8xTyJbO0xohjLQKwD4dqh574m+riourKqlq7
-C4CAEOlwok56p2NIuGqzekuIK6NPht8oBCUueWcZtdPHWuWG8yXbTg8zaWHytrOk
-uKhMVnq0aOz7/wqYNEBU58EqlNSoF2oy8XZJpzXRObMCJ4TMQ2ce0NJXzq9xg5sF
-17LWGKwo55oyv/kHIpXwGGUkZJcrPMmjcFXEIJOsrSj2LtzqPc/kiisO
-=kD1T
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAl+8HbwTHGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumEJjB/kBrLVu3NbhiP82DLx1EuHUxEEcItJ8
+tm62ynSozX2+sfKfa5QTsrcLohd5LfKLfWVNRHFKgc1bCv0/45L6eSl1WkXBLWnt
+58YyL91aM6usRNDVNwGFDooMxsQX1r6d0bphV6xvWCQbhmtJjkma8Fz+x/pgDvnn
+R7BAV5vsAuU7qeNVaOskSue9+fYyATGmDuTGHtV5ZdrEoYBVvVTn7TBjWB+HQ/s9
+synI4gBTD3RiLt1t+eASQsKZjqks+CHFqoz+4rtp4HvqAqGqRlTjxNLJ0Lt/1BYL
+FUHKtKUtPqPDB7vKpGa4FzCf1AeM1qjcWfTwU+RqCgSq8rtxQnE6TN0d
+=HLl/
 -----END PGP SIGNATURE-----

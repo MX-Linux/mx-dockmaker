@@ -836,6 +836,7 @@ void MainWindow::on_buttonAdd_clicked()
                                         ui->buttonSelectApp->property("extra_options").toString()});
     apps.insert(index, app_info);
     ui->icons->insertWidget(index, list_icons.at(index));
+    showApp(index, index - 1);
     itemChanged();
 }
 
