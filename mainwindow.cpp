@@ -342,7 +342,8 @@ void MainWindow::moveDock()
     slit_location = pickSlitLocation();
 
     // replace string
-    re.setPattern("sed -i.*");
+    re.setPattern("^sed -i.*");
+    re.setPatternOptions(QRegularExpression::MultilineOption);
     QString new_line = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + slit_location + "/' $HOME/.fluxbox/init";
 
     if(!file.open(QFile::Text | QFile::ReadWrite | QFile::Truncate)) {
@@ -353,10 +354,17 @@ void MainWindow::moveDock()
     }
     QTextStream out(&file);
 
+    // add shebang and pkill wmalauncher
+    out << "#!/bin/bash\n\n";
+    out << "pkill wmalauncher\n\n";
+
+    // remove if already existent
+    text.remove("#!/bin/bash\n\n").remove("#!/bin/bash\n").remove("pkill wmalauncher\n\n").remove("pkill wmalauncher\n");
+
     // if location line not found add it at the beginning
     if (!re.match(text).hasMatch()) {
-        out << "#!/bin/bash\n\n#set up slit location\n" + new_line + "\n";
-        out << text.remove("#!/bin/bash\n").remove("#set up slit location\n");
+        out << "#set up slit location\n" + new_line + "\n";
+        out << text.remove("#set up slit location\n");
     } else {
         out << text.replace(re, new_line);
     }
@@ -467,33 +475,39 @@ void MainWindow::on_buttonSave_clicked()
         qDebug() << "Could not open file:" << file.fileName();
         return;
     }
-    QTextStream stream(&file);
+    QTextStream out(&file);
 
     if (file_content.isEmpty()) {
         // build and write string
-        stream << "#!/bin/bash\n\n";
-        stream << "#set up slit location\n";
-        stream << "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + slit_location + "/' $HOME/.fluxbox/init\n\n";
-        stream << "fluxbox-remote restart; sleep 1\n\n";
-        stream << "#commands for dock launchers\n";
+        out << "#!/bin/bash\n\n";
+        out << "pkill wmalauncher\n\n";
+        out << "#set up slit location\n";
+        out << "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + slit_location + "/' $HOME/.fluxbox/init\n\n";
+        out << "fluxbox-remote restart; sleep 1\n\n";
+        out << "#commands for dock launchers\n";
     } else {
-        // replace string
-        QRegularExpression re;
-        re.setPattern("sed -i.*");
+        // add shebang and pkill wmalauncher
+        out << "#!/bin/bash\n\n";
+        out << "pkill wmalauncher\n\n";
+
+        // remove if already existent
+        file_content.remove("#!/bin/bash\n\n").remove("#!/bin/bash\n").remove("pkill wmalauncher\n\n").remove("pkill wmalauncher\n");
+
+        QRegularExpression re("^sed -i.*", QRegularExpression::MultilineOption);
         QString new_line = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + slit_location + "/' $HOME/.fluxbox/init";
 
         // if location line not found add it at the beginning
         if (!re.match(file_content).hasMatch()) {
-            stream << "#!/bin/bash\n\n#set up slit location\n" + new_line + "\n";
-            stream << file_content.remove("#!/bin/bash\n").remove("#set up slit location\n");
+            out << "#set up slit location\n" + new_line + "\n";
+            out << file_content.remove("#set up slit location\n");
         } else {
-            stream << file_content.replace(re, new_line);
+            out << file_content.replace(re, new_line);
         }
     }
 
     for (int i = 0; i < apps.size(); ++i) {
         QString command = (apps.at(i).at(0).endsWith(".desktop")) ? "--desktop-file " + apps.at(i).at(0) : "--command " + apps.at(i).at(1) + " --icon " + apps.at(i).at(2);
-        stream << "wmalauncher " + command + " --background-color " + apps.at(i).at(4) + " --border-color " +
+        out << "wmalauncher " + command + " --background-color " + apps.at(i).at(4) + " --border-color " +
                   apps.at(i).at(5) + " --window-size " + apps.at(i).at(3).section("x", 0, 0) + apps.at(i).at(6) + "& sleep 0.1\n";
     }
     file.close();
