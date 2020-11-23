@@ -24,6 +24,7 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QTimer>
+#include <QSettings>
 
 #include <about.h>
 #include <cmd.h>
@@ -124,8 +125,19 @@ void MainWindow::setup(QString file)
     ui->comboBgColor->addItems(color_list);
     ui->comboBorderColor->addItems(color_list);
 
-    ui->comboBgColor->setCurrentIndex(ui->comboBgColor->findText(tr("black")));
-    ui->comboBorderColor->setCurrentIndex(ui->comboBorderColor->findText(tr("white")));
+    QSettings settings("MX-Linux", "mx-dockmaker");
+
+    // Write configs if not there
+    settings.setValue("BackgroundColor", settings.value("BackgroundColor", "black").toString());
+    settings.setValue("FrameColor", settings.value("FrameColor", "white").toString());
+    settings.setValue("Size", settings.value("Size", "48x48").toString());
+
+    QString bg_color = settings.value("BackgroundColor", "black").toString();
+    QString border_color = settings.value("FrameColor", "white").toString();
+    QString size = settings.value("Size", "48x48").toString();
+
+    ui->comboBgColor->setCurrentIndex(ui->comboBgColor->findText(bg_color));
+    ui->comboBorderColor->setCurrentIndex(ui->comboBorderColor->findText(border_color));
 
     blockComboSignals(false);
 
@@ -589,10 +601,16 @@ void MainWindow::resetAdd()
     ui->radioDesktop->toggled(true);
     ui->buttonAdd->setDisabled(true);
 
+    QSettings settings("MX-Linux", "mx-dockmaker");
+
+    QString bg_color = settings.value("BackgroundColor", "black").toString();
+    QString border_color = settings.value("FrameColor", "white").toString();
+    QString size = settings.value("Size", "48x48").toString();
+
     blockComboSignals(true);
-    ui->comboSize->setCurrentIndex(ui->comboSize->findText("48x48"));
-    ui->comboBgColor->setCurrentIndex(ui->comboBgColor->findText(tr("black")));
-    ui->comboBorderColor->setCurrentIndex(ui->comboBorderColor->findText(tr("white")));
+    ui->comboSize->setCurrentIndex(ui->comboSize->findText(size));
+    ui->comboBgColor->setCurrentIndex(ui->comboBgColor->findText(bg_color));
+    ui->comboBorderColor->setCurrentIndex(ui->comboBorderColor->findText(border_color));
     blockComboSignals(false);
 
     ui->buttonSelectIcon->setToolTip(QString());
