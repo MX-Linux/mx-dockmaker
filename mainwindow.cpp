@@ -442,10 +442,12 @@ void MainWindow::on_buttonSave_clicked()
         dir.mkpath(QDir::homePath() + "/.fluxbox/scripts");
     }
 
+    bool new_file = false;
     if(!QFileInfo::exists(file_name) || QMessageBox::No == QMessageBox::question(this, tr("Overwrite?"), tr("Do you want to overwrite the dock file?"))) {
         file_name = QFileDialog::getSaveFileName(this, tr("Save file"), QDir::homePath() + "/.fluxbox/scripts", tr("Dock Files (*.mxdk);;All Files (*.*)"));
         if (file_name.isEmpty()) return;
         if (!file_name.endsWith(".mxdk")) file_name += ".mxdk";
+        new_file = true;
     }
     QFile file(file_name);
     cmd.run("cp " + file_name + " " + file_name + ".~", true);
@@ -485,7 +487,7 @@ void MainWindow::on_buttonSave_clicked()
     file.close();
     chmod(file_name.toUtf8(), 00744);
 
-    if (dock_name.isEmpty()) dock_name = inputDockName();
+    if (dock_name.isEmpty() || new_file) dock_name = inputDockName();
     if (dock_name.isEmpty()) dock_name = QFileInfo(file).baseName();
 
     if (!isDockInMenu(file.fileName())) {
