@@ -240,7 +240,8 @@ QString MainWindow::getDockName(const QString &file_name)
         file.close();
 
         text = re_file.match(text).captured();
-        QString name = re_name.match(text).captured().chopped(1).mid(1);
+        QString name = re_name.match(text).captured().mid(1);
+        name.chop(1);
         if (!name.isEmpty())
             return name;
     }
@@ -254,7 +255,10 @@ QString MainWindow::getDockName(const QString &file_name)
     file.close();
 
     text = re_file.match(text).captured();
-    return re_name.match(text).captured().chopped(1).mid(1);
+
+    QString name = re_name.match(text).captured().mid(1);
+    name.chop(1);
+    return name;
 }
 
 QString MainWindow::inputDockName()

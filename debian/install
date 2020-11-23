@@ -4,6 +4,3 @@ mx-dockmaker.desktop	usr/share/applications
 images/mx-dockmaker.png	usr/share/icons/hicolor/192x192/apps
 license.html            usr/share/doc/mx-dockmaker
 translations/*.qm	usr/share/mx-dockmaker/locale
-exit-options/system*.png usr/local/share/icons
-exit-options/exit-options  usr/bin
-docks/DefaultDock.mxdk etc/skel/.fluxbox/scripts

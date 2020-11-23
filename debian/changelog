@@ -1,3 +1,14 @@
+mx-dockmaker (20.11) mx; urgency=medium
+
+  * search for dock name in /usr/share/...; replaced external grep with QRegularExpression
+  * replaced external grep with QRegularExpression
+  * add pkill wmalauncher at the begining of the script
+  * add .conf file
+  * prompt for new dock name in menu if not overwriting
+  * fix inconsistencies enable/disable Save button * save slit location when not initially present in script
+
+ -- Adrian <adrian@mxlinux.org>  Mon, 23 Nov 2020 14:39:47 -0500
+
 mx-dockmaker (20.10) mx; urgency=medium
 
   * update translations
