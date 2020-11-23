@@ -60,7 +60,12 @@ void MainWindow::displayIcon(const QString &app_name, int location)
     QPalette pal = palette();
     QString icon;
     if (ui->buttonSelectApp->text().endsWith(".desktop")) {
-        icon = cmd.getCmdOut("grep -m1 ^Icon= /usr/share/applications/" + app_name + "|cut -f2 -d=", true);
+        QFile file("/usr/share/applications/" + app_name);
+        if(!file.open(QFile::Text | QFile::ReadOnly)) return;
+        QString text = file.readAll();
+        file.close();
+        QRegularExpression re("^Icon=(.*)$", QRegularExpression::MultilineOption);
+        icon = re.match(text).captured(1);
     } else {
         icon = ui->buttonSelectIcon->text();
     }
