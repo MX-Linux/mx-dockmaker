@@ -229,7 +229,32 @@ QString MainWindow::findLargest(const QStringList &files)
 
 QString MainWindow::getDockName(const QString &file_name)
 {
-    return cmd.getCmdOut("grep " + QFileInfo(file_name).baseName() + " " + QDir::homePath() + "/.fluxbox/menu-mx|awk -F\"[()]\" '{print $2}'", true);
+    QRegularExpression re_file(".*" + QFileInfo(file_name).fileName());
+    QRegularExpression re_name("\\(.*\\)");
+
+    // check if dock name is in /usr/share...
+    QFile file("/usr/share/mxflux/menu/appearance");
+
+    if (file.open(QFile::Text | QFile::ReadOnly)) {
+        QString text = file.readAll();
+        file.close();
+
+        text = re_file.match(text).captured();
+        QString name = re_name.match(text).captured().chopped(1).mid(1);
+        if (!name.isEmpty())
+            return name;
+    }
+
+    // find dock name in menu-mx file
+    file.setFileName(QDir::homePath() + "/.fluxbox/menu-mx");
+
+    if(!file.open(QFile::Text | QFile::ReadOnly))
+        return QString();
+    QString text = file.readAll();
+    file.close();
+
+    text = re_file.match(text).captured();
+    return re_name.match(text).captured().chopped(1).mid(1);
 }
 
 QString MainWindow::inputDockName()
