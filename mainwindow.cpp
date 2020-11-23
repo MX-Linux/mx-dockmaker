@@ -79,8 +79,9 @@ void MainWindow::displayIcon(const QString &app_name, int location)
 bool MainWindow::checkDoneEditing()
 {
     if (!apps.isEmpty()) ui->buttonDelete->setEnabled(true);
+
     if (ui->buttonSelectApp->text() != tr("Select...") || !ui->lineEditCommand->text().isEmpty()) {
-        ui->buttonSave->setEnabled(true);
+        if (changed) ui->buttonSave->setEnabled(true);
         ui->buttonAdd->setEnabled(true);
         if (index != 0) ui->buttonPrev->setEnabled(true);
         if (index < apps.size() - 1 && apps.size() > 1) ui->buttonNext->setEnabled(true);
@@ -237,7 +238,6 @@ QString MainWindow::pickSlitLocation()
 void MainWindow::itemChanged()
 {
     changed = true;
-    ui->buttonSave->setEnabled(true);
     updateAppList(index);
     checkDoneEditing();
     displayIcon(ui->buttonSelectApp->text(), index);
@@ -261,19 +261,6 @@ void MainWindow::updateAppList(int idx)
                                         ui->buttonSelectApp->property("extra_options").toString()});
     (idx < apps.size()) ? apps.replace(idx, app_info) : apps.push_back(app_info);
 }
-
-void MainWindow::updateOptions()
-{
-    QStringList app_info = QStringList({apps.at(index).at(0), apps.at(index).at(1), apps.at(index).at(2),
-                                        ui->comboSize->currentText(), ui->comboBgColor->currentText(), ui->comboBorderColor->currentText(),
-                                        apps.at(index).at(6)});
-    (index < apps.size()) ? apps.replace(index, app_info) : apps.push_back(app_info);
-    displayIcon(ui->buttonSelectApp->text(), index);
-    list_icons.at(index)->setStyleSheet("background-color: " + ui->comboBgColor->currentText() + ";border: 10px solid " + ui->comboBorderColor->currentText() + ";");
-    checkDoneEditing();
-}
-
-
 
 void MainWindow::addDockToMenu(const QString &file_name)
 {
@@ -355,12 +342,15 @@ void MainWindow::moveDock()
     QTextStream out(&file);
 
     // if location line not found add it at the beginning
-    if (!re.match(text).hasMatch()) out << "\n#set up slit location\n" + new_line + "\n";
-
-    out << text.replace(re, new_line);
+    if (!re.match(text).hasMatch()) {
+        out << "#!/bin/bash\n\n#set up slit location\n" + new_line + "\n";
+        out << text.remove("#!/bin/bash\n").remove("#set up slit location\n");
+    } else {
+        out << text.replace(re, new_line);
+    }
 
     file.close();
-    cmd.run("pkill wmalauncher;" + file.fileName() + ";disown", true);
+    cmd.run("pkill wmalauncher;" + file.fileName() + "&disown", true);
     setup();
     this->show();
 }
@@ -368,6 +358,7 @@ void MainWindow::moveDock()
 void MainWindow::parseFile(QFile &file)
 {
     blockComboSignals(true);
+    parsing = true;
 
     const QStringList possible_locations({"TopLeft",    "TopCenter",    "TopRight",
                                           "LeftTop",                    "RightTop",
@@ -407,7 +398,7 @@ void MainWindow::parseFile(QFile &file)
                     ui->buttonSelectIcon->setStyleSheet("text-align: center; padding: 3px;");
                 } else if ((tokens.at(0) ==  "c") | (tokens.at(0) == "command")) {
                     ui->radioCommand->setChecked(true);
-                    if (tokens.size() > 1) ui->lineEditCommand->setText(tokens.mid(1).join(" "));
+                    if (tokens.size() > 1) ui->lineEditCommand->setText(tokens.mid(1).join(" ").trimmed());
                     ui->buttonSelectIcon->setStyleSheet("text-align: right; padding: 3px;");
                 } else if ((tokens.at(0) == "i") | (tokens.at(0) == "icon")) {
                     if (tokens.size() > 1) {
@@ -436,6 +427,7 @@ void MainWindow::parseFile(QFile &file)
     }
     ui->buttonSave->setDisabled(true);
     showApp(index = 0, -1);
+    parsing = false;
 }
 
 
@@ -471,7 +463,18 @@ void MainWindow::on_buttonSave_clicked()
         stream << "fluxbox-remote restart; sleep 1\n\n";
         stream << "#commands for dock launchers\n";
     } else {
-        stream << file_content;
+        // replace string
+        QRegularExpression re;
+        re.setPattern("sed -i.*");
+        QString new_line = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + slit_location + "/' $HOME/.fluxbox/init";
+
+        // if location line not found add it at the beginning
+        if (!re.match(file_content).hasMatch()) {
+            stream << "#!/bin/bash\n\n#set up slit location\n" + new_line + "\n";
+            stream << file_content.remove("#!/bin/bash\n").remove("#set up slit location\n");
+        } else {
+            stream << file_content.replace(re, new_line);
+        }
     }
 
     for (int i = 0; i < apps.size(); ++i) {
@@ -492,7 +495,7 @@ void MainWindow::on_buttonSave_clicked()
     QMessageBox::information(this, tr("Dock saved"), tr("The dock has been saved.\n\n"
                                                         "To edit the newly created dock please select 'Edit an existing dock'."));
 
-    cmd.run("pkill wmalauncher;" + file.fileName() + ";disown", true);
+    cmd.run("pkill wmalauncher;" + file.fileName() + "&disown", true);
 
     index = 0;
     apps.clear();
@@ -529,27 +532,26 @@ void MainWindow::on_buttonHelp_clicked()
 
 void MainWindow::on_comboSize_currentIndexChanged(const QString)
 {
-    updateOptions();
+    itemChanged();
 }
 
 void MainWindow::on_comboBgColor_currentIndexChanged(const QString)
 {
-    updateOptions();
+    itemChanged();
 }
 
 void MainWindow::on_comboBorderColor_currentIndexChanged(const QString)
 {
-    updateOptions();
+    itemChanged();
 }
 
 
 void MainWindow::on_buttonNext_clicked()
 {
     blockComboSignals(true);
-    if (changed) updateAppList(index);
+    updateAppList(index);
     index++;
     showApp(index, index - 1);
-    changed = false;
     blockComboSignals(false);
 }
 
@@ -597,21 +599,32 @@ void MainWindow::resetAdd()
 
 void MainWindow::showApp(int idx, int old_idx)
 {
-    ui->buttonSelectApp->setText(apps.at(idx).at(0));
+    ui->radioCommand->blockSignals(true);
+    ui->radioDesktop->blockSignals(true);
 
+    ui->buttonSelectApp->setText(apps.at(idx).at(0));
     if (apps.at(idx).at(0).endsWith(".desktop") || apps.at(idx).at(1).isEmpty()) {
-        ui->radioDesktop->click();
-        ui->radioDesktop->toggled(true);
-        ui->buttonSelectIcon->setToolTip(QString());
+        ui->radioDesktop->setChecked(true);
+        ui->lineEditCommand->clear();
+        ui->buttonSelectApp->setEnabled(true);
+        ui->lineEditCommand->setEnabled(false);
+        ui->buttonSelectIcon->setEnabled(false);
+        ui->buttonSelectIcon->setText(tr("Select icon..."));
         ui->buttonSelectIcon->setStyleSheet("text-align: center; padding: 3px;");
     } else {
-        ui->radioCommand->click();
-        ui->radioDesktop->toggled(false);
+        ui->radioCommand->setChecked(true);
+        ui->buttonSelectApp->setText(tr("Select..."));
+        ui->buttonSelectApp->setEnabled(false);
+        ui->lineEditCommand->setEnabled(true);
+        ui->buttonSelectIcon->setEnabled(true);
         ui->lineEditCommand->setText(apps.at(idx).at(1));
         ui->buttonSelectIcon->setText(apps.at(idx).at(2));
         ui->buttonSelectIcon->setToolTip(apps.at(idx).at(2));
         ui->buttonSelectIcon->setStyleSheet("text-align: right; padding: 3px;");
     }
+
+    ui->radioCommand->blockSignals(false);
+    ui->radioDesktop->blockSignals(false);
 
     blockComboSignals(true);
     ui->comboSize->setCurrentIndex(ui->comboSize->findText(apps.at(idx).at(3)));
@@ -669,7 +682,6 @@ void MainWindow::editDock(QString file_arg)
     file_name = file.fileName();
     dock_name = getDockName(file_name);
 
-
     parseFile(file);
     file.close();
     ui->labelUsage->setText(tr("1. Edit applications one at a time using the Back and Next buttons\n"
@@ -692,10 +704,11 @@ void MainWindow::newDock()
 
 void MainWindow::on_buttonPrev_clicked()
 {
-    if (changed) updateAppList(index);
-    changed = false;
+    blockComboSignals(true);
+    updateAppList(index);
     int old_idx = index;
     showApp(--index, old_idx);
+    blockComboSignals(false);
 }
 
 void MainWindow::on_radioDesktop_toggled(bool checked)
@@ -710,7 +723,7 @@ void MainWindow::on_radioDesktop_toggled(bool checked)
     } else {
         ui->buttonSelectApp->setText(tr("Select..."));
     }
-    checkDoneEditing();
+    if (!parsing) checkDoneEditing();
 }
 
 void MainWindow::on_buttonSelectIcon_clicked()
@@ -726,11 +739,12 @@ void MainWindow::on_buttonSelectIcon_clicked()
         displayIcon(ui->buttonSelectIcon->text(), index);
         list_icons.at(index)->setStyleSheet(list_icons.at(index)->styleSheet() + "border-width: 10px;");
     }
-   checkDoneEditing();
+    if (!parsing) checkDoneEditing();
 }
 
 void MainWindow::on_lineEditCommand_textEdited(const QString)
 {
+    qDebug() << "lineEditCommand changed";
     ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
     if(ui->buttonSelectIcon->text() != tr("Select icon...")) {
         ui->buttonSelectApp->setProperty("extra_options", QString()); // reset extra options when changing the command
@@ -740,7 +754,7 @@ void MainWindow::on_lineEditCommand_textEdited(const QString)
         ui->buttonNext->setEnabled(false);
         return;
     }
-    checkDoneEditing();
+    if (!parsing) checkDoneEditing();
 }
 
 
@@ -755,13 +769,13 @@ void MainWindow::on_buttonAdd_clicked()
     apps.insert(index, app_info);
     ui->icons->insertWidget(index, list_icons.at(index));
     itemChanged();
-    checkDoneEditing();
 }
 
 
 void MainWindow::on_buttonMoveLeft_clicked()
 {
     if(index == 0) return;
+    changed = true;
 
     apps.swap(index, index - 1);
     QPixmap map = *list_icons.at(index)->pixmap();
@@ -774,13 +788,13 @@ void MainWindow::on_buttonMoveLeft_clicked()
     displayIcon(ui->buttonSelectApp->text(), index);
     list_icons.at(index)->setStyleSheet(list_icons.at(index)->styleSheet() + "border-width: 10px;");
 
-    ui->buttonSave->setEnabled(checkDoneEditing());
-
+    checkDoneEditing();
 }
 
 void MainWindow::on_buttonMoveRight_clicked()
 {
     if(index == apps.size() - 1) return;
+    changed = true;
 
     apps.swap(index, index + 1);
     QPixmap map = *list_icons.at(index)->pixmap();
@@ -793,5 +807,5 @@ void MainWindow::on_buttonMoveRight_clicked()
     displayIcon(ui->buttonSelectApp->text(), index);
     list_icons.at(index)->setStyleSheet(list_icons.at(index)->styleSheet() + "border-width: 10px;");
 
-    ui->buttonSave->setEnabled(checkDoneEditing());
+    checkDoneEditing();
 }

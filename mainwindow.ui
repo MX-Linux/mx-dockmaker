@@ -315,7 +315,8 @@
             <string>Move right</string>
            </property>
            <property name="icon">
-            <iconset theme="arrow-right"/>
+            <iconset theme="arrow-right">
+             <normaloff>.</normaloff>.</iconset>
            </property>
           </widget>
          </item>
@@ -328,7 +329,8 @@
             <string>Move left</string>
            </property>
            <property name="icon">
-            <iconset theme="arrow-left"/>
+            <iconset theme="arrow-left">
+             <normaloff>.</normaloff>.</iconset>
            </property>
           </widget>
          </item>
@@ -575,7 +577,7 @@
          <normaloff>.</normaloff>.</iconset>
        </property>
        <property name="shortcut">
-        <string/>
+        <string>Alt+S</string>
        </property>
        <property name="autoDefault">
         <bool>true</bool>

@@ -60,7 +60,6 @@ public:
     void setup(QString file = QString());
     void showApp(int i, int old_idx);
     void updateAppList(int idx);
-    void updateOptions();
 
     QString findIcon(const QString &icon_name);
     QString findLargest(const QStringList &files);
@@ -97,6 +96,7 @@ private:
     Cmd cmd;
 
     bool changed = false;
+    bool parsing  = false;
     int index = 0;
     QList<QLabel *> list_icons;
     QString dock_name;
