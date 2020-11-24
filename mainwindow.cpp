@@ -760,7 +760,6 @@ void MainWindow::editDock(QString file_arg)
 
 void MainWindow::newDock()
 {
-    dock_name = inputDockName();
     this->show();
     apps.clear();
     list_icons.clear();

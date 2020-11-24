@@ -66,8 +66,8 @@
     <message>
         <location filename="../mainwindow.ui" line="216"/>
         <location filename="../mainwindow.cpp" line="680"/>
-        <location filename="../mainwindow.cpp" line="789"/>
-        <location filename="../mainwindow.cpp" line="817"/>
+        <location filename="../mainwindow.cpp" line="788"/>
+        <location filename="../mainwindow.cpp" line="816"/>
         <source>Select icon...</source>
         <translation>アイコンの選択...</translation>
     </message>
@@ -76,7 +76,7 @@
         <location filename="../mainwindow.cpp" line="89"/>
         <location filename="../mainwindow.cpp" line="646"/>
         <location filename="../mainwindow.cpp" line="684"/>
-        <location filename="../mainwindow.cpp" line="792"/>
+        <location filename="../mainwindow.cpp" line="791"/>
         <source>Select...</source>
         <translation>選択...</translation>
     </message>
@@ -356,12 +356,12 @@ Creating a new dock instead.</source>
 3. 完了したら、「保存」をクリックします。</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="800"/>
+        <location filename="../mainwindow.cpp" line="799"/>
         <source>Select icon</source>
         <translation>アイコンの選択</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="800"/>
+        <location filename="../mainwindow.cpp" line="799"/>
         <source>Icons (*.png *.jpg *.bmp *.xpm *.svg)</source>
         <translation>アイコン (*.png *.jpg *.bmp *.xpm *.svg)</translation>
     </message>

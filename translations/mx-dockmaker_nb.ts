@@ -66,8 +66,8 @@
     <message>
         <location filename="../mainwindow.ui" line="216"/>
         <location filename="../mainwindow.cpp" line="680"/>
-        <location filename="../mainwindow.cpp" line="789"/>
-        <location filename="../mainwindow.cpp" line="817"/>
+        <location filename="../mainwindow.cpp" line="788"/>
+        <location filename="../mainwindow.cpp" line="816"/>
         <source>Select icon...</source>
         <translation>Velg ikon …</translation>
     </message>
@@ -76,7 +76,7 @@
         <location filename="../mainwindow.cpp" line="89"/>
         <location filename="../mainwindow.cpp" line="646"/>
         <location filename="../mainwindow.cpp" line="684"/>
-        <location filename="../mainwindow.cpp" line="792"/>
+        <location filename="../mainwindow.cpp" line="791"/>
         <source>Select...</source>
         <translation>Velg …</translation>
     </message>
@@ -358,12 +358,12 @@ Oppretter nytt samlevindu istedenfor.</translation>
 3. Velg «Lagre» når du er ferdig</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="800"/>
+        <location filename="../mainwindow.cpp" line="799"/>
         <source>Select icon</source>
         <translation>Velg ikon</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="800"/>
+        <location filename="../mainwindow.cpp" line="799"/>
         <source>Icons (*.png *.jpg *.bmp *.xpm *.svg)</source>
         <translation>Ikoner (*.png *.jpg *.bmp *.xpm *.svg)</translation>
     </message>
