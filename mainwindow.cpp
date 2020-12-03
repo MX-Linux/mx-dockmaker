@@ -61,11 +61,14 @@ void MainWindow::displayIcon(const QString &app_name, int location)
     QString icon;
     if (ui->buttonSelectApp->text().endsWith(".desktop")) {
         QFile file("/usr/share/applications/" + app_name);
-        if(!file.open(QFile::Text | QFile::ReadOnly)) return;
-        QString text = file.readAll();
-        file.close();
-        QRegularExpression re("^Icon=(.*)$", QRegularExpression::MultilineOption);
-        icon = re.match(text).captured(1);
+        if(file.open(QFile::Text | QFile::ReadOnly)) {
+            QString text = file.readAll();
+            file.close();
+            QRegularExpression re("^Icon=(.*)$", QRegularExpression::MultilineOption);
+            icon = re.match(text).captured(1);
+        } else {
+            qDebug() << "Could not open/find file " << file.fileName();
+        }
     } else {
         icon = ui->buttonSelectIcon->text();
     }
@@ -187,6 +190,7 @@ void MainWindow::setup(QString file)
 
 QString MainWindow::findIcon(const QString &icon_name)
 {
+    if (icon_name.isEmpty()) return QString();
     if (QFileInfo::exists(icon_name)) return icon_name;
 
     const QStringList extList({".png", ".svg", ".xpm"});
