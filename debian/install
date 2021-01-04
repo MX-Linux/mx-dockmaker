@@ -1,4 +1,4 @@
-help			usr/share/doc/mx-dockmaker
+help/*			usr/share/doc/mx-dockmaker
 images/mx-dockmaker.png	usr/share/icons/hicolor/192x192/apps
 mx-dockmaker		usr/bin
 mx-dockmaker.conf	etc
