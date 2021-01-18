@@ -43,6 +43,13 @@ int main(int argc, char *argv[])
     appTran.load(QString("mx-dockmaker_") + QLocale::system().name(), "/usr/share/mx-dockmaker/locale");
     a.installTranslator(&appTran);
 
+    // root guard
+    if (system("logname |grep -q ^root$") == 0) {
+        QMessageBox::critical(nullptr, QObject::tr("Error"),
+                              QObject::tr("You seem to be logged in as root, please log out and log in as normal user to use this program."));
+        exit(EXIT_FAILURE);
+    }
+
     if (getuid() != 0) {
 
         QString file;
