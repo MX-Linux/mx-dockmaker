@@ -188,13 +188,18 @@ void MainWindow::setup(QString file)
     delete mbox;
 }
 
-QString MainWindow::findIcon(const QString &icon_name)
+QString MainWindow::findIcon(QString icon_name)
 {
-    if (icon_name.isEmpty()) return QString();
-    if (QFileInfo::exists(icon_name)) return icon_name;
+    if (icon_name.isEmpty())
+        return QString();
+    if (QFileInfo::exists(icon_name))
+        return icon_name;
 
-    const QStringList extList({".png", ".svg", ".xpm"});
+    icon_name = icon_name.remove(QRegularExpression("\\.png$|\\.svg$|\\.xpm$"));
 
+    const QStringList extList({".svg", ".png", ".xpm"});
+
+    // Find icon in current theme
     QString out = cmd.getCmdOut("xfconf-query -c xsettings -p /Net/IconThemeName", true);
     if (!out.isEmpty()) {
         QString dir = "/usr/share/icons/" + out;
@@ -203,16 +208,30 @@ QString MainWindow::findIcon(const QString &icon_name)
                 out = cmd.getCmdOut("find " + dir + " -iname " + icon_name + ext, true);
                 if (!out.isEmpty()) {
                     QStringList files = out.split("\n");
-                    return findLargest(files);
-                } else {
-                    out = cmd.getCmdOut("find " + dir + " /usr/share/icons/hicolor /usr/share/pixmaps -iname " + icon_name + ext, true);
-                    if (!out.isEmpty()) {
-                        QStringList files = out.split("\n");
+                    if (!files.isEmpty())
                         return findLargest(files);
-                    }
                 }
             }
         }
+    }
+
+    // Look in other themes
+    for (const QString &ext : extList) {
+        out = cmd.getCmdOut("find /usr/share/icons -iname " + icon_name + ext, true);
+        if (!out.isEmpty()) {
+            QStringList files = out.split("\n");
+            if (!files.isEmpty())
+                return findLargest(files);
+        }
+    }
+
+    // Fallback if previous doesn't find the icon search in other places
+    QString local_path = (QFileInfo::exists(QDir::homePath() + "/.local/share/icons")) ? QDir::homePath() + "/.local/share/icons " : QString();
+    for (const QString &ext : extList) {
+        if (QFileInfo::exists("/usr/share/pixmaps/" + icon_name + ext))
+            return "/usr/share/pixmaps/" + icon_name + ext;
+        if (!local_path.isEmpty() && QFileInfo::exists(local_path + icon_name + ext))
+            return local_path + icon_name + ext;
     }
     return QString();
 }

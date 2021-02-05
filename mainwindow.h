@@ -61,7 +61,7 @@ public:
     void showApp(int i, int old_idx);
     void updateAppList(int idx);
 
-    QString findIcon(const QString &icon_name);
+    QString findIcon(QString icon_name);
     QString findLargest(const QStringList &files);
     QString getDockName(const QString &file_name);
     QString inputDockName();

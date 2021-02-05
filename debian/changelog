@@ -1,3 +1,9 @@
+mx-dockmaker (21.2) mx; urgency=medium
+
+  * improve icon search
+
+ -- Adrian <adrian@mxlinux.org>  Fri, 05 Feb 2021 11:04:41 -0500
+
 mx-dockmaker (20.12) mx; urgency=medium
 
   * fix: stop crashing if icon file doesn't exist 

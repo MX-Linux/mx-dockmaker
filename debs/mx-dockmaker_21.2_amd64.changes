@@ -1,0 +1,49 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Format: 1.8
+Date: Fri, 05 Feb 2021 11:04:41 -0500
+Source: mx-dockmaker
+Binary: mx-dockmaker
+Architecture: source amd64
+Version: 21.2
+Distribution: mx
+Urgency: medium
+Maintainer: Adrian <adrian@mxlinux.org>
+Changed-By: Adrian <adrian@mxlinux.org>
+Description:
+ mx-dockmaker - mx-dockmaker
+Changes:
+ mx-dockmaker (21.2) mx; urgency=medium
+ .
+   * improve icon search
+Checksums-Sha1:
+ f60584f3f15aeadbf843a61f058cbcdaebc0abcb 1121 mx-dockmaker_21.2.dsc
+ 1457f92946b8c119ce79062e0009bd02a01a2b40 75644 mx-dockmaker_21.2.tar.xz
+ efcb03313dc47e517fa33d9ed1dbae021325c152 931154 mx-dockmaker-dbgsym_21.2_amd64.deb
+ 2306684ed04e54441a43b8a2aa5c16115e21f8b6 10697 mx-dockmaker_21.2_amd64.buildinfo
+ 5f80a6c677406a6444747d99f1d38779ed4ca89a 103302 mx-dockmaker_21.2_amd64.deb
+Checksums-Sha256:
+ 411e63353947eb45fd43475236cb970afea95db6eaaa824f3123234cb5cd6c24 1121 mx-dockmaker_21.2.dsc
+ 6cf3badcdbeb1b59932159946daf47ad7b855d0cd91387a94c17b65eb44a192b 75644 mx-dockmaker_21.2.tar.xz
+ 1f116d46b1d222ac78f915f6715b1fd71aada14718f9c04f879018657d70efa5 931154 mx-dockmaker-dbgsym_21.2_amd64.deb
+ ceb83d50f71676eb79a3f828663a939d94d14b1cc40311eb6e590908fda7f359 10697 mx-dockmaker_21.2_amd64.buildinfo
+ dd28420dd8739a9dcb3d0d39c7cd03efd00def40d9bc44a82a46ea4f5f82d91c 103302 mx-dockmaker_21.2_amd64.deb
+Files:
+ 19a16721e4ac2bcf231237eaa0867685 1121 admin optional mx-dockmaker_21.2.dsc
+ 190a5ebd658c922a8b750ab729af8319 75644 admin optional mx-dockmaker_21.2.tar.xz
+ c572a296e1258256d301d474209684f6 931154 debug extra mx-dockmaker-dbgsym_21.2_amd64.deb
+ af2e97ecff5261f902a165e22fef0c35 10697 admin optional mx-dockmaker_21.2_amd64.buildinfo
+ dee4476a054b634a14e29f292923803c 103302 admin optional mx-dockmaker_21.2_amd64.deb
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAmAdbPYTHGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumNn+B/9uORewT/iQNc0XXkkKWl4DesGt3R3W
+SnLlavfEyfcJSt6GOtYHIzcNo5IuVE3XR4/mVLnrsgpBvymLXfTdVhvKYskzBaCA
+AkAkQILwjsXbHM64x+uhB95AQtrseH3L5ytOYsZuh+SjzXs8cViefrRTHdwXbgl5
+t2atfdz6rkO7hBtuyW0iwuiCimCfu0Lb/iyWw4VJ8eRfrG5gMxgSC+3zj6ff9riL
+Jq+WWbjsHe64dXqD6jkYe976EKzNzZVscXibcLVTWYi+mX4M91Yyki1TBPFMiVxP
+03R9orUv3JaIIIB8RJiyKBVKOMZOfkiQ3IR+nnV26rsq3CSJPqGVK8T4
+=/Z/4
+-----END PGP SIGNATURE-----
