@@ -1,3 +1,9 @@
+mx-dockmaker (21.2.01) mx; urgency=medium
+
+  * update desktop file 
+
+ -- Dolphin Oracle <dolphinoracle@gmail.com>  Sat, 13 Feb 2021 20:20:05 -0500
+
 mx-dockmaker (21.2) mx; urgency=medium
 
   * improve icon search
