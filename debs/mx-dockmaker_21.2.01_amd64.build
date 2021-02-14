@@ -1,0 +1,233 @@
+ dpkg-buildpackage -rfakeroot -us -uc
+dpkg-buildpackage: info: source package mx-dockmaker
+dpkg-buildpackage: info: source version 21.2.01
+dpkg-buildpackage: info: source distribution mx
+dpkg-buildpackage: info: source changed by Dolphin Oracle <dolphinoracle@gmail.com>
+ dpkg-source --before-build 64
+dpkg-buildpackage: info: host architecture amd64
+ fakeroot debian/rules clean
+dh clean --parallel 
+   debian/rules override_dh_auto_clean
+make[1]: Entering directory '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64'
+dh_auto_clean
+rm -f src/translations/*.qm
+make[1]: Leaving directory '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64'
+   dh_clean -O--parallel
+ dpkg-source -b 64
+dpkg-source: info: using source format '3.0 (native)'
+dpkg-source: info: building mx-dockmaker in mx-dockmaker_21.2.01.tar.xz
+dpkg-source: info: building mx-dockmaker in mx-dockmaker_21.2.01.dsc
+ debian/rules build
+dh build --parallel 
+   dh_update_autotools_config -O--parallel
+   dh_auto_configure -O--parallel
+	qmake -makefile "QMAKE_CFLAGS_RELEASE=-g -O2 -fdebug-prefix-map=/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2" "QMAKE_CFLAGS_DEBUG=-g -O2 -fdebug-prefix-map=/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2" "QMAKE_CXXFLAGS_RELEASE=-g -O2 -fdebug-prefix-map=/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2" "QMAKE_CXXFLAGS_DEBUG=-g -O2 -fdebug-prefix-map=/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2" QMAKE_LFLAGS_RELEASE=-Wl,-z,relro QMAKE_LFLAGS_DEBUG=-Wl,-z,relro QMAKE_STRIP=: PREFIX=/usr
+Info: creating stash file /media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/.qmake.stash
+   debian/rules override_dh_auto_build
+make[1]: Entering directory '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64'
+lrelease mx-dockmaker.pro
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_am.qm'...
+    Generated 27 translation(s) (26 finished and 1 unfinished)
+    Ignored 61 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_ar.qm'...
+    Generated 7 translation(s) (6 finished and 1 unfinished)
+    Ignored 81 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_bg.qm'...
+    Generated 23 translation(s) (22 finished and 1 unfinished)
+    Ignored 65 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_bn.qm'...
+    Generated 0 translation(s) (0 finished and 0 unfinished)
+    Ignored 88 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_ca.qm'...
+    Generated 86 translation(s) (85 finished and 1 unfinished)
+    Ignored 2 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_cs.qm'...
+    Generated 31 translation(s) (30 finished and 1 unfinished)
+    Ignored 57 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_da.qm'...
+    Generated 33 translation(s) (32 finished and 1 unfinished)
+    Ignored 55 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_de.qm'...
+    Generated 80 translation(s) (79 finished and 1 unfinished)
+    Ignored 8 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_el.qm'...
+    Generated 86 translation(s) (85 finished and 1 unfinished)
+    Ignored 2 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_es.qm'...
+    Generated 86 translation(s) (85 finished and 1 unfinished)
+    Ignored 2 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_et.qm'...
+    Generated 3 translation(s) (3 finished and 0 unfinished)
+    Ignored 85 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_eu.qm'...
+    Generated 2 translation(s) (2 finished and 0 unfinished)
+    Ignored 86 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_fa.qm'...
+    Generated 20 translation(s) (20 finished and 0 unfinished)
+    Ignored 68 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_fil_PH.qm'...
+    Generated 27 translation(s) (26 finished and 1 unfinished)
+    Ignored 61 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_fi.qm'...
+    Generated 80 translation(s) (79 finished and 1 unfinished)
+    Ignored 8 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_fr.qm'...
+    Generated 80 translation(s) (79 finished and 1 unfinished)
+    Ignored 8 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_he_IL.qm'...
+    Generated 24 translation(s) (23 finished and 1 unfinished)
+    Ignored 64 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_hi.qm'...
+    Generated 28 translation(s) (27 finished and 1 unfinished)
+    Ignored 60 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_hr.qm'...
+    Generated 57 translation(s) (56 finished and 1 unfinished)
+    Ignored 31 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_hu.qm'...
+    Generated 22 translation(s) (21 finished and 1 unfinished)
+    Ignored 66 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_id.qm'...
+    Generated 18 translation(s) (17 finished and 1 unfinished)
+    Ignored 70 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_is.qm'...
+    Generated 21 translation(s) (20 finished and 1 unfinished)
+    Ignored 67 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_it.qm'...
+    Generated 86 translation(s) (85 finished and 1 unfinished)
+    Ignored 2 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_ja.qm'...
+    Generated 80 translation(s) (79 finished and 1 unfinished)
+    Ignored 8 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_kk.qm'...
+    Generated 17 translation(s) (16 finished and 1 unfinished)
+    Ignored 71 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_ko.qm'...
+    Generated 5 translation(s) (5 finished and 0 unfinished)
+    Ignored 83 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_lt.qm'...
+    Generated 50 translation(s) (49 finished and 1 unfinished)
+    Ignored 38 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_mk.qm'...
+    Generated 4 translation(s) (4 finished and 0 unfinished)
+    Ignored 84 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_mr.qm'...
+    Generated 16 translation(s) (15 finished and 1 unfinished)
+    Ignored 72 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_nb.qm'...
+    Generated 80 translation(s) (79 finished and 1 unfinished)
+    Ignored 8 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_nl.qm'...
+    Generated 86 translation(s) (85 finished and 1 unfinished)
+    Ignored 2 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_pl.qm'...
+    Generated 80 translation(s) (79 finished and 1 unfinished)
+    Ignored 8 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_pt_BR.qm'...
+    Generated 86 translation(s) (85 finished and 1 unfinished)
+    Ignored 2 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_pt.qm'...
+    Generated 86 translation(s) (85 finished and 1 unfinished)
+    Ignored 2 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_ro.qm'...
+    Generated 25 translation(s) (24 finished and 1 unfinished)
+    Ignored 63 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_ru.qm'...
+    Generated 80 translation(s) (79 finished and 1 unfinished)
+    Ignored 8 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_sk.qm'...
+    Generated 32 translation(s) (31 finished and 1 unfinished)
+    Ignored 56 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_sl.qm'...
+    Generated 86 translation(s) (85 finished and 1 unfinished)
+    Ignored 2 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_sq.qm'...
+    Generated 19 translation(s) (18 finished and 1 unfinished)
+    Ignored 69 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_sr.qm'...
+    Generated 6 translation(s) (5 finished and 1 unfinished)
+    Ignored 82 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_sv.qm'...
+    Generated 86 translation(s) (85 finished and 1 unfinished)
+    Ignored 2 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_tr.qm'...
+    Generated 67 translation(s) (66 finished and 1 unfinished)
+    Ignored 21 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_uk.qm'...
+    Generated 24 translation(s) (23 finished and 1 unfinished)
+    Ignored 64 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_vi.qm'...
+    Generated 19 translation(s) (18 finished and 1 unfinished)
+    Ignored 69 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_zh_CN.qm'...
+    Generated 32 translation(s) (31 finished and 1 unfinished)
+    Ignored 56 untranslated source text(s)
+Updating '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64/translations/mx-dockmaker_zh_TW.qm'...
+    Generated 32 translation(s) (31 finished and 1 unfinished)
+    Ignored 56 untranslated source text(s)
+head -n1 debian/changelog | sed -e "s/.*(\([^(]*\)).*/#define VERSION \"\1\"/" > version.h
+dh_auto_build
+	make -j4
+make[2]: Entering directory '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64'
+/usr/lib/x86_64-linux-gnu/qt5/bin/uic mainwindow.ui -o ui_mainwindow.h
+/usr/lib/x86_64-linux-gnu/qt5/bin/uic picklocation.ui -o ui_picklocation.h
+g++ -c -m64 -pipe -g -O2 -fdebug-prefix-map=/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -std=gnu++11 -Wall -W -D_REENTRANT -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -o main.o main.cpp
+g++ -c -m64 -pipe -g -O2 -fdebug-prefix-map=/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -std=gnu++11 -Wall -W -D_REENTRANT -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -o about.o about.cpp
+g++ -c -m64 -pipe -g -O2 -fdebug-prefix-map=/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -std=gnu++11 -Wall -W -D_REENTRANT -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -o cmd.o cmd.cpp
+g++ -c -m64 -pipe -g -O2 -fdebug-prefix-map=/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -std=gnu++11 -Wall -W -D_REENTRANT -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -o picklocation.o picklocation.cpp
+/usr/lib/x86_64-linux-gnu/qt5/bin/rcc -name images images.qrc -o qrc_images.cpp
+/usr/lib/x86_64-linux-gnu/qt5/bin/moc -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/6 -I/usr/include/x86_64-linux-gnu/c++/6 -I/usr/include/c++/6/backward -I/usr/lib/gcc/x86_64-linux-gnu/6/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/6/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindow.h -o moc_mainwindow.cpp
+about.cpp: In function ‘void displayDoc(QString, QString, bool)’:
+about.cpp:16:86: warning: ignoring return value of ‘int system(const char*)’, declared with attribute warn_unused_result [-Wunused-result]
+         system("/usr/bin/mx-viewer " + url.toUtf8() + " \"" + title.toUtf8() + "\"&");
+                                                                                      ^
+about.cpp:19:56: warning: ignoring return value of ‘int system(const char*)’, declared with attribute warn_unused_result [-Wunused-result]
+             system("/usr/bin/xdg-open " + url.toUtf8());
+                                                        ^
+about.cpp:24:82: warning: ignoring return value of ‘int system(const char*)’, declared with attribute warn_unused_result [-Wunused-result]
+                    user.toUtf8() + ") /usr/bin/xdg-open " + url.toUtf8() + "\"&");
+                                                                                  ^
+/usr/lib/x86_64-linux-gnu/qt5/bin/moc -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/6 -I/usr/include/x86_64-linux-gnu/c++/6 -I/usr/include/c++/6/backward -I/usr/lib/gcc/x86_64-linux-gnu/6/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/6/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include cmd.h -o moc_cmd.cpp
+/usr/lib/x86_64-linux-gnu/qt5/bin/moc -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/6 -I/usr/include/x86_64-linux-gnu/c++/6 -I/usr/include/c++/6/backward -I/usr/lib/gcc/x86_64-linux-gnu/6/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/6/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include picklocation.h -o moc_picklocation.cpp
+g++ -c -m64 -pipe -g -O2 -fdebug-prefix-map=/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -std=gnu++11 -Wall -W -D_REENTRANT -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -o mainwindow.o mainwindow.cpp
+g++ -c -m64 -pipe -g -O2 -fdebug-prefix-map=/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -std=gnu++11 -Wall -W -D_REENTRANT -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -o qrc_images.o qrc_images.cpp
+g++ -c -m64 -pipe -g -O2 -fdebug-prefix-map=/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -std=gnu++11 -Wall -W -D_REENTRANT -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -o moc_mainwindow.o moc_mainwindow.cpp
+g++ -c -m64 -pipe -g -O2 -fdebug-prefix-map=/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -std=gnu++11 -Wall -W -D_REENTRANT -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -o moc_cmd.o moc_cmd.cpp
+g++ -c -m64 -pipe -g -O2 -fdebug-prefix-map=/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -std=gnu++11 -Wall -W -D_REENTRANT -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -o moc_picklocation.o moc_picklocation.cpp
+g++ -m64 -Wl,-z,relro -o mx-dockmaker main.o mainwindow.o about.o cmd.o picklocation.o qrc_images.o moc_mainwindow.o moc_cmd.o moc_picklocation.o   -L/usr/X11R6/lib64 -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+make[2]: Leaving directory '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64'
+make[1]: Leaving directory '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64'
+   dh_auto_test -O--parallel
+ fakeroot debian/rules binary
+dh binary --parallel 
+   dh_testroot -O--parallel
+   dh_prep -O--parallel
+   dh_auto_install -O--parallel
+   dh_install -O--parallel
+   dh_installdocs -O--parallel
+   dh_installchangelogs -O--parallel
+   dh_installinit -O--parallel
+   dh_icons -O--parallel
+   dh_perl -O--parallel
+   dh_link -O--parallel
+   dh_strip_nondeterminism -O--parallel
+   dh_compress -O--parallel
+   dh_fixperms -O--parallel
+   dh_missing -O--parallel
+   dh_strip -O--parallel
+   dh_makeshlibs -O--parallel
+   debian/rules override_dh_shlibdeps
+make[1]: Entering directory '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64'
+dh_shlibdeps -- -xvirtualbox-guest-x11 --ignore-missing-info
+dpkg-shlibdeps: warning: package could avoid a useless dependency if debian/mx-dockmaker/usr/bin/mx-dockmaker was not linked against libGL.so.1 (it uses none of the library's symbols)
+make[1]: Leaving directory '/media/demo/dataext/development/working/mx-dockmaker_20.02.01/64'
+   dh_installdeb -O--parallel
+   dh_gencontrol -O--parallel
+   dh_md5sums -O--parallel
+   dh_builddeb -O--parallel
+dpkg-deb: building package 'mx-dockmaker-dbgsym' in '../mx-dockmaker-dbgsym_21.2.01_amd64.deb'.
+dpkg-deb: building package 'mx-dockmaker' in '../mx-dockmaker_21.2.01_amd64.deb'.
+ dpkg-genbuildinfo
+ dpkg-genchanges  >../mx-dockmaker_21.2.01_amd64.changes
+dpkg-genchanges: info: including full source code in upload
+ dpkg-source --after-build 64
+dpkg-buildpackage: info: full upload; Debian-native package (full source is included)
