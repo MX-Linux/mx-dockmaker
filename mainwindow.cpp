@@ -199,8 +199,7 @@ QString MainWindow::findIcon(QString icon_name, const QSize &size)
     const QStringList extList({".svg", ".png", ".xpm"});
 
     // Find icon in current theme
-    QString theme = QIcon::themeName();
-    QString dir = "/usr/share/icons/" + theme;
+    QString dir = "/usr/share/icons/" + QIcon::themeName();;
     QString out;
     if (QFileInfo::exists(dir)) {
         for (const QString &ext : extList) {
