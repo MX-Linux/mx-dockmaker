@@ -1,0 +1,46 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Format: 1.8
+Date: Sun, 09 May 2021 23:01:21 -0400
+Source: mx-dockmaker
+Binary: mx-dockmaker
+Architecture: source amd64
+Version: 21.5
+Distribution: mx
+Urgency: medium
+Maintainer: Adrian <adrian@mxlinux.org>
+Changed-By: Adrian <adrian@mxlinux.org>
+Description:
+ mx-dockmaker - mx-dockmaker
+Changes:
+ mx-dockmaker (21.5) mx; urgency=medium
+ .
+   * change menu location from ~/.fluxbox/menu-mx to ~/.fluxbox/submenus
+Checksums-Sha1:
+ 778e8a9eecf8e180474e7dab70524c5df70ae0b2 1120 mx-dockmaker_21.5.dsc
+ 27bbd13fc4fb00a947d70862da9e522ee1376459 75780 mx-dockmaker_21.5.tar.xz
+ 70b7b5b4d71102067101ee2907f2bdbb47120542 10429 mx-dockmaker_21.5_amd64.buildinfo
+ 2e4a01443803cefa3fb3c4815aa77939f518c686 104012 mx-dockmaker_21.5_amd64.deb
+Checksums-Sha256:
+ e44fdb2a29e910888758bd233b77092f5ed0178e5930c076aae97c710e376e4c 1120 mx-dockmaker_21.5.dsc
+ 4c93223997ff1aed2033c87af433d95c0031c7632810130b7cb62a8f5a90810d 75780 mx-dockmaker_21.5.tar.xz
+ e4c3496647220788d3b71f20716b8c7026f31bbfe45a85f768b8e444b9bc7089 10429 mx-dockmaker_21.5_amd64.buildinfo
+ 6db19a402a5779b2aacce23c0c8c1e075493751d0f63e1be24c8bd5427b362e7 104012 mx-dockmaker_21.5_amd64.deb
+Files:
+ 1cf87096b48406fdaa97dad9e25c42e1 1120 admin optional mx-dockmaker_21.5.dsc
+ 8d5008e524f9fba5df9db77e9f7b84f8 75780 admin optional mx-dockmaker_21.5.tar.xz
+ 0f10a04c2b8096dd5785c222d9326150 10429 admin optional mx-dockmaker_21.5_amd64.buildinfo
+ 53902a5a9824d488b7bb10ad2c4fe8ce 104012 admin optional mx-dockmaker_21.5_amd64.deb
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAmCYooATHGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumNbwCACAx+t+7jNrcvDmHbA6CjiToKZtFyYJ
+fyVg5tDa+ygc5zOGdfN05PRVP4ztENjv/YTdiLsDPYabckgD0VQ/7/QdYUy41ggo
+130pilz4qOuitthdTsj0UwnkV4+qgFfAq+QuwmhiBHchPLVc9UVPM/wgihkmFKxr
+jQvD0xN1mDNfq8EqSTv4DU8yf9YzwlYkjPcdzE3E1WVHoRlrJXJiCWi6rSr2+HtJ
+6+XGCxnmsLYuh2ZYhZ4XiraXjoAN6p98mkeHpKNz2PS/Hkl6dgCcqEz1rdY5OqtV
+5H0o6jvUwV7rF6jtkwBbJV0q2sHVaOuITBbewTvhRv5ywH11NRG9Gyo7
+=cid+
+-----END PGP SIGNATURE-----

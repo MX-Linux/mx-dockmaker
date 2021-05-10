@@ -1,0 +1,40 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Format: 1.8
+Date: Sun, 09 May 2021 23:01:21 -0400
+Source: mx-dockmaker
+Binary: mx-dockmaker
+Architecture: i386
+Version: 21.5
+Distribution: mx
+Urgency: medium
+Maintainer: Adrian <adrian@mxlinux.org>
+Changed-By: Adrian <adrian@mxlinux.org>
+Description:
+ mx-dockmaker - mx-dockmaker
+Changes:
+ mx-dockmaker (21.5) mx; urgency=medium
+ .
+   * change menu location from ~/.fluxbox/menu-mx to ~/.fluxbox/submenus
+Checksums-Sha1:
+ fa220ceaa48f1015d016a59f576d4ece7b856177 10132 mx-dockmaker_21.5_i386.buildinfo
+ cf9bba867de3e197e009c7b6a0749cc07f92d85a 108044 mx-dockmaker_21.5_i386.deb
+Checksums-Sha256:
+ bc6adbc2d238562c3c08e0855cc6781b2b0cd5f41dd9fb013cc9437c3150c8fc 10132 mx-dockmaker_21.5_i386.buildinfo
+ cedeb1fbf9e9b8d2d20de2495abe9dca8e25a1e974f05465a0455543b37f2508 108044 mx-dockmaker_21.5_i386.deb
+Files:
+ 387f094a325c4943ec4900158bcf53a3 10132 admin optional mx-dockmaker_21.5_i386.buildinfo
+ 999018b896bed10c65f428e968dc1311 108044 admin optional mx-dockmaker_21.5_i386.deb
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAmCYooATHGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumIixCACxWplT825mdJ1bVtRuZJ5rz7df1Rpy
+U64MeJsDDUi81KnKbiioU9ysrAp5csr5mRMI+uA3Z7nJdcd8mJFxglXf/4RADGI+
+qJwOcO4hxnfIELR0YKLQeAk4SOqSlRJ+7n9TvxEHTdkmWWQmfnnUSTZLV856sc2g
+0zOzAqaFGe5Q8nnZjpNpaOpvFz1l9KibltEawPmbUK60sGtz2pHZDqebU/lEPmrK
+it5bv3jKwEkQVKNheLHXW6iitrkxW2P6lC/75tJ67nRq6P4I1tB0jPe+2MUh4pqB
+IRDJ4kwfFMVLjstEtJueNRxp6gyDr97PEUVCCtdEj8aXSk2ysoze82F6
+=Wt5W
+-----END PGP SIGNATURE-----

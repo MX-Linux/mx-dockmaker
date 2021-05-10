@@ -51,7 +51,8 @@ MainWindow::~MainWindow()
 
 bool MainWindow::isDockInMenu(const QString &file_name)
 {
-    if (dock_name.isEmpty()) return false;
+    if (dock_name.isEmpty())
+        return false;
     return getDockName(file_name) == dock_name;
 }
 
@@ -61,7 +62,7 @@ void MainWindow::displayIcon(const QString &app_name, int location)
     QString icon;
     if (ui->buttonSelectApp->text().endsWith(".desktop")) {
         QFile file("/usr/share/applications/" + app_name);
-        if(file.open(QFile::Text | QFile::ReadOnly)) {
+        if (file.open(QFile::Text | QFile::ReadOnly)) {
             QString text = file.readAll();
             file.close();
             QRegularExpression re("^Icon=(.*)$", QRegularExpression::MultilineOption);
@@ -118,9 +119,9 @@ void MainWindow::setup(QString file)
 
     blockComboSignals(true);
 
-    while (ui->icons->layout()->count() > 0) {
+    while (ui->icons->layout()->count() > 0)
         delete ui->icons->layout()->itemAt(0)->widget();
-    }
+
     ui->comboSize->setCurrentIndex(ui->comboSize->findText("48x48"));
 
     // "apricot", "mint" removed because not availalbe in Qt, might add back if needed
@@ -289,10 +290,10 @@ QString MainWindow::getDockName(const QString &file_name)
             return name;
     }
 
-    // find dock name in menu-mx file
-    file.setFileName(QDir::homePath() + "/.fluxbox/menu-mx");
+    // find dock name in submenus file
+    file.setFileName(QDir::homePath() + "/.fluxbox/submenus");
 
-    if(!file.open(QFile::Text | QFile::ReadOnly))
+    if (!file.open(QFile::Text | QFile::ReadOnly))
         return QString();
     QString text = file.readAll();
     file.close();
@@ -310,7 +311,8 @@ QString MainWindow::inputDockName()
     QString text = QInputDialog::getText(nullptr, tr("Dock name"),
                                              tr("Enter the name to show in the Menu:"), QLineEdit::Normal,
                                              QString(), &ok);
-    if (ok && !text.isEmpty()) return text;
+    if (ok && !text.isEmpty())
+        return text;
 
     setup();
     return QString();
@@ -335,7 +337,8 @@ void MainWindow::itemChanged()
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    if (!checkDoneEditing()) return;
+    if (!checkDoneEditing())
+        return;
     if (event->button() == Qt::LeftButton) {
         int i = ui->icons->layout()->indexOf(this->childAt(event->pos()));
         int old_idx = index;
@@ -354,7 +357,7 @@ void MainWindow::updateAppList(int idx)
 void MainWindow::addDockToMenu(const QString &file_name)
 {
     cmd.run("sed -i '/\\[submenu\\] (Docks)/a \\\\t\\t\\t[exec] (" + dock_name + ") {" +
-            file_name + "}' " + QDir::homePath() + "/.fluxbox/menu-mx", true);
+            file_name + "}' " + QDir::homePath() + "/.fluxbox/submenus", true);
 }
 
 // cleanup environment when window is closed
@@ -370,7 +373,7 @@ void MainWindow::deleteDock()
     if (!selected.isEmpty() && QMessageBox::question(nullptr, tr("Confirmation"),
                                                      tr("Are you sure you want to delete %1?").arg(selected), tr("&Delete"), tr("&Cancel")) == 0) {
         QFile::remove(selected);
-        cmd.run("sed -ni '\\|" + selected + "|!p' " + QDir::homePath() + "/.fluxbox/menu-mx", true);
+        cmd.run("sed -ni '\\|" + selected + "|!p' " + QDir::homePath() + "/.fluxbox/submenus", true);
         cmd.run("pkill wmalauncher", true);
     }
     this->show();
@@ -401,7 +404,7 @@ void MainWindow::moveDock()
 
     QFile file(selected_dock);
 
-    if(!file.open(QFile::Text | QFile::ReadOnly)) {
+    if (!file.open(QFile::Text | QFile::ReadOnly)) {
         qDebug() << "Could not open file:" << file.fileName();
         QMessageBox::warning(nullptr, tr("Could not open file"), tr("Could not open file"));
         setup();
@@ -423,7 +426,7 @@ void MainWindow::moveDock()
     re.setPatternOptions(QRegularExpression::MultilineOption);
     QString new_line = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + slit_location + "/' $HOME/.fluxbox/init";
 
-    if(!file.open(QFile::Text | QFile::ReadWrite | QFile::Truncate)) {
+    if (!file.open(QFile::Text | QFile::ReadWrite | QFile::Truncate)) {
         qDebug() << "Could not open file:" << file.fileName();
         QMessageBox::warning(nullptr, tr("Could not open file"), tr("Could not open file"));
         setup();
@@ -534,13 +537,13 @@ void MainWindow::on_buttonSave_clicked()
     slit_location = pickSlitLocation();
 
     // create "~/.fluxbox/scripts" if it doesn't exist
-    if(!QFileInfo::exists(QDir::homePath() + "/.fluxbox/scripts")) {
+    if (!QFileInfo::exists(QDir::homePath() + "/.fluxbox/scripts")) {
         QDir dir;
         dir.mkpath(QDir::homePath() + "/.fluxbox/scripts");
     }
 
     bool new_file = false;
-    if(!QFileInfo::exists(file_name) || QMessageBox::No == QMessageBox::question(this, tr("Overwrite?"), tr("Do you want to overwrite the dock file?"))) {
+    if (!QFileInfo::exists(file_name) || QMessageBox::No == QMessageBox::question(this, tr("Overwrite?"), tr("Do you want to overwrite the dock file?"))) {
         file_name = QFileDialog::getSaveFileName(this, tr("Save file"), QDir::homePath() + "/.fluxbox/scripts", tr("Dock Files (*.mxdk);;All Files (*.*)"));
         if (file_name.isEmpty()) return;
         if (!file_name.endsWith(".mxdk")) file_name += ".mxdk";
@@ -548,7 +551,7 @@ void MainWindow::on_buttonSave_clicked()
     }
     QFile file(file_name);
     cmd.run("cp " + file_name + " " + file_name + ".~", true);
-    if(!file.open(QFile::Text | QFile::WriteOnly)) {
+    if (!file.open(QFile::Text | QFile::WriteOnly)) {
         qDebug() << "Could not open file:" << file.fileName();
         return;
     }
@@ -590,12 +593,13 @@ void MainWindow::on_buttonSave_clicked()
     file.close();
     chmod(file_name.toUtf8(), 00744);
 
-    if (dock_name.isEmpty() || new_file) dock_name = inputDockName();
-    if (dock_name.isEmpty()) dock_name = QFileInfo(file).baseName();
+    if (dock_name.isEmpty() || new_file)
+        dock_name = inputDockName();
+    if (dock_name.isEmpty())
+        dock_name = QFileInfo(file).baseName();
 
-    if (!isDockInMenu(file.fileName())) {
+    if (!isDockInMenu(file.fileName()))
         addDockToMenu(file.fileName());
-    }
 
     QMessageBox::information(this, tr("Dock saved"), tr("The dock has been saved.\n\n"
                                                         "To edit the newly created dock please select 'Edit an existing dock'."));
@@ -775,17 +779,17 @@ void MainWindow::editDock(QString file_arg)
     this->hide();
 
     QString selected_dock;
-    if (!file_arg.isEmpty() && QFile::exists(file_arg)) {
+    if (!file_arg.isEmpty() && QFile::exists(file_arg))
         selected_dock = file_arg;
-    } else {
+    else
         selected_dock = QFileDialog::getOpenFileName(nullptr, tr("Select a dock file"), QDir::homePath() + "/.fluxbox/scripts", tr("Dock Files (*.mxdk);;All Files (*.*)"));
-    }
+
     if (!QFileInfo::exists(selected_dock)) {
         QMessageBox::warning(nullptr, tr("No file selected"), tr("You haven't selected any dock file to edit.\nCreating a new dock instead."));
         return;
     }
     QFile file(selected_dock);
-    if(!file.open(QFile::Text | QFile::ReadOnly)) {
+    if (!file.open(QFile::Text | QFile::ReadOnly)) {
         qDebug() << "Could not open file:" << file.fileName();
         QMessageBox::warning(nullptr, tr("Could not open file"), tr("Could not open selected file.\nCreating a new dock instead."));
         return;
@@ -856,7 +860,7 @@ void MainWindow::on_lineEditCommand_textEdited(const QString)
 {
     qDebug() << "lineEditCommand changed";
     ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
-    if(ui->buttonSelectIcon->text() != tr("Select icon...")) {
+    if (ui->buttonSelectIcon->text() != tr("Select icon...")) {
         ui->buttonSelectApp->setProperty("extra_options", QString()); // reset extra options when changing the command
         ui->buttonNext->setEnabled(true);
         changed = true;
@@ -885,7 +889,8 @@ void MainWindow::on_buttonAdd_clicked()
 
 void MainWindow::on_buttonMoveLeft_clicked()
 {
-    if(index == 0) return;
+    if (index == 0)
+        return;
     changed = true;
 
     apps.swap(index, index - 1);
@@ -904,7 +909,8 @@ void MainWindow::on_buttonMoveLeft_clicked()
 
 void MainWindow::on_buttonMoveRight_clicked()
 {
-    if(index == apps.size() - 1) return;
+    if (index == apps.size() - 1)
+        return;
     changed = true;
 
     apps.swap(index, index + 1);

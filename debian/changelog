@@ -1,3 +1,9 @@
+mx-dockmaker (21.5) mx; urgency=medium
+
+  * change menu location from ~/.fluxbox/menu-mx to ~/.fluxbox/submenus
+
+ -- Adrian <adrian@mxlinux.org>  Sun, 09 May 2021 23:01:21 -0400
+
 mx-dockmaker (21.2.01) mx; urgency=medium
 
   * update desktop file 
