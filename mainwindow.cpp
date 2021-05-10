@@ -291,7 +291,7 @@ QString MainWindow::getDockName(const QString &file_name)
     }
 
     // find dock name in submenus file
-    file.setFileName(QDir::homePath() + "/.fluxbox/submenus");
+    file.setFileName(QDir::homePath() + "/.fluxbox/submenus/appearance");
 
     if (!file.open(QFile::Text | QFile::ReadOnly))
         return QString();
@@ -357,7 +357,7 @@ void MainWindow::updateAppList(int idx)
 void MainWindow::addDockToMenu(const QString &file_name)
 {
     cmd.run("sed -i '/\\[submenu\\] (Docks)/a \\\\t\\t\\t[exec] (" + dock_name + ") {" +
-            file_name + "}' " + QDir::homePath() + "/.fluxbox/submenus", true);
+            file_name + "}' " + QDir::homePath() + "/.fluxbox/submenus/appearance", true);
 }
 
 // cleanup environment when window is closed
@@ -373,7 +373,7 @@ void MainWindow::deleteDock()
     if (!selected.isEmpty() && QMessageBox::question(nullptr, tr("Confirmation"),
                                                      tr("Are you sure you want to delete %1?").arg(selected), tr("&Delete"), tr("&Cancel")) == 0) {
         QFile::remove(selected);
-        cmd.run("sed -ni '\\|" + selected + "|!p' " + QDir::homePath() + "/.fluxbox/submenus", true);
+        cmd.run("sed -ni '\\|" + selected + "|!p' " + QDir::homePath() + "/.fluxbox/submenus/appearance", true);
         cmd.run("pkill wmalauncher", true);
     }
     this->show();

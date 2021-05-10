@@ -18,23 +18,23 @@ Changes:
  .
    * change menu location from ~/.fluxbox/menu-mx to ~/.fluxbox/submenus
 Checksums-Sha1:
- fa220ceaa48f1015d016a59f576d4ece7b856177 10132 mx-dockmaker_21.5_i386.buildinfo
- cf9bba867de3e197e009c7b6a0749cc07f92d85a 108044 mx-dockmaker_21.5_i386.deb
+ 30616950f4dd80e53c4288100f1755761a3294c4 10132 mx-dockmaker_21.5_i386.buildinfo
+ 2d979aa7ceffe62409ddf2f7a81c81fe6ef085e2 108132 mx-dockmaker_21.5_i386.deb
 Checksums-Sha256:
- bc6adbc2d238562c3c08e0855cc6781b2b0cd5f41dd9fb013cc9437c3150c8fc 10132 mx-dockmaker_21.5_i386.buildinfo
- cedeb1fbf9e9b8d2d20de2495abe9dca8e25a1e974f05465a0455543b37f2508 108044 mx-dockmaker_21.5_i386.deb
+ 427c0ae4692a9a41331aa3bd44d1953f95fc2ebaef843a5f85fd5dddc4ebff49 10132 mx-dockmaker_21.5_i386.buildinfo
+ 856c3f25bb30516fa815dd4ca47d8ebac8dc3594ece757447764dab7ccfa029b 108132 mx-dockmaker_21.5_i386.deb
 Files:
- 387f094a325c4943ec4900158bcf53a3 10132 admin optional mx-dockmaker_21.5_i386.buildinfo
- 999018b896bed10c65f428e968dc1311 108044 admin optional mx-dockmaker_21.5_i386.deb
+ 2083bd493770fc088952d43cb3255bb7 10132 admin optional mx-dockmaker_21.5_i386.buildinfo
+ 79c76e7d00ec4c0f9d03fd25ff0655d5 108132 admin optional mx-dockmaker_21.5_i386.deb
 
 -----BEGIN PGP SIGNATURE-----
 
-iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAmCYooATHGFkcmlhbkBt
-eGxpbnV4Lm9yZwAKCRBwk4x4BnnumIixCACxWplT825mdJ1bVtRuZJ5rz7df1Rpy
-U64MeJsDDUi81KnKbiioU9ysrAp5csr5mRMI+uA3Z7nJdcd8mJFxglXf/4RADGI+
-qJwOcO4hxnfIELR0YKLQeAk4SOqSlRJ+7n9TvxEHTdkmWWQmfnnUSTZLV856sc2g
-0zOzAqaFGe5Q8nnZjpNpaOpvFz1l9KibltEawPmbUK60sGtz2pHZDqebU/lEPmrK
-it5bv3jKwEkQVKNheLHXW6iitrkxW2P6lC/75tJ67nRq6P4I1tB0jPe+2MUh4pqB
-IRDJ4kwfFMVLjstEtJueNRxp6gyDr97PEUVCCtdEj8aXSk2ysoze82F6
-=Wt5W
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAmCZUs8THGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumEPeB/9V+Bv2JHw8O0Gjy57OwZVw5H0xT2vb
+XQ2xWq2YnKmgCYh+a/lEnN93mFtPp51jK0EAml2wK3Kd4cdyIoFwNvdVa7X7oDjS
+qUYzTkO9n2ifZHUAjDXSjIpienrhS8GCEMK+c49kiH5sHgidJAcWgD3nVPHKT0J7
+p9YqieRD6yiRm1eb+AHHX8ItGjRovz3D5Aqf48eh4UqHJ5FJ2qxQByfKXeRX+AnD
+ok/4oydh6E+RQ4+HtNiiGOnG427/8lXSPOpiXj6lXq3dVNsPIMnLNuGcALUF6zG3
+/oTVkMJkLGi4OdqPsnzG+eqNyulZgbnmLWBxpIqfB0g8d590o14KYKGN
+=Kfee
 -----END PGP SIGNATURE-----

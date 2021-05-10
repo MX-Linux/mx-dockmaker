@@ -18,29 +18,29 @@ Changes:
  .
    * change menu location from ~/.fluxbox/menu-mx to ~/.fluxbox/submenus
 Checksums-Sha1:
- 778e8a9eecf8e180474e7dab70524c5df70ae0b2 1120 mx-dockmaker_21.5.dsc
- 27bbd13fc4fb00a947d70862da9e522ee1376459 75780 mx-dockmaker_21.5.tar.xz
- 70b7b5b4d71102067101ee2907f2bdbb47120542 10429 mx-dockmaker_21.5_amd64.buildinfo
- 2e4a01443803cefa3fb3c4815aa77939f518c686 104012 mx-dockmaker_21.5_amd64.deb
+ c8f5ccee89e6804e4fe7ca99d7e1c1095c93d938 1120 mx-dockmaker_21.5.dsc
+ 89a66ac0e41c6117181862844f87de5feb79f40e 75768 mx-dockmaker_21.5.tar.xz
+ 456ec92e8801d5cbb5adbdd66686ab6423fc0b46 10429 mx-dockmaker_21.5_amd64.buildinfo
+ 6a65957acf285fe00f5b78fc41573b5fd1c4d57a 104110 mx-dockmaker_21.5_amd64.deb
 Checksums-Sha256:
- e44fdb2a29e910888758bd233b77092f5ed0178e5930c076aae97c710e376e4c 1120 mx-dockmaker_21.5.dsc
- 4c93223997ff1aed2033c87af433d95c0031c7632810130b7cb62a8f5a90810d 75780 mx-dockmaker_21.5.tar.xz
- e4c3496647220788d3b71f20716b8c7026f31bbfe45a85f768b8e444b9bc7089 10429 mx-dockmaker_21.5_amd64.buildinfo
- 6db19a402a5779b2aacce23c0c8c1e075493751d0f63e1be24c8bd5427b362e7 104012 mx-dockmaker_21.5_amd64.deb
+ 80547bdcf12d40a15b51ba1b95cbd6cbded2bfbbd1a9777d282f73fd4e6ba785 1120 mx-dockmaker_21.5.dsc
+ 02faf66c5303da89950b874074c4f5ae44d29cfa4dfe45f0906e04e6814f6dd5 75768 mx-dockmaker_21.5.tar.xz
+ d2daaca803c1debc74f8386111ef45ee1a2dd4c8bd10bb798161ba74e95d2294 10429 mx-dockmaker_21.5_amd64.buildinfo
+ e90081feb4c1c02f5dfddc13eac7438e13b2e6cdb2e368a4a4940db283af99d1 104110 mx-dockmaker_21.5_amd64.deb
 Files:
- 1cf87096b48406fdaa97dad9e25c42e1 1120 admin optional mx-dockmaker_21.5.dsc
- 8d5008e524f9fba5df9db77e9f7b84f8 75780 admin optional mx-dockmaker_21.5.tar.xz
- 0f10a04c2b8096dd5785c222d9326150 10429 admin optional mx-dockmaker_21.5_amd64.buildinfo
- 53902a5a9824d488b7bb10ad2c4fe8ce 104012 admin optional mx-dockmaker_21.5_amd64.deb
+ 12c23b075586423645d820633564c39b 1120 admin optional mx-dockmaker_21.5.dsc
+ 7f0d62dd88ffb93e804067487aadbdf1 75768 admin optional mx-dockmaker_21.5.tar.xz
+ 377bdd19e81620574bdb22cc73f310e7 10429 admin optional mx-dockmaker_21.5_amd64.buildinfo
+ 4c9dbc7c0bd5286f5bdc25791a36a6cf 104110 admin optional mx-dockmaker_21.5_amd64.deb
 
 -----BEGIN PGP SIGNATURE-----
 
-iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAmCYooATHGFkcmlhbkBt
-eGxpbnV4Lm9yZwAKCRBwk4x4BnnumNbwCACAx+t+7jNrcvDmHbA6CjiToKZtFyYJ
-fyVg5tDa+ygc5zOGdfN05PRVP4ztENjv/YTdiLsDPYabckgD0VQ/7/QdYUy41ggo
-130pilz4qOuitthdTsj0UwnkV4+qgFfAq+QuwmhiBHchPLVc9UVPM/wgihkmFKxr
-jQvD0xN1mDNfq8EqSTv4DU8yf9YzwlYkjPcdzE3E1WVHoRlrJXJiCWi6rSr2+HtJ
-6+XGCxnmsLYuh2ZYhZ4XiraXjoAN6p98mkeHpKNz2PS/Hkl6dgCcqEz1rdY5OqtV
-5H0o6jvUwV7rF6jtkwBbJV0q2sHVaOuITBbewTvhRv5ywH11NRG9Gyo7
-=cid+
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAmCZUs8THGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumLDOB/9O5LvvXzj0Q3RzQ8dB9cyeCFdicJJR
+01HK6DTmYSGDNX/+LMphO8wx2npZ2Nx7I+4zpjwCCobUonD+asi2vkJKhguxS2kU
+J7wPMC3/GrnxyfUROTAZLcCm2f2kcwtR5aYuERE/AvHuqEi+vaRsT97P7i5oT8dk
+JKbDebWoAUVnhb020XRQOk6ZTUJuriAFG4BctQ65zPz4EcoRii5ffyWICR/T1lgN
+y+05+jKzNO3ES81JMHF3noJr3V0z/aLysipJ5lVjLckdmjkvauxm3Q77ZKN+9wuS
+sqcD9JfyjPsYv3Ga2DYeIaJzp870eonvlZtYwURldymBnj4UihuTKD26
+=ji+s
 -----END PGP SIGNATURE-----
