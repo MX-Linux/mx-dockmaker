@@ -134,7 +134,7 @@ void MainWindow::setup(QString file)
     ui->comboBgColor->addItems(color_list);
     ui->comboBorderColor->addItems(color_list);
 
-    QSettings settings("MX-Linux", "mx-dockmaker");
+    QSettings settings(qApp->organizationName(), qApp->applicationName());
 
     // Write configs if not there
     settings.setValue("BackgroundColor", settings.value("BackgroundColor", "black").toString());
@@ -656,7 +656,7 @@ void MainWindow::resetAdd()
     ui->radioDesktop->toggled(true);
     ui->buttonAdd->setDisabled(true);
 
-    QSettings settings("MX-Linux", "mx-dockmaker");
+    QSettings settings(qApp->organizationName(), qApp->applicationName());
 
     QString bg_color = settings.value("BackgroundColor", "black").toString();
     QString border_color = settings.value("FrameColor", "white").toString();
