@@ -1,3 +1,9 @@
+mx-dockmaker (21.7) mx; urgency=medium
+
+  * Faster icons search
+
+ -- Adrian <adrian@mxlinux.org>  Sun, 18 Jul 2021 20:51:53 -0400
+
 mx-dockmaker (21.5) mx; urgency=medium
 
   * change menu location from ~/.fluxbox/menu-mx to ~/.fluxbox/submenus

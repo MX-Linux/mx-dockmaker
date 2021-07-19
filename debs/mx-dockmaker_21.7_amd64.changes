@@ -1,0 +1,46 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Format: 1.8
+Date: Sun, 18 Jul 2021 20:51:53 -0400
+Source: mx-dockmaker
+Binary: mx-dockmaker
+Architecture: source amd64
+Version: 21.7
+Distribution: mx
+Urgency: medium
+Maintainer: Adrian <adrian@mxlinux.org>
+Changed-By: Adrian <adrian@mxlinux.org>
+Description:
+ mx-dockmaker - mx-dockmaker
+Changes:
+ mx-dockmaker (21.7) mx; urgency=medium
+ .
+   * Faster icons search
+Checksums-Sha1:
+ bdf6af52b23469c5d3f9e9df47af78dd0abc1d80 1120 mx-dockmaker_21.7.dsc
+ cf07bf074ef22dab2ad51e91087dca6ef6ce4866 75604 mx-dockmaker_21.7.tar.xz
+ b683611ca084621d5add34bfc72ee8ccc2fb0ed7 10429 mx-dockmaker_21.7_amd64.buildinfo
+ 1452b7a8cfd8bb89a540f4c595efad7ed00b21c4 103952 mx-dockmaker_21.7_amd64.deb
+Checksums-Sha256:
+ ff4f6039fcf285c3edb63ccb8681fc10a582149eaa0e528d34f84a596090d5a9 1120 mx-dockmaker_21.7.dsc
+ 4f65b9057262a89a0ff6ddb521a7382d83fa1dec7a585b96b2986e696907e131 75604 mx-dockmaker_21.7.tar.xz
+ adeff1c5992dbcc63b8d06f5d47ccc191a72896b8a08867d2a170be942a73e64 10429 mx-dockmaker_21.7_amd64.buildinfo
+ b6e93fd98e459e9e6520fee22b5a747b26969e33d36e6bc39b99a3478e2906f1 103952 mx-dockmaker_21.7_amd64.deb
+Files:
+ eabeef4aa349424b07c38a7f76fb238d 1120 admin optional mx-dockmaker_21.7.dsc
+ 874c670ac949fd76c4eb44dbc8f94d86 75604 admin optional mx-dockmaker_21.7.tar.xz
+ bac664004f8fa4e7207c92992fe06999 10429 admin optional mx-dockmaker_21.7_amd64.buildinfo
+ b52dfe08d3080f5ce83187516c5b8f93 103952 admin optional mx-dockmaker_21.7_amd64.deb
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAmD0zSMTHGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumJwuCACQDlRX5r+ivHPYc1KINaxPMr2C1RTY
+ZfcuNGSMvK6fEd7AvUc+g7QQ39SD9k55Hz6GsdoXVz4E4M+qkQeiUhok4vJi3sxs
+OYn+A19c5bPbJjTFbPgC0gDvvhICM74HNOQD2XqAM8r9wBjtXRDjsEVpA6H886Vo
++XMDfd2GhEXRK5XlRES6cnEGXUkqtbzLqmAa7wEAVzjZyxkB8CneU/XF2yj2H6zi
+5ensulDei23rkxQOCw4F2d85WezzPlwHv+t2Pq6yRBfFN3HWxKCm4ImrQfRIBEul
+6ZgLTcFZPsCqWJYN/+Bx7e/MGaHICAu04zHR5EadO+5QCLhmG70AWDNo
+=YAFj
+-----END PGP SIGNATURE-----
