@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setWindowIcon(QIcon("/usr/share/icons/hicolor/192x192/apps/mx-dockmaker.png"));
     a.setApplicationName("mx-dockmaker");
+    a.setOrganizationName("MX-Linux");
 
     QTranslator qtTran;
     qtTran.load(QString("qt_") + QLocale::system().name());

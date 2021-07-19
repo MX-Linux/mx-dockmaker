@@ -61,7 +61,7 @@ public:
     void showApp(int i, int old_idx);
     void updateAppList(int idx);
 
-    QString findIcon(QString icon_name, const QSize &size);
+    QPixmap findIcon(QString icon_name, const QSize &size);
     QString getDockName(const QString &file_name);
     QString inputDockName();
     QString pickSlitLocation();
