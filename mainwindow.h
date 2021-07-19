@@ -62,8 +62,6 @@ public:
     void updateAppList(int idx);
 
     QString findIcon(QString icon_name, const QSize &size);
-    QString findLargest(const QStringList &files);
-    QString pickIcon(const QStringList &icons, const QSize &size);
     QString getDockName(const QString &file_name);
     QString inputDockName();
     QString pickSlitLocation();
