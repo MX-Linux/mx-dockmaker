@@ -1,0 +1,46 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Format: 1.8
+Date: Thu, 22 Jul 2021 11:43:41 -0400
+Source: mx-dockmaker
+Binary: mx-dockmaker
+Architecture: source amd64
+Version: 21.7.02
+Distribution: mx
+Urgency: medium
+Maintainer: Adrian <adrian@mxlinux.org>
+Changed-By: Adrian <adrian@mxlinux.org>
+Description:
+ mx-dockmaker - mx-dockmaker
+Changes:
+ mx-dockmaker (21.7.02) mx; urgency=medium
+ .
+   * Open icons from default theme
+Checksums-Sha1:
+ 29bc6ad98fc888ea37b09c7b385ecafd2dff00d7 1132 mx-dockmaker_21.7.02.dsc
+ d25558b1d6259ef29113901aa038a543407b49c5 75804 mx-dockmaker_21.7.02.tar.xz
+ d38f6af1a287ed91de0482fac81a70d8191efe05 10453 mx-dockmaker_21.7.02_amd64.buildinfo
+ 3c8077ce703fe32ee546213a68f07a3897e143e8 104412 mx-dockmaker_21.7.02_amd64.deb
+Checksums-Sha256:
+ 4015e78177747e32326f398b1cc10d18c24a01ac522ead9be1ce49c6e649ab5d 1132 mx-dockmaker_21.7.02.dsc
+ 62dea7d7d69e2b7cc063fcba9dd3db0a503f04419a29edf044bcb084e8c62d19 75804 mx-dockmaker_21.7.02.tar.xz
+ 3f2c1e1a5171035b8be78e84a1ec616a73c23609b4f569909bd4daf34a9efc3d 10453 mx-dockmaker_21.7.02_amd64.buildinfo
+ bfb2462a2e20b65d18986506c795ce5f603d90977d18d09f8b487fa6993f6c6a 104412 mx-dockmaker_21.7.02_amd64.deb
+Files:
+ cd3eb1fd188e3eea4fc0abd299c9e733 1132 admin optional mx-dockmaker_21.7.02.dsc
+ f7069ea1cfc8f7b403f1640ec6469d5a 75804 admin optional mx-dockmaker_21.7.02.tar.xz
+ cfeb2fadedb92f5d1fcba378360739e5 10453 admin optional mx-dockmaker_21.7.02_amd64.buildinfo
+ 1261e315e688c5f5391cc3cea87e169b 104412 admin optional mx-dockmaker_21.7.02_amd64.deb
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAmD5k50THGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumO1kCACsAWo7DVbAcXpTtS1WfIST73He/a5c
+HgTUox1aTZDs1jZ9PksYT2X/qrshZwyFrwvFVnR1SKGzB129qRepobGYNglYapQ+
+6m9vUzq3ERuk5Cw95xFZF0Wl5L/a+u4huS+fSAAIAVf8Kqi4jmhDI+lWyBIDU02S
+ejpo9N5Df82NfbZaDMzEHWXFTEfwl7wXgfOasA1uanBBk1VgqeVZcViWEJYuYaIb
++QzmImLSm/NAFqGvn4iL7D2X12LByaYaqwC3/mqcmurpaOJ/er+22BcEpkI8GX7Y
+6GkEwQ01JbgW3unvR88euRVJtF9mSjQhVLH2l33WcAi96bF42c/txXev
+=AgaT
+-----END PGP SIGNATURE-----

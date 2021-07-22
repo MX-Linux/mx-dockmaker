@@ -1,0 +1,40 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Format: 1.8
+Date: Thu, 22 Jul 2021 11:43:41 -0400
+Source: mx-dockmaker
+Binary: mx-dockmaker
+Architecture: i386
+Version: 21.7.02
+Distribution: mx
+Urgency: medium
+Maintainer: Adrian <adrian@mxlinux.org>
+Changed-By: Adrian <adrian@mxlinux.org>
+Description:
+ mx-dockmaker - mx-dockmaker
+Changes:
+ mx-dockmaker (21.7.02) mx; urgency=medium
+ .
+   * Open icons from default theme
+Checksums-Sha1:
+ ff3cb4ff6cf20ef587375e38792a476487a759ce 10147 mx-dockmaker_21.7.02_i386.buildinfo
+ 33cd2b8030b98dbf1e30fe8f427b774c7df02129 108338 mx-dockmaker_21.7.02_i386.deb
+Checksums-Sha256:
+ 09523e178746f1951c704e7aa080cb4456015dabcb4fe19eb46d2c9844c20f22 10147 mx-dockmaker_21.7.02_i386.buildinfo
+ 8b46448bacb532c6a53bba471992651a9e2d177d384da66b369cb2067a37b269 108338 mx-dockmaker_21.7.02_i386.deb
+Files:
+ 8afa0ca414d9d71687369fb947e71e10 10147 admin optional mx-dockmaker_21.7.02_i386.buildinfo
+ 671fed5d2e67c76e79a9537d424459fc 108338 admin optional mx-dockmaker_21.7.02_i386.deb
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAmD5k50THGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumD2yCACc5e/VMobPPmrQQR2KiDb5mnlBOXYn
+7AWHmLKU4Nk8+3E1/JYETbBd3nsOfBebWAqdyxxoC7besgwUQfrK1ECwkMf3pRUq
+Q4b1zlhG1G5r/4qOHlw/+tNujweo3SoiprJpRFH45PRYH+VEUZUI5zwjOLbDRULz
+EdoUo18v75OqyZm8x9tyQuXKJHvRLQaSG6XbGMJj89mUCS/JpSrqsCOZuGqBz92H
+ksASNlFzE8nImUWP/cBJMQ3t/+f3wcJ4JE4RS/B3nVZ2P7S6o8RQKqPnoUvqpxOK
+h3G93lk/0H7c7NZZ3iwQfkA+3S6oFz+NccQ7OnKW6PBfxzBCNX38y/QW
+=J6cb
+-----END PGP SIGNATURE-----
