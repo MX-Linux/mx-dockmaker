@@ -83,7 +83,8 @@ void MainWindow::displayIcon(const QString &app_name, int location)
     }
     list_icons.at(location)->setPixmap(pix);
     list_icons.at(location)->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    list_icons.at(location)->setStyleSheet("background-color: " + ui->comboBgColor->currentText() + ";border: 4px solid " + ui->comboBorderColor->currentText() + ";");
+    list_icons.at(location)->setStyleSheet("background-color: " + ui->comboBgColor->currentText()
+                                           + ";border: 4px solid " + ui->comboBorderColor->currentText() + ";");
 }
 
 bool MainWindow::checkDoneEditing()
@@ -156,7 +157,8 @@ void MainWindow::setup(QString file)
     }
 
     QMessageBox *mbox = new QMessageBox(nullptr);
-    mbox->setText(tr("This tool allows you to create a new dock with one or more applications. You can also edit or delete a dock created earlier."));
+    mbox->setText(tr("This tool allows you to create a new dock with one or more applications. "
+                     "You can also edit or delete a dock created earlier."));
     mbox->setIcon(QMessageBox::Question);
     mbox->setWindowTitle(tr("Operation mode"));
     mbox->addButton(tr("&Close"), QMessageBox::NoRole);
@@ -331,9 +333,11 @@ void MainWindow::cleanup()
 void MainWindow::deleteDock()
 {
     this->hide();
-    QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select dock to delete"), QDir::homePath() + "/.fluxbox/scripts", tr("Dock Files (*.mxdk);;All Files (*.*)"));
+    QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select dock to delete"), QDir::homePath()
+                                                    + "/.fluxbox/scripts", tr("Dock Files (*.mxdk);;All Files (*.*)"));
     if (!selected.isEmpty() && QMessageBox::question(nullptr, tr("Confirmation"),
-                                                     tr("Are you sure you want to delete %1?").arg(selected), tr("&Delete"), tr("&Cancel")) == 0) {
+                                                     tr("Are you sure you want to delete %1?").arg(selected),
+                                                     tr("&Delete"), tr("&Cancel")) == 0) {
         QFile::remove(selected);
         cmd.run("sed -ni '\\|" + selected + "|!p' " + QDir::homePath() + "/.fluxbox/submenus/appearance", true);
         cmd.run("pkill wmalauncher", true);
@@ -358,7 +362,8 @@ void MainWindow::moveDock()
                                           "LeftBottom",                 "RightBottom",
                                           "BottomLeft", "BottomCenter", "BottomRight"});
 
-    QString selected_dock = QFileDialog::getOpenFileName(nullptr, tr("Select dock to move"), QDir::homePath() + "/.fluxbox/scripts", tr("Dock Files (*.mxdk);;All Files (*.*)"));
+    QString selected_dock = QFileDialog::getOpenFileName(nullptr, tr("Select dock to move"), QDir::homePath()
+                                                         + "/.fluxbox/scripts", tr("Dock Files (*.mxdk);;All Files (*.*)"));
     if (selected_dock.isEmpty()) {
         setup();
         return;
@@ -386,7 +391,8 @@ void MainWindow::moveDock()
     // replace string
     re.setPattern("^sed -i.*");
     re.setPatternOptions(QRegularExpression::MultilineOption);
-    QString new_line = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + slit_location + "/' $HOME/.fluxbox/init";
+    QString new_line = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: "
+            + slit_location + "/' $HOME/.fluxbox/init";
 
     if (!file.open(QFile::Text | QFile::ReadWrite | QFile::Truncate)) {
         qDebug() << "Could not open file:" << file.fileName();
@@ -472,7 +478,8 @@ void MainWindow::parseFile(QFile &file)
                 } else if ((tokens.at(0) == "b") | (tokens.at(0) == "border-color")) {
                     if (tokens.size() > 1) ui->comboBorderColor->setCurrentIndex(ui->comboBorderColor->findText(tokens.at(1)));
                 } else if ((tokens.at(0) == "w") | (tokens.at(0) == "window-size")) {
-                    if (tokens.size() > 1) ui->comboSize->setCurrentIndex(ui->comboSize->findText(tokens.at(1) + "x" + tokens.at(1)));
+                    if (tokens.size() > 1) ui->comboSize->setCurrentIndex(ui->comboSize->findText(tokens.at(1)
+                                                                                                  + "x" + tokens.at(1)));
                 } else if ((tokens.at(0) == "x") | (tokens.at(0) == "exit-on-right-click")) {
                     // not used right now
                 } else { // other not handled options, add them as a propriety to the app button
@@ -524,7 +531,8 @@ void MainWindow::on_buttonSave_clicked()
         out << "#!/bin/bash\n\n";
         out << "pkill wmalauncher\n\n";
         out << "#set up slit location\n";
-        out << "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + slit_location + "/' $HOME/.fluxbox/init\n\n";
+        out << "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: "
+               + slit_location + "/' $HOME/.fluxbox/init\n\n";
         out << "fluxbox-remote restart; sleep 1\n\n";
         out << "#commands for dock launchers\n";
     } else {
@@ -536,7 +544,8 @@ void MainWindow::on_buttonSave_clicked()
         file_content.remove("#!/bin/bash\n\n").remove("#!/bin/bash\n").remove("pkill wmalauncher\n\n").remove("pkill wmalauncher\n");
 
         QRegularExpression re("^sed -i.*", QRegularExpression::MultilineOption);
-        QString new_line = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + slit_location + "/' $HOME/.fluxbox/init";
+        QString new_line = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: "
+                + slit_location + "/' $HOME/.fluxbox/init";
 
         // if location line not found add it at the beginning
         if (!re.match(file_content).hasMatch()) {
@@ -548,7 +557,8 @@ void MainWindow::on_buttonSave_clicked()
     }
 
     for (int i = 0; i < apps.size(); ++i) {
-        QString command = (apps.at(i).at(0).endsWith(".desktop")) ? "--desktop-file " + apps.at(i).at(0) : "--command " + apps.at(i).at(1) + " --icon " + apps.at(i).at(2);
+        QString command = (apps.at(i).at(0).endsWith(".desktop")) ? "--desktop-file " + apps.at(i).at(0)
+                : "--command " + apps.at(i).at(1) + " --icon " + apps.at(i).at(2);
         out << "wmalauncher " + command + " --background-color " + apps.at(i).at(4) + " --border-color " +
                   apps.at(i).at(5) + " --window-size " + apps.at(i).at(3).section("x", 0, 0) + apps.at(i).at(6) + "& sleep 0.1\n";
     }
@@ -586,8 +596,8 @@ void MainWindow::on_buttonAbout_clicked()
                        "<p align=\"center\"><b><h2>MX Dockmaker</h2></b></p><p align=\"center\">" +
                        tr("Version: ") + VERSION + "</p><p align=\"center\"><h3>" +
                        tr("Description goes here") +
-                       "</h3></p><p align=\"center\"><a href=\"http://mxlinux.org\">http://mxlinux.org</a><br /></p><p align=\"center\">" +
-                       tr("Copyright (c) MX Linux") + "<br /><br /></p>",
+                       "</h3></p><p align=\"center\"><a href=\"http://mxlinux.org\">http://mxlinux.org</a><br /></p>"
+                       "<p align=\"center\">" + tr("Copyright (c) MX Linux") + "<br /><br /></p>",
                         "/usr/share/doc/mx-dockmaker/license.html", tr("%1 License").arg(this->windowTitle()), false);
 
     this->show();
@@ -725,7 +735,8 @@ void MainWindow::showApp(int idx, int old_idx)
 
 void MainWindow::on_buttonSelectApp_clicked()
 {
-    QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select .desktop file"), "/usr/share/applications", tr("Desktop Files (*.desktop)"));
+    QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select .desktop file"), "/usr/share/applications",
+                                                    tr("Desktop Files (*.desktop)"));
     QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
         file_name = file;
@@ -744,7 +755,8 @@ void MainWindow::editDock(QString file_arg)
     if (!file_arg.isEmpty() && QFile::exists(file_arg))
         selected_dock = file_arg;
     else
-        selected_dock = QFileDialog::getOpenFileName(nullptr, tr("Select a dock file"), QDir::homePath() + "/.fluxbox/scripts", tr("Dock Files (*.mxdk);;All Files (*.*)"));
+        selected_dock = QFileDialog::getOpenFileName(nullptr, tr("Select a dock file"), QDir::homePath()
+                                                     + "/.fluxbox/scripts", tr("Dock Files (*.mxdk);;All Files (*.*)"));
 
     if (!QFileInfo::exists(selected_dock)) {
         QMessageBox::warning(nullptr, tr("No file selected"), tr("You haven't selected any dock file to edit.\nCreating a new dock instead."));
@@ -805,7 +817,15 @@ void MainWindow::on_radioDesktop_toggled(bool checked)
 void MainWindow::on_buttonSelectIcon_clicked()
 {
     ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
-    QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select icon"), "/usr/share/icons/Moka", tr("Icons (*.png *.jpg *.bmp *.xpm *.svg)"));
+    QString default_folder;
+    if (ui->buttonSelectIcon->text() != tr("Select icon...") && QFileInfo::exists(ui->buttonSelectIcon->text())) {
+        QFileInfo f_info(ui->buttonSelectIcon->text());
+        default_folder = f_info.canonicalPath();
+    } else {
+        default_folder = "/usr/share/icons/" + QIcon::themeName();
+    }
+    QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select icon"), default_folder,
+                                                    tr("Icons (*.png *.jpg *.bmp *.xpm *.svg)"));
     QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
         ui->buttonSelectIcon->setText(selected);

@@ -1,3 +1,9 @@
+mx-dockmaker (21.7.02) mx; urgency=medium
+
+  * Open icons from default theme
+
+ -- Adrian <adrian@mxlinux.org>  Thu, 22 Jul 2021 11:43:41 -0400
+
 mx-dockmaker (21.7.01) mx; urgency=medium
 
   * Fix icon search 
