@@ -1,6 +1,6 @@
 mx-dockmaker (21.7.02) mx; urgency=medium
 
-  * Open icons from default theme
+  * Open icons from /usr/share/icons or current folder
 
  -- Adrian <adrian@mxlinux.org>  Thu, 22 Jul 2021 11:43:41 -0400
 

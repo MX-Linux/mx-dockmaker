@@ -16,25 +16,25 @@ Description:
 Changes:
  mx-dockmaker (21.7.02) mx; urgency=medium
  .
-   * Open icons from default theme
+   * Open icons from /usr/share/icons or current folder
 Checksums-Sha1:
- ff3cb4ff6cf20ef587375e38792a476487a759ce 10147 mx-dockmaker_21.7.02_i386.buildinfo
- 33cd2b8030b98dbf1e30fe8f427b774c7df02129 108338 mx-dockmaker_21.7.02_i386.deb
+ 67099cb3a5bad24cb5dda90ee89a002a448b4434 10147 mx-dockmaker_21.7.02_i386.buildinfo
+ c0524fd42fe737744d5d633e75826b173fb55a89 108418 mx-dockmaker_21.7.02_i386.deb
 Checksums-Sha256:
- 09523e178746f1951c704e7aa080cb4456015dabcb4fe19eb46d2c9844c20f22 10147 mx-dockmaker_21.7.02_i386.buildinfo
- 8b46448bacb532c6a53bba471992651a9e2d177d384da66b369cb2067a37b269 108338 mx-dockmaker_21.7.02_i386.deb
+ ebc34f8a5cc35a661da1d8b58f7dc725b5c2b12f7ec4ebf7cf832c9735819197 10147 mx-dockmaker_21.7.02_i386.buildinfo
+ 97775d09d741669f3c33cc33bc6aa2df31809cb65ef8f96e80640eb88a076d0d 108418 mx-dockmaker_21.7.02_i386.deb
 Files:
- 8afa0ca414d9d71687369fb947e71e10 10147 admin optional mx-dockmaker_21.7.02_i386.buildinfo
- 671fed5d2e67c76e79a9537d424459fc 108338 admin optional mx-dockmaker_21.7.02_i386.deb
+ fcd20e37a541b943c1c9fef5df42d662 10147 admin optional mx-dockmaker_21.7.02_i386.buildinfo
+ 4d96c1dcae7e111e9ec547f984182152 108418 admin optional mx-dockmaker_21.7.02_i386.deb
 
 -----BEGIN PGP SIGNATURE-----
 
-iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAmD5k50THGFkcmlhbkBt
-eGxpbnV4Lm9yZwAKCRBwk4x4BnnumD2yCACc5e/VMobPPmrQQR2KiDb5mnlBOXYn
-7AWHmLKU4Nk8+3E1/JYETbBd3nsOfBebWAqdyxxoC7besgwUQfrK1ECwkMf3pRUq
-Q4b1zlhG1G5r/4qOHlw/+tNujweo3SoiprJpRFH45PRYH+VEUZUI5zwjOLbDRULz
-EdoUo18v75OqyZm8x9tyQuXKJHvRLQaSG6XbGMJj89mUCS/JpSrqsCOZuGqBz92H
-ksASNlFzE8nImUWP/cBJMQ3t/+f3wcJ4JE4RS/B3nVZ2P7S6o8RQKqPnoUvqpxOK
-h3G93lk/0H7c7NZZ3iwQfkA+3S6oFz+NccQ7OnKW6PBfxzBCNX38y/QW
-=J6cb
+iQFHBAEBCgAxFiEE8ndToY6S45N+YzXncJOMeAZ57pgFAmD6DmUTHGFkcmlhbkBt
+eGxpbnV4Lm9yZwAKCRBwk4x4BnnumGXKB/4+CmdKzHNhLW64SW/Vtp9J3t7hr5l7
+IYP7EoTtk9RTaqGRpGO/XoiFQgmb5J1+1Nc4iPrp+9GdRztuz9Kd3urDeaWyXNK3
+PQCV8ugwnXnK6dvLz3L/iBBCaccJuekIcHq4b2MzbH4hLGCmSA0L2KkxDq/Dr4tt
+6YDcuwXchiERzFSy+14aX1HhE07VDunTfBO/gZ0cOAf4gZPorumlB+R3YN/ZMaSp
+Em5jkcnzFnqXm3XU1cnRZlo31mOMsrvpE/dOZFVJMO+DhLG/6+QC6IT84RkEZsqv
+YaG9h3pQXbP5MWMrG4o6EehjsF+fWY7sfnPZ3zNERFQ4p2g2T2FOff2h
+=S0Yp
 -----END PGP SIGNATURE-----

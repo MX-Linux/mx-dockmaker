@@ -822,7 +822,7 @@ void MainWindow::on_buttonSelectIcon_clicked()
         QFileInfo f_info(ui->buttonSelectIcon->text());
         default_folder = f_info.canonicalPath();
     } else {
-        default_folder = "/usr/share/icons/" + QIcon::themeName();
+        default_folder = "/usr/share/icons/";
     }
     QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select icon"), default_folder,
                                                     tr("Icons (*.png *.jpg *.bmp *.xpm *.svg)"));
