@@ -38,7 +38,7 @@ PickLocation::PickLocation(QString location, QWidget *parent) :
     connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked), this, &PickLocation::onGroupButton);
 
     bool found = false;
-    for (QAbstractButton *button : buttonGroup->buttons()) {
+    for (auto *button : buttonGroup->buttons()) {
         if (location == button->property("location").toString()) {
             button->click();
             found = true;

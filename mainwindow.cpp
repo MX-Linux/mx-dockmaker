@@ -24,7 +24,6 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QTimer>
-#include <QSettings>
 
 #include <about.h>
 #include <cmd.h>
@@ -135,8 +134,6 @@ void MainWindow::setup(QString file)
     ui->comboBgColor->addItems(color_list);
     ui->comboBorderColor->addItems(color_list);
 
-    QSettings settings(qApp->organizationName(), qApp->applicationName());
-
     // Write configs if not there
     settings.setValue("BackgroundColor", settings.value("BackgroundColor", "black").toString());
     settings.setValue("FrameColor", settings.value("FrameColor", "white").toString());
@@ -237,8 +234,8 @@ QPixmap MainWindow::findIcon(QString icon_name, const QSize &size)
 
 QString MainWindow::getDockName(const QString &file_name)
 {
-    QRegularExpression re_file(".*" + QFileInfo(file_name).fileName());
-    QRegularExpression re_name("\\(.*\\)");
+    const QRegularExpression re_file(".*" + QFileInfo(file_name).fileName());
+    const QRegularExpression re_name("\\(.*\\)");
 
     // check if dock name is in /usr/share...
     QFile file("/usr/share/mxflux/menu/appearance");
@@ -668,8 +665,6 @@ void MainWindow::resetAdd()
     ui->radioDesktop->toggled(true);
     ui->buttonAdd->setDisabled(true);
 
-    QSettings settings(qApp->organizationName(), qApp->applicationName());
-
     QString bg_color = settings.value("BackgroundColor", "black").toString();
     QString border_color = settings.value("FrameColor", "white").toString();
     QString size = settings.value("Size", "48x48").toString();
@@ -840,7 +835,6 @@ void MainWindow::on_buttonSelectIcon_clicked()
 
 void MainWindow::on_lineEditCommand_textEdited(const QString)
 {
-    qDebug() << "lineEditCommand changed";
     ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
     if (ui->buttonSelectIcon->text() != tr("Select icon...")) {
         ui->buttonSelectApp->setProperty("extra_options", QString()); // reset extra options when changing the command

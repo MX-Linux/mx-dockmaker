@@ -28,6 +28,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QMouseEvent>
+#include <QSettings>
 
 #include "cmd.h"
 
@@ -102,6 +103,7 @@ private:
     QString file_content;
     QString file_name;
     QString slit_location;
+    QSettings settings;
     QList<QStringList> apps;
 
 
