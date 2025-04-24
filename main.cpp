@@ -22,6 +22,7 @@
 
 #include <QApplication>
 #include <QIcon>
+#include <QLibraryInfo>
 #include <QLocale>
 #include <QProcess>
 #include <QTranslator>
@@ -37,13 +38,20 @@ int main(int argc, char *argv[])
     QApplication::setOrganizationName(QStringLiteral("MX-Linux"));
 
     QTranslator qtTran;
-    qtTran.load(QStringLiteral("qt_") + QLocale::system().name());
-    QApplication::installTranslator(&qtTran);
+    if (qtTran.load("qt_" + QLocale().name(), QLibraryInfo::path(QLibraryInfo::TranslationsPath))) {
+        QApplication::installTranslator(&qtTran);
+    }
+
+    QTranslator qtBaseTran;
+    if (qtBaseTran.load("qtbase_" + QLocale().name(), QLibraryInfo::path(QLibraryInfo::TranslationsPath))) {
+        QApplication::installTranslator(&qtBaseTran);
+    }
 
     QTranslator appTran;
-    appTran.load(QStringLiteral("mx-dockmaker_") + QLocale::system().name(),
-                 QStringLiteral("/usr/share/mx-dockmaker/locale"));
-    QApplication::installTranslator(&appTran);
+    if (appTran.load(QApplication::applicationName() + "_" + QLocale().name(),
+                     "/usr/share/" + QApplication::applicationName() + "/locale")) {
+        QApplication::installTranslator(&appTran);
+    }
 
     // root guard
     if (QProcess::execute("/bin/bash", {"-c", "logname |grep -q ^root$"}) == 0) {
@@ -56,8 +64,9 @@ int main(int argc, char *argv[])
 
     if (getuid() != 0) {
         QString file;
-        if (QApplication::arguments().length() >= 2 && QFile::exists(QApplication::arguments().at(1)))
+        if (QApplication::arguments().length() >= 2 && QFile::exists(QApplication::arguments().at(1))) {
             file = QApplication::arguments().at(1);
+        }
         MainWindow w(nullptr, file);
         w.show();
         return QApplication::exec();
