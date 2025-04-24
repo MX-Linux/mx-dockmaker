@@ -65,10 +65,10 @@
     </message>
     <message>
         <location filename="../mainwindow.ui" line="504"/>
-        <location filename="../mainwindow.cpp" line="857"/>
-        <location filename="../mainwindow.cpp" line="975"/>
-        <location filename="../mainwindow.cpp" line="1013"/>
-        <location filename="../mainwindow.cpp" line="1038"/>
+        <location filename="../mainwindow.cpp" line="861"/>
+        <location filename="../mainwindow.cpp" line="979"/>
+        <location filename="../mainwindow.cpp" line="1017"/>
+        <location filename="../mainwindow.cpp" line="1042"/>
         <source>Select icon...</source>
         <translation>आइकन चयन...</translation>
     </message>
@@ -76,8 +76,8 @@
         <location filename="../mainwindow.ui" line="677"/>
         <location filename="../mainwindow.cpp" line="102"/>
         <location filename="../mainwindow.cpp" line="801"/>
-        <location filename="../mainwindow.cpp" line="861"/>
-        <location filename="../mainwindow.cpp" line="978"/>
+        <location filename="../mainwindow.cpp" line="865"/>
+        <location filename="../mainwindow.cpp" line="982"/>
         <source>Select...</source>
         <translation>चयन...</translation>
     </message>
@@ -276,7 +276,7 @@
         <location filename="../mainwindow.cpp" line="391"/>
         <location filename="../mainwindow.cpp" line="427"/>
         <location filename="../mainwindow.cpp" line="642"/>
-        <location filename="../mainwindow.cpp" line="922"/>
+        <location filename="../mainwindow.cpp" line="926"/>
         <source>Dock Files (*.mxdk);;All Files (*.*)</source>
         <translation>डॉक फाइलें (*.mxdk);;सभी फाइलें (*.*)</translation>
     </message>
@@ -293,7 +293,7 @@
     <message>
         <location filename="../mainwindow.cpp" line="437"/>
         <location filename="../mainwindow.cpp" line="462"/>
-        <location filename="../mainwindow.cpp" line="933"/>
+        <location filename="../mainwindow.cpp" line="937"/>
         <source>Could not open file</source>
         <translation>फाइल खोलना विफल</translation>
     </message>
@@ -362,41 +362,41 @@ To edit the newly created dock please select &apos;Edit an existing dock&apos;.<
         <translation>%1 सहायता</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="900"/>
+        <location filename="../mainwindow.cpp" line="904"/>
         <source>Select .desktop file</source>
         <translation>.desktop फाइल चयन</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="901"/>
+        <location filename="../mainwindow.cpp" line="905"/>
         <source>Desktop Files (*.desktop)</source>
         <translation>डेस्कटॉप फाइलें (*.desktop)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="921"/>
+        <location filename="../mainwindow.cpp" line="925"/>
         <source>Select a dock file</source>
         <translation>डॉक फाइल चयन</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="926"/>
+        <location filename="../mainwindow.cpp" line="930"/>
         <source>No file selected</source>
         <translation>कोई फ़ाइल चयनित नहीं है</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="927"/>
+        <location filename="../mainwindow.cpp" line="931"/>
         <source>You haven&apos;t selected any dock file to edit.
 Creating a new dock instead.</source>
         <translation>संपादन हेतु डॉक फाइल चयनित नहीं है।
 नवीन डॉक बनाया जाएगा।</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="934"/>
+        <location filename="../mainwindow.cpp" line="938"/>
         <source>Could not open selected file.
 Creating a new dock instead.</source>
         <translation>चयनित फाइल खोलना विफल।
 नवीन डॉक बनाया जाएगा।</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="942"/>
+        <location filename="../mainwindow.cpp" line="946"/>
         <source>1. Edit applications one at a time using the Back and Next buttons
 2. Add or delete applications as you like
 3. When finished click Save</source>
@@ -405,12 +405,12 @@ Creating a new dock instead.</source>
 3. पूर्ण होने पर संचित करें पर क्लिक करें</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1019"/>
+        <location filename="../mainwindow.cpp" line="1023"/>
         <source>Select icon</source>
         <translation>आइकन चयन</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1020"/>
+        <location filename="../mainwindow.cpp" line="1024"/>
         <source>Icons (*.png *.jpg *.bmp *.xpm *.svg)</source>
         <translation>आइकन (*.png *.jpg *.bmp *.xpm *.svg)</translation>
     </message>

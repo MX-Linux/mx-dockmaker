@@ -65,10 +65,10 @@
     </message>
     <message>
         <location filename="../mainwindow.ui" line="504"/>
-        <location filename="../mainwindow.cpp" line="857"/>
-        <location filename="../mainwindow.cpp" line="975"/>
-        <location filename="../mainwindow.cpp" line="1013"/>
-        <location filename="../mainwindow.cpp" line="1038"/>
+        <location filename="../mainwindow.cpp" line="861"/>
+        <location filename="../mainwindow.cpp" line="979"/>
+        <location filename="../mainwindow.cpp" line="1017"/>
+        <location filename="../mainwindow.cpp" line="1042"/>
         <source>Select icon...</source>
         <translation>Ikon kiválasztása...</translation>
     </message>
@@ -76,8 +76,8 @@
         <location filename="../mainwindow.ui" line="677"/>
         <location filename="../mainwindow.cpp" line="102"/>
         <location filename="../mainwindow.cpp" line="801"/>
-        <location filename="../mainwindow.cpp" line="861"/>
-        <location filename="../mainwindow.cpp" line="978"/>
+        <location filename="../mainwindow.cpp" line="865"/>
+        <location filename="../mainwindow.cpp" line="982"/>
         <source>Select...</source>
         <translation>Választás...</translation>
     </message>
@@ -276,7 +276,7 @@
         <location filename="../mainwindow.cpp" line="391"/>
         <location filename="../mainwindow.cpp" line="427"/>
         <location filename="../mainwindow.cpp" line="642"/>
-        <location filename="../mainwindow.cpp" line="922"/>
+        <location filename="../mainwindow.cpp" line="926"/>
         <source>Dock Files (*.mxdk);;All Files (*.*)</source>
         <translation>Dokk fájlok (*.mxdk);;Minden fájl (*.*)</translation>
     </message>
@@ -293,7 +293,7 @@
     <message>
         <location filename="../mainwindow.cpp" line="437"/>
         <location filename="../mainwindow.cpp" line="462"/>
-        <location filename="../mainwindow.cpp" line="933"/>
+        <location filename="../mainwindow.cpp" line="937"/>
         <source>Could not open file</source>
         <translation>Fájl megnyitása nem sikerült</translation>
     </message>
@@ -362,41 +362,41 @@ Az újonnan létrehozott dokk szerkesztéséhez válassza a &apos;Meglévő dokk
         <translation>%1 Súgó</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="900"/>
+        <location filename="../mainwindow.cpp" line="904"/>
         <source>Select .desktop file</source>
         <translation>Válassza ki a .desktop fájlt</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="901"/>
+        <location filename="../mainwindow.cpp" line="905"/>
         <source>Desktop Files (*.desktop)</source>
         <translation>Desktop fájlok (*.desktop)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="921"/>
+        <location filename="../mainwindow.cpp" line="925"/>
         <source>Select a dock file</source>
         <translation>Válasszon ki egy dokk fájlt</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="926"/>
+        <location filename="../mainwindow.cpp" line="930"/>
         <source>No file selected</source>
         <translation>Nincs kijelölt fájl</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="927"/>
+        <location filename="../mainwindow.cpp" line="931"/>
         <source>You haven&apos;t selected any dock file to edit.
 Creating a new dock instead.</source>
         <translation>Nem választott ki dokkfájlt szerkesztésre.
 Új dokk kerül létrehozásra.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="934"/>
+        <location filename="../mainwindow.cpp" line="938"/>
         <source>Could not open selected file.
 Creating a new dock instead.</source>
         <translation>Nem sikerült a kiválasztott fájl megnyitása.
 Inkább egy új dokk kerül létrehozásra.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="942"/>
+        <location filename="../mainwindow.cpp" line="946"/>
         <source>1. Edit applications one at a time using the Back and Next buttons
 2. Add or delete applications as you like
 3. When finished click Save</source>
@@ -405,12 +405,12 @@ Inkább egy új dokk kerül létrehozásra.</translation>
 3. Ha végzett, kattintson a Mentés gombra.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1019"/>
+        <location filename="../mainwindow.cpp" line="1023"/>
         <source>Select icon</source>
         <translation>Válasszon ikont</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1020"/>
+        <location filename="../mainwindow.cpp" line="1024"/>
         <source>Icons (*.png *.jpg *.bmp *.xpm *.svg)</source>
         <translation>Ikonok (*.png *.jpg *.bmp *.xpm *.svg)</translation>
     </message>
