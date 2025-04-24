@@ -832,7 +832,11 @@ void MainWindow::setConnections()
     connect(ui->buttonSave, &QPushButton::clicked, this, &MainWindow::buttonSave_clicked);
     connect(ui->buttonSelectApp, &QPushButton::clicked, this, &MainWindow::buttonSelectApp_clicked);
     connect(ui->buttonSelectIcon, &QPushButton::clicked, this, &MainWindow::buttonSelectIcon_clicked);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+    connect(ui->checkApplyStyleToAll, &QCheckBox::checkStateChanged, this, &MainWindow::checkApplyStyleToAll_stateChanged);
+#else
     connect(ui->checkApplyStyleToAll, &QCheckBox::stateChanged, this, &MainWindow::checkApplyStyleToAll_stateChanged);
+#endif
     connect(ui->comboSize, &QComboBox::currentTextChanged, this, &MainWindow::comboSize_currentTextChanged);
     connect(ui->lineEditCommand, &QLineEdit::textEdited, this, &MainWindow::lineEditCommand_textEdited);
     connect(ui->radioDesktop, &QRadioButton::toggled, this, &MainWindow::radioDesktop_toggled);
