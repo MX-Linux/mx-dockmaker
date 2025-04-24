@@ -544,18 +544,18 @@ Creating a new dock instead.</source>
         <translation type="unfinished">बंद करें (&amp;C)</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="51"/>
-        <location filename="../main.cpp" line="66"/>
+        <location filename="../main.cpp" line="59"/>
+        <location filename="../main.cpp" line="75"/>
         <source>Error</source>
         <translation type="unfinished">त्रुटि</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="52"/>
+        <location filename="../main.cpp" line="60"/>
         <source>You seem to be logged in as root, please log out and log in as normal user to use this program.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="66"/>
+        <location filename="../main.cpp" line="75"/>
         <source>You must run this program as normal user.</source>
         <translation type="unfinished">प्रोग्राम निष्पादन हेतु आपका रुट उपयोक्ता होना आवश्यक है।</translation>
     </message>

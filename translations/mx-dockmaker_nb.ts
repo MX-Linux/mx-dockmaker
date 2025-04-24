@@ -544,18 +544,18 @@ Oppretter nytt samlevindu istedenfor.</translation>
         <translation type="unfinished">&amp;Lukk</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="51"/>
-        <location filename="../main.cpp" line="66"/>
+        <location filename="../main.cpp" line="59"/>
+        <location filename="../main.cpp" line="75"/>
         <source>Error</source>
         <translation type="unfinished">Feil</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="52"/>
+        <location filename="../main.cpp" line="60"/>
         <source>You seem to be logged in as root, please log out and log in as normal user to use this program.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="66"/>
+        <location filename="../main.cpp" line="75"/>
         <source>You must run this program as normal user.</source>
         <translation type="unfinished">Du må kjøre dette programmet som en vanlig bruker.</translation>
     </message>

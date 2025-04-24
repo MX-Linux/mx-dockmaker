@@ -544,18 +544,18 @@ En aquest cas, es crea un acoblador nou.</translation>
         <translation type="unfinished">Tan&amp;ca </translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="51"/>
-        <location filename="../main.cpp" line="66"/>
+        <location filename="../main.cpp" line="59"/>
+        <location filename="../main.cpp" line="75"/>
         <source>Error</source>
         <translation type="unfinished">Error</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="52"/>
+        <location filename="../main.cpp" line="60"/>
         <source>You seem to be logged in as root, please log out and log in as normal user to use this program.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="66"/>
+        <location filename="../main.cpp" line="75"/>
         <source>You must run this program as normal user.</source>
         <translation type="unfinished">Cal executar aquest programa com a usuari normal</translation>
     </message>

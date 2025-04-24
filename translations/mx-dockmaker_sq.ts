@@ -544,18 +544,18 @@ Në vend të kësaj, po krijohet një panel i ri.</translation>
         <translation type="unfinished">&amp;Mbylle</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="51"/>
-        <location filename="../main.cpp" line="66"/>
+        <location filename="../main.cpp" line="59"/>
+        <location filename="../main.cpp" line="75"/>
         <source>Error</source>
         <translation type="unfinished">Gabim</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="52"/>
+        <location filename="../main.cpp" line="60"/>
         <source>You seem to be logged in as root, please log out and log in as normal user to use this program.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="66"/>
+        <location filename="../main.cpp" line="75"/>
         <source>You must run this program as normal user.</source>
         <translation type="unfinished">Këtë program duhet ta xhironi si përdorues i thjeshtë.</translation>
     </message>
