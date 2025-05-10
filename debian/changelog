@@ -1,3 +1,10 @@
+mx-dockmaker (25.5) mx; urgency=medium
+
+  * Fix button order
+  * Update translations
+
+ -- Adrian <adrian@mxlinux.org>  Sat, 10 May 2025 09:51:16 -0400
+
 mx-dockmaker (25.4) mx; urgency=medium
 
   * Update to Qt6
