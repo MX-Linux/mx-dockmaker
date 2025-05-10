@@ -167,34 +167,33 @@ void MainWindow::setup(const QString &file)
                      "You can also edit or delete a dock created earlier."));
     mbox->setIcon(QMessageBox::Question);
     mbox->setWindowTitle(tr("Operation mode"));
-    mbox->addButton(tr("&Close"), QMessageBox::NoRole);
-    mbox->addButton(tr("&Move"), QMessageBox::NoRole);
-    mbox->addButton(tr("&Delete"), QMessageBox::NoRole);
-    mbox->addButton(tr("&Edit"), QMessageBox::NoRole);
-    mbox->addButton(tr("C&reate"), QMessageBox::NoRole);
+
+    auto *moveBtn = mbox->addButton(tr("&Move"), QMessageBox::NoRole);
+    auto *deleteBtn = mbox->addButton(tr("&Delete"), QMessageBox::NoRole);
+    auto *editBtn = mbox->addButton(tr("&Edit"), QMessageBox::NoRole);
+    auto *createBtn = mbox->addButton(tr("C&reate"), QMessageBox::NoRole);
+    auto *closeBtn = mbox->addButton(tr("&Close"), QMessageBox::RejectRole);
 
     this->hide();
+    mbox->exec();
 
-    switch (enum {Close, Move, Delete, Edit, New}; mbox->exec()) {
-    case Close:
+    auto *clickedButton = mbox->clickedButton();
+
+    if (clickedButton == closeBtn) {
         QTimer::singleShot(0, QApplication::instance(), &QGuiApplication::quit);
-        break;
-    case Move:
+    } else if (clickedButton == moveBtn) {
         moveDock();
-        break;
-    case Delete:
+    } else if (clickedButton == deleteBtn) {
         this->show();
         deleteDock();
         setup();
-        break;
-    case Edit:
+    } else if (clickedButton == editBtn) {
         this->show();
         editDock();
-        break;
-    case New:
+    } else if (clickedButton == createBtn) {
         newDock();
-        break;
     }
+
     delete mbox;
 }
 
@@ -833,7 +832,8 @@ void MainWindow::setConnections()
     connect(ui->buttonSelectApp, &QPushButton::clicked, this, &MainWindow::buttonSelectApp_clicked);
     connect(ui->buttonSelectIcon, &QPushButton::clicked, this, &MainWindow::buttonSelectIcon_clicked);
 #if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
-    connect(ui->checkApplyStyleToAll, &QCheckBox::checkStateChanged, this, &MainWindow::checkApplyStyleToAll_stateChanged);
+    connect(ui->checkApplyStyleToAll, &QCheckBox::checkStateChanged, this,
+            &MainWindow::checkApplyStyleToAll_stateChanged);
 #else
     connect(ui->checkApplyStyleToAll, &QCheckBox::stateChanged, this, &MainWindow::checkApplyStyleToAll_stateChanged);
 #endif
