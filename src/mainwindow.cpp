@@ -29,9 +29,12 @@
 #include <QTimer>
 
 #include "picklocation.h"
-#include "version.h"
-#include <about.h>
-#include <cmd.h>
+#include "about.h"
+
+#ifndef VERSION
+    #define VERSION "?.?.?.?"
+#endif
+#include "cmd.h"
 #include <sys/stat.h>
 
 MainWindow::MainWindow(QWidget *parent, const QString &file)

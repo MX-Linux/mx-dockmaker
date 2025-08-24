@@ -21,14 +21,20 @@
  **********************************************************************/
 
 #include <QApplication>
+#include <QFile>
 #include <QIcon>
 #include <QLibraryInfo>
 #include <QLocale>
+#include <QMessageBox>
 #include <QProcess>
 #include <QTranslator>
 
 #include "mainwindow.h"
 #include <unistd.h>
+
+#ifndef VERSION
+    #define VERSION "?.?.?.?"
+#endif
 
 int main(int argc, char *argv[])
 {
