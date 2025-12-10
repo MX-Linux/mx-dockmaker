@@ -598,6 +598,18 @@ void MainWindow::parseFile(QFile &file)
 
             auto isKnownOption = [&](const QString &token) { return knownOptions.contains(stripQuotes(token)); };
 
+            auto appendExtraOption = [&](const QString &option, const QString &value) {
+                QString extra = ui->buttonSelectApp->property("extra_options").toString();
+                if (!extra.isEmpty()) {
+                    extra += QLatin1Char(' ');
+                }
+                extra += option;
+                if (!value.isEmpty()) {
+                    extra += QLatin1Char(' ') + value;
+                }
+                ui->buttonSelectApp->setProperty("extra_options", extra);
+            };
+
             QRegularExpression tokenRe(QStringLiteral(R"((\"[^\"]*\"|'[^']*'|\S+))"));
             QStringList tokens;
             auto matchIt = tokenRe.globalMatch(line.trimmed());
@@ -673,15 +685,15 @@ void MainWindow::parseFile(QFile &file)
                 } else if (token == QLatin1String("-x") || token == QLatin1String("--exit-on-right-click")) {
                     // not used right now
                 } else {
-                    QString extra = ui->buttonSelectApp->property("extra_options").toString();
-                    if (!extra.isEmpty()) {
-                        extra += QLatin1Char(' ');
+                    QString value;
+                    if (i + 1 < tokens.size()) {
+                        const QString possibleValue = tokens.at(i + 1);
+                        if (!possibleValue.startsWith(QLatin1Char('-')) && !isKnownOption(possibleValue)) {
+                            value = possibleValue;
+                            ++i;
+                        }
                     }
-                    extra += token;
-                    if (i + 1 < tokens.size() && !tokens.at(i + 1).startsWith(QLatin1Char('-'))) {
-                        extra += QLatin1Char(' ') + stripQuotes(tokens.at(++i));
-                    }
-                    ui->buttonSelectApp->setProperty("extra_options", extra);
+                    appendExtraOption(token, value);
                 }
             }
             updateAppList(index);
