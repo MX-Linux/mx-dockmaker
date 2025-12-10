@@ -25,7 +25,10 @@
 #include <QColorDialog>
 #include <QDebug>
 #include <QFileDialog>
+#include <QRegularExpression>
 #include <QInputDialog>
+#include <QProcess>
+#include <QSet>
 #include <QTimer>
 
 #include "picklocation.h"
@@ -36,6 +39,19 @@
 #endif
 #include "cmd.h"
 #include <sys/stat.h>
+
+namespace
+{
+QString quoteArgument(const QString &arg)
+{
+    if (arg.isEmpty()) {
+        return QStringLiteral("''");
+    }
+    QString escaped = arg;
+    escaped.replace(QLatin1Char('\''), QStringLiteral("'\"'\"'")); // POSIX-safe single-quote escaping
+    return QLatin1Char('\'') + escaped + QLatin1Char('\'');
+}
+} // namespace
 
 MainWindow::MainWindow(QWidget *parent, const QString &file)
     : QDialog(parent),
@@ -535,7 +551,24 @@ void MainWindow::parseFile(QFile &file)
                                           "BottomRight"});
 
     QString line;
-    QStringList options;
+    const QSet<QString> knownOptions {QLatin1String("-d"),
+                                      QLatin1String("--desktop-file"),
+                                      QLatin1String("-c"),
+                                      QLatin1String("--command"),
+                                      QLatin1String("-i"),
+                                      QLatin1String("--icon"),
+                                      QLatin1String("-k"),
+                                      QLatin1String("--background-color"),
+                                      QLatin1String("-K"),
+                                      QLatin1String("--hover-background-color"),
+                                      QLatin1String("-b"),
+                                      QLatin1String("--border-color"),
+                                      QLatin1String("-B"),
+                                      QLatin1String("--hover-border-color"),
+                                      QLatin1String("-w"),
+                                      QLatin1String("--window-size"),
+                                      QLatin1String("-x"),
+                                      QLatin1String("--exit-on-right-click")};
 
     while (!file.atEnd()) {
         line = file.readLine().trimmed();
@@ -552,67 +585,103 @@ void MainWindow::parseFile(QFile &file)
         if (line.startsWith(QLatin1String("wmalauncher"))) {
             ui->buttonSelectApp->setProperty("extra_options", QString());
             line.remove(QRegularExpression(QStringLiteral("^wmalauncher")));
-            line.remove(QRegularExpression(QStringLiteral("\\s*&.*sleep.*$")));
+            line.remove(QRegularExpression(QStringLiteral("\\s*&(?:\\s*sleep.*)?$")));
 
-            options = line.split(QRegularExpression(QStringLiteral(" --| -")));
-            options.removeAll(QString());
+            auto stripQuotes = [](const QString &value) {
+                if (value.size() >= 2
+                    && ((value.startsWith(QLatin1Char('"')) && value.endsWith(QLatin1Char('"')))
+                        || (value.startsWith(QLatin1Char('\'')) && value.endsWith(QLatin1Char('\''))))) {
+                    return value.mid(1, value.size() - 2);
+                }
+                return value;
+            };
 
-            for (const QString &option : std::as_const(options)) {
-                QStringList tokens = option.split(QStringLiteral(" "));
-                if (tokens.at(0) == QLatin1String("d") || tokens.at(0) == QLatin1String("desktop-file")) {
+            auto isKnownOption = [&](const QString &token) { return knownOptions.contains(stripQuotes(token)); };
+
+            QRegularExpression tokenRe(QStringLiteral(R"((\"[^\"]*\"|'[^']*'|\S+))"));
+            QStringList tokens;
+            auto matchIt = tokenRe.globalMatch(line.trimmed());
+            while (matchIt.hasNext()) {
+                tokens << matchIt.next().captured(0);
+            }
+
+            for (int i = 0; i < tokens.size(); ++i) {
+                const QString token = tokens.at(i);
+                auto nextValue = [&](QString *out) {
+                    if (i + 1 < tokens.size()) {
+                        *out = stripQuotes(tokens.at(++i));
+                    }
+                };
+
+                if (token == QLatin1String("-d") || token == QLatin1String("--desktop-file")) {
                     ui->radioDesktop->setChecked(true);
-                    if (tokens.size() > 1) {
-                        ui->buttonSelectApp->setText(tokens.at(1));
+                    QString value;
+                    nextValue(&value);
+                    if (!value.isEmpty()) {
+                        ui->buttonSelectApp->setText(value);
                     }
                     ui->buttonSelectIcon->setToolTip(QString());
                     ui->buttonSelectIcon->setStyleSheet(QStringLiteral("text-align: center; padding: 3px;"));
-                } else if (tokens.at(0) == QLatin1String("c") || tokens.at(0) == QLatin1String("command")) {
+                } else if (token == QLatin1String("-c") || token == QLatin1String("--command")) {
                     ui->radioCommand->setChecked(true);
-                    if (tokens.size() > 1) {
-                        ui->lineEditCommand->setText(tokens.mid(1).join(QStringLiteral(" ")).trimmed());
+                    QString value;
+                    nextValue(&value);
+                    while (i + 1 < tokens.size() && !isKnownOption(tokens.at(i + 1))) {
+                        value += QLatin1Char(' ') + stripQuotes(tokens.at(++i));
+                    }
+                    if (!value.isEmpty()) {
+                        ui->lineEditCommand->setText(value);
                     }
                     ui->buttonSelectIcon->setStyleSheet(QStringLiteral("text-align: right; padding: 3px;"));
-                } else if (tokens.at(0) == QLatin1String("i") || tokens.at(0) == QLatin1String("icon")) {
-                    if (tokens.size() > 1) {
-                        ui->buttonSelectIcon->setText(tokens.mid(1).join(QStringLiteral(" ")));
-                        ui->buttonSelectIcon->setToolTip(tokens.mid(1).join(QStringLiteral(" ")));
+                } else if (token == QLatin1String("-i") || token == QLatin1String("--icon")) {
+                    QString value;
+                    nextValue(&value);
+                    if (!value.isEmpty()) {
+                        ui->buttonSelectIcon->setText(value);
+                        ui->buttonSelectIcon->setToolTip(value);
                     }
-                } else if (tokens.at(0) == QLatin1String("k") || tokens.at(0) == QLatin1String("background-color")) {
-                    if (tokens.size() > 1) {
-                        QString color = tokens.at(1);
-                        color.remove("\"");
+                } else if (token == QLatin1String("-k") || token == QLatin1String("--background-color")) {
+                    QString color;
+                    nextValue(&color);
+                    if (!color.isEmpty()) {
                         setColor(ui->widgetBackground, color);
                     }
-                } else if (tokens.at(0) == QLatin1String("K")
-                           || tokens.at(0) == QLatin1String("hover-background-color")) {
-                    if (tokens.size() > 1) {
-                        QString color = tokens.at(1);
-                        color.remove("\"");
+                } else if (token == QLatin1String("-K") || token == QLatin1String("--hover-background-color")) {
+                    QString color;
+                    nextValue(&color);
+                    if (!color.isEmpty()) {
                         setColor(ui->widgetHoverBackground, color);
                     }
-                } else if (tokens.at(0) == QLatin1String("b") || tokens.at(0) == QLatin1String("border-color")) {
-                    if (tokens.size() > 1) {
-                        QString color = tokens.at(1);
-                        color.remove("\"");
+                } else if (token == QLatin1String("-b") || token == QLatin1String("--border-color")) {
+                    QString color;
+                    nextValue(&color);
+                    if (!color.isEmpty()) {
                         setColor(ui->widgetBorder, color);
                     }
-                } else if (tokens.at(0) == QLatin1String("B") || tokens.at(0) == QLatin1String("hover-border-color")) {
-                    if (tokens.size() > 1) {
-                        QString color = tokens.at(1);
-                        color.remove("\"");
+                } else if (token == QLatin1String("-B") || token == QLatin1String("--hover-border-color")) {
+                    QString color;
+                    nextValue(&color);
+                    if (!color.isEmpty()) {
                         setColor(ui->widgetHoverBorder, color);
                     }
-                } else if (tokens.at(0) == QLatin1String("w") || tokens.at(0) == QLatin1String("window-size")) {
-                    if (tokens.size() > 1) {
-                        ui->comboSize->setCurrentIndex(ui->comboSize->findText(tokens.at(1) + "x" + tokens.at(1)));
+                } else if (token == QLatin1String("-w") || token == QLatin1String("--window-size")) {
+                    QString size;
+                    nextValue(&size);
+                    if (!size.isEmpty()) {
+                        ui->comboSize->setCurrentIndex(ui->comboSize->findText(size + "x" + size));
                     }
-                } else if (tokens.at(0) == QLatin1String("x") || tokens.at(0) == QLatin1String("exit-on-right-click")) {
+                } else if (token == QLatin1String("-x") || token == QLatin1String("--exit-on-right-click")) {
                     // not used right now
-                } else { // other not handled options, add them as a propriety to the app button
-                    ui->buttonSelectApp->setProperty("extra_options",
-                                                     ui->buttonSelectApp->property("extra_options").toString()
-                                                         + ((tokens.at(0).length() > 1) ? " --" : " -")
-                                                         + tokens.join(QStringLiteral(" ")));
+                } else {
+                    QString extra = ui->buttonSelectApp->property("extra_options").toString();
+                    if (!extra.isEmpty()) {
+                        extra += QLatin1Char(' ');
+                    }
+                    extra += token;
+                    if (i + 1 < tokens.size() && !tokens.at(i + 1).startsWith(QLatin1Char('-'))) {
+                        extra += QLatin1Char(' ') + stripQuotes(tokens.at(++i));
+                    }
+                    ui->buttonSelectApp->setProperty("extra_options", extra);
                 }
             }
             updateAppList(index);
@@ -689,13 +758,18 @@ void MainWindow::buttonSave_clicked()
         }
     }
     for (const auto &app : std::as_const(apps)) {
-        QString command = (app.at(Info::App).endsWith(QLatin1String(".desktop")))
-                              ? "--desktop-file " + app.at(Info::App)
-                              : "--command " + app.at(Info::Command) + " --icon " + app.at(Info::Icon);
+        const QString command = (app.at(Info::App).endsWith(QLatin1String(".desktop")))
+                                    ? "--desktop-file " + quoteArgument(app.at(Info::App))
+                                    : "--command " + quoteArgument(app.at(Info::Command)) + " --icon "
+                                          + quoteArgument(app.at(Info::Icon));
+        QString extraOptions = app.at(Info::Extra);
+        if (!extraOptions.isEmpty() && !extraOptions.startsWith(QLatin1Char(' '))) {
+            extraOptions.prepend(QLatin1Char(' '));
+        }
         out << "wmalauncher " + command + " --background-color \"" + app.at(Info::BgColor)
                    + "\" --hover-background-color \"" + app.at(Info::BgHoverColor) + "\" --border-color \""
                    + app.at(Info::BorderColor) + "\" --hover-border-color \"" + app.at(Info::BorderHoverColor)
-                   + "\" --window-size " + app.at(Info::Size).section(QStringLiteral("x"), 0, 0) + app.at(Info::Extra)
+                   + "\" --window-size " + app.at(Info::Size).section(QStringLiteral("x"), 0, 0) + extraOptions
                    + "& sleep 0.1\n";
     }
     file.close();
