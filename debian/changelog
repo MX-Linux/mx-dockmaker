@@ -1,3 +1,9 @@
+mx-dockmaker (25.12) mx; urgency=medium
+
+  * Handle commands with options (quote arguments)
+
+ -- Adrian <adrian@mxlinux.org>  Wed, 10 Dec 2025 00:08:26 -0500
+
 mx-dockmaker (25.5) mx; urgency=medium
 
   * Fix button order
@@ -32,7 +38,7 @@ mx-dockmaker (23.7) mx; urgency=medium
 
 mx-dockmaker (23.5.03) mx; urgency=medium
 
-  * Fix: setting icon for manual commands 
+  * Fix: setting icon for manual commands
 
  -- Adrian <adrian@mxlinux.org>  Tue, 30 May 2023 18:59:15 -0400
 
@@ -66,13 +72,13 @@ mx-dockmaker (22.12) mx; urgency=medium
 
 mx-dockmaker (22.10) mx; urgency=medium
 
-  * update translations 
+  * update translations
 
  -- Dolphin Oracle <dolphinoracle@gmail.com>  Wed, 26 Oct 2022 20:00:01 -0400
 
 mx-dockmaker (22.7) mx; urgency=medium
 
-  * translation refresh 
+  * translation refresh
 
  -- Dolphin Oracle <dolphinoracle@gmail.com>  Sat, 23 Jul 2022 11:25:30 -0400
 
@@ -96,7 +102,7 @@ mx-dockmaker (21.7.02) mx; urgency=medium
 
 mx-dockmaker (21.7.01) mx; urgency=medium
 
-  * Fix icon search 
+  * Fix icon search
 
  -- Adrian <adrian@mxlinux.org>  Mon, 19 Jul 2021 10:37:56 -0400
 
@@ -114,7 +120,7 @@ mx-dockmaker (21.5) mx; urgency=medium
 
 mx-dockmaker (21.2.01) mx; urgency=medium
 
-  * update desktop file 
+  * update desktop file
 
  -- Dolphin Oracle <dolphinoracle@gmail.com>  Sat, 13 Feb 2021 20:20:05 -0500
 
@@ -126,7 +132,7 @@ mx-dockmaker (21.2) mx; urgency=medium
 
 mx-dockmaker (20.12) mx; urgency=medium
 
-  * fix: stop crashing if icon file doesn't exist 
+  * fix: stop crashing if icon file doesn't exist
 
  -- Adrian <adrian@mxlinux.org>  Thu, 03 Dec 2020 12:05:00 -0500
 
