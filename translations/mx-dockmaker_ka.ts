@@ -1,15 +1,15 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.0" language="hr">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.0" language="ka">
 <context>
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="14"/>
         <source>Program_Name</source>
-        <translation>Ime_programa</translation>
+        <translation>პროგრამის_სახელი</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="29"/>
         <source>Usage</source>
-        <translation>Uporaba</translation>
+        <translation>გამოყენება</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="106"/>
@@ -19,54 +19,54 @@
     <message>
         <location filename="mainwindow.ui" line="118"/>
         <source>Add New Application</source>
-        <translation>Dodaj novu aplikaciju</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.ui" line="131"/>
         <source>Command</source>
-        <translation>Naredba</translation>
+        <translation>ბრძანება</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="301"/>
         <source>Add application</source>
-        <translation>Dodaj aplikaciju</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.ui" line="393"/>
         <source>Delete this application</source>
-        <translation>Izbriši ovu aplikaciju</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.ui" line="124"/>
         <source>Border</source>
-        <translation>Granica</translation>
+        <translation>საზღვარი</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="154"/>
         <source>Size</source>
-        <translation>Veličina</translation>
+        <translation>ზომა</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="161"/>
         <source>Background</source>
-        <translation>Pozadina</translation>
+        <translation>ფონის სურათი</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="379"/>
         <source>Back</source>
-        <translation>Nazad</translation>
+        <translation>უკან</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="184"/>
         <source>File</source>
-        <translation>Datoteka</translation>
+        <translation>ფაილი</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="216"/>
         <location filename="mainwindow.cpp" line="708"/>
         <location filename="mainwindow.cpp" line="735"/>
         <source>Select icon...</source>
-        <translation>Izaberi ikonu...</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.ui" line="229"/>
@@ -74,7 +74,7 @@
         <location filename="mainwindow.cpp" line="582"/>
         <location filename="mainwindow.cpp" line="711"/>
         <source>Select...</source>
-        <translation>Odaberi...</translation>
+        <translation>აირჩიეთ...</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="315"/>
@@ -89,12 +89,12 @@
     <message>
         <location filename="mainwindow.ui" line="439"/>
         <source>Display help </source>
-        <translation>Prikaži pomoć</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.ui" line="442"/>
         <source>Help</source>
-        <translation>Pomoć</translation>
+        <translation>დახმარება</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="449"/>
@@ -104,12 +104,12 @@
     <message>
         <location filename="mainwindow.ui" line="478"/>
         <source>About this application</source>
-        <translation>O ovoj aplikaciji</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.ui" line="481"/>
         <source>About...</source>
-        <translation>O programu...</translation>
+        <translation>შესახებ...</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="488"/>
@@ -119,12 +119,12 @@
     <message>
         <location filename="mainwindow.ui" line="520"/>
         <source>Quit application</source>
-        <translation>Zatvori aplikaciju</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.ui" line="523"/>
         <source>Close</source>
-        <translation>Zatvori</translation>
+        <translation>დახურვა</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="530"/>
@@ -134,7 +134,7 @@
     <message>
         <location filename="mainwindow.ui" line="571"/>
         <source>Save</source>
-        <translation>Spremi</translation>
+        <translation>შენახვა</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="103"/>
@@ -148,13 +148,13 @@
         <location filename="mainwindow.cpp" line="126"/>
         <location filename="mainwindow.cpp" line="590"/>
         <source>black</source>
-        <translation>crno</translation>
+        <translation>შავი</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="127"/>
         <location filename="mainwindow.cpp" line="591"/>
         <source>white</source>
-        <translation>bijelo</translation>
+        <translation>თეთრი</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="137"/>
@@ -169,28 +169,28 @@
     <message>
         <location filename="mainwindow.cpp" line="140"/>
         <source>&amp;Close</source>
-        <translation>&amp;Zatvori</translation>
+        <translation>&amp;დახურვა</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="141"/>
         <source>&amp;Move</source>
-        <translation type="unfinished"/>
+        <translation>&amp;გადატანა</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="142"/>
         <location filename="mainwindow.cpp" line="295"/>
         <source>&amp;Delete</source>
-        <translation>&amp;Izbriši</translation>
+        <translation>&amp;წაშლა</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="143"/>
         <source>&amp;Edit</source>
-        <translation>&amp;Uredi</translation>
+        <translation>ჩასწორ&amp;ება</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="144"/>
         <source>C&amp;reate</source>
-        <translation type="unfinished"/>
+        <translation>შ&amp;ექმნა</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="220"/>
@@ -200,7 +200,7 @@
     <message>
         <location filename="mainwindow.cpp" line="221"/>
         <source>Enter the name to show in the Menu:</source>
-        <translation>Unesite ime za prikaz u Izborniku:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="293"/>
@@ -210,22 +210,22 @@
     <message>
         <location filename="mainwindow.cpp" line="294"/>
         <source>Confirmation</source>
-        <translation>Potvrda</translation>
+        <translation>დადასტუება</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="295"/>
         <source>Are you sure you want to delete %1?</source>
-        <translation>Jeste li sigurni da želite izbrisati %1?</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="295"/>
         <source>&amp;Cancel</source>
-        <translation>&amp;Otkaži</translation>
+        <translation>&amp;გაუქმება</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="353"/>
         <source>Next</source>
-        <translation>Slijedeće</translation>
+        <translation>შემდეგი</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="320"/>
@@ -245,12 +245,12 @@
         <location filename="mainwindow.cpp" line="351"/>
         <location filename="mainwindow.cpp" line="666"/>
         <source>Could not open file</source>
-        <translation>Ne mogu otvoriti datoteku</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="453"/>
         <source>Overwrite?</source>
-        <translation type="unfinished"/>
+        <translation>გადავაწერო თავზე?</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="453"/>
@@ -260,7 +260,7 @@
     <message>
         <location filename="mainwindow.cpp" line="454"/>
         <source>Save file</source>
-        <translation>Spremi datoteku</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="492"/>
@@ -277,32 +277,32 @@ To edit the newly created dock please select &apos;Edit an existing dock&apos;.<
     <message>
         <location filename="mainwindow.cpp" line="511"/>
         <source>About %1</source>
-        <translation>O programu %1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="513"/>
         <source>Version: </source>
-        <translation>Inačica:</translation>
+        <translation>ვერსია:</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="514"/>
         <source>Description goes here</source>
-        <translation>Opis ide ovdje</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="516"/>
         <source>Copyright (c) MX Linux</source>
-        <translation>Autorska prava (c) MX Linux</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="517"/>
         <source>%1 License</source>
-        <translation>%1 Licenca</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="526"/>
         <source>%1 Help</source>
-        <translation>%1 Pomoć</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="638"/>
@@ -322,7 +322,7 @@ To edit the newly created dock please select &apos;Edit an existing dock&apos;.<
     <message>
         <location filename="mainwindow.cpp" line="660"/>
         <source>No file selected</source>
-        <translation>Nijedna datoteka nije odabrana</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="660"/>
@@ -346,7 +346,7 @@ Creating a new dock instead.</source>
     <message>
         <location filename="mainwindow.cpp" line="719"/>
         <source>Select icon</source>
-        <translation>Izaberi ikonu</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="719"/>
@@ -359,7 +359,7 @@ Creating a new dock instead.</source>
     <message>
         <location filename="picklocation.ui" line="14"/>
         <source>Dialog</source>
-        <translation>Dijalog</translation>
+        <translation>დიალოგი</translation>
     </message>
     <message>
         <location filename="picklocation.ui" line="23"/>
@@ -369,62 +369,62 @@ Creating a new dock instead.</source>
     <message>
         <location filename="picklocation.ui" line="29"/>
         <source>TopCenter</source>
-        <translation>Goresredina</translation>
+        <translation>ზედაცენტრი</translation>
     </message>
     <message>
         <location filename="picklocation.ui" line="45"/>
         <source>BottomLeft</source>
-        <translation>Doljelijevo</translation>
+        <translation>ქვედამარცხენა</translation>
     </message>
     <message>
         <location filename="picklocation.ui" line="61"/>
         <source>BottomCenter</source>
-        <translation>Doljesredina</translation>
+        <translation>ქვედაცენტრი</translation>
     </message>
     <message>
         <location filename="picklocation.ui" line="80"/>
         <source>TopLeft</source>
-        <translation>Gorelijevo</translation>
+        <translation>ზედამარცხენა</translation>
     </message>
     <message>
         <location filename="picklocation.ui" line="96"/>
         <source>TopRight</source>
-        <translation>Goredesno</translation>
+        <translation>ზედამარჯვენა</translation>
     </message>
     <message>
         <location filename="picklocation.ui" line="112"/>
         <source>LeftCenter</source>
-        <translation type="unfinished"/>
+        <translation>მარცხენაცენტრი</translation>
     </message>
     <message>
         <location filename="picklocation.ui" line="128"/>
         <source>RightCenter</source>
-        <translation type="unfinished"/>
+        <translation>მარჯვენაცენტრი</translation>
     </message>
     <message>
         <location filename="picklocation.ui" line="144"/>
         <source>BottomRight</source>
-        <translation>Doljedesno</translation>
+        <translation>ქვედამარჯვენა</translation>
     </message>
     <message>
         <location filename="picklocation.ui" line="160"/>
         <source>RightTop</source>
-        <translation>Desnogore</translation>
+        <translation>მარჯვენაზედა</translation>
     </message>
     <message>
         <location filename="picklocation.ui" line="173"/>
         <source>LeftTop</source>
-        <translation>Lijevogore</translation>
+        <translation>მარცხენაზედა</translation>
     </message>
     <message>
         <location filename="picklocation.ui" line="189"/>
         <source>LeftBottom</source>
-        <translation>Lijevodolje</translation>
+        <translation>მარცხენაქვედა</translation>
     </message>
     <message>
         <location filename="picklocation.ui" line="205"/>
         <source>RightBottom</source>
-        <translation>Desnodolje</translation>
+        <translation>მარჯვენაქვედა</translation>
     </message>
     <message>
         <location filename="picklocation.cpp" line="9"/>
@@ -437,33 +437,33 @@ Creating a new dock instead.</source>
     <message>
         <location filename="about.cpp" line="32"/>
         <source>License</source>
-        <translation>Licenca</translation>
+        <translation>ლიცენზია</translation>
     </message>
     <message>
         <location filename="about.cpp" line="33"/>
         <location filename="about.cpp" line="43"/>
         <source>Changelog</source>
-        <translation type="unfinished"/>
+        <translation>ცვლილებების ჟურნალი</translation>
     </message>
     <message>
         <location filename="about.cpp" line="34"/>
         <source>Cancel</source>
-        <translation>Otkaži</translation>
+        <translation>გაუქმება</translation>
     </message>
     <message>
         <location filename="about.cpp" line="51"/>
         <source>&amp;Close</source>
-        <translation>&amp;Zatvori</translation>
+        <translation>&amp;დახურვა</translation>
     </message>
     <message>
         <location filename="main.cpp" line="57"/>
         <source>Error</source>
-        <translation>Greška</translation>
+        <translation>შეცდომა</translation>
     </message>
     <message>
         <location filename="main.cpp" line="58"/>
         <source>You must run this program as normal user.</source>
-        <translation>Morate pokrenuti ovaj program kao normalni korisnik.</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 </TS>
