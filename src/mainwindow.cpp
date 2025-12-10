@@ -51,6 +51,14 @@ namespace
     escaped.replace(QLatin1Char('\''), QStringLiteral("'\"'\"'")); // POSIX-safe single-quote escaping
     return QLatin1Char('\'') + escaped + QLatin1Char('\'');
 }
+
+[[nodiscard]] QString quoteDouble(const QString &arg)
+{
+    auto escaped = arg;
+    escaped.replace(QLatin1Char('\\'), QStringLiteral("\\\\"));
+    escaped.replace(QLatin1Char('"'), QStringLiteral("\\\""));
+    return QLatin1Char('"') + escaped + QLatin1Char('"');
+}
 } // namespace
 
 MainWindow::MainWindow(QWidget *parent, const QString &file)
@@ -320,8 +328,9 @@ void MainWindow::allItemsChanged()
             continue;
         }
         const QStringList app_info = QStringList(
-            {apps.at(i).at(Info::App), apps.at(i).at(Info::Command), apps.at(i).at(Info::Icon),
-             ui->comboSize->currentText(), ui->widgetBackground->palette().color(QWidget::backgroundRole()).name(),
+            {apps.at(i).at(Info::App), apps.at(i).at(Info::Command), apps.at(i).at(Info::Tooltip),
+             apps.at(i).at(Info::Icon), ui->comboSize->currentText(),
+             ui->widgetBackground->palette().color(QWidget::backgroundRole()).name(),
              ui->widgetHoverBackground->palette().color(QWidget::backgroundRole()).name(),
              ui->widgetBorder->palette().color(QWidget::backgroundRole()).name(),
              ui->widgetHoverBorder->palette().color(QWidget::backgroundRole()).name(), apps.at(i).at(Info::Extra)});
@@ -384,8 +393,9 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 void MainWindow::updateAppList(int idx)
 {
     const QStringList app_info = QStringList(
-        {ui->buttonSelectApp->text(), ui->lineEditCommand->text(), ui->buttonSelectIcon->text(),
-         ui->comboSize->currentText(), ui->widgetBackground->palette().color(QWidget::backgroundRole()).name(),
+        {ui->buttonSelectApp->text(), ui->lineEditCommand->text(), ui->lineEditTooltip->text(),
+         ui->buttonSelectIcon->text(), ui->comboSize->currentText(),
+         ui->widgetBackground->palette().color(QWidget::backgroundRole()).name(),
          ui->widgetHoverBackground->palette().color(QWidget::backgroundRole()).name(),
          ui->widgetBorder->palette().color(QWidget::backgroundRole()).name(),
          ui->widgetHoverBorder->palette().color(QWidget::backgroundRole()).name(),
@@ -567,6 +577,7 @@ void MainWindow::parseFile(QFile &file)
                                       QLatin1String("--hover-border-color"),
                                       QLatin1String("-w"),
                                       QLatin1String("--window-size"),
+                                      QLatin1String("--tooltip-text"),
                                       QLatin1String("-x"),
                                       QLatin1String("--exit-on-right-click")};
 
@@ -584,6 +595,7 @@ void MainWindow::parseFile(QFile &file)
         }
         if (line.startsWith(QLatin1String("wmalauncher"))) {
             ui->buttonSelectApp->setProperty("extra_options", QString());
+            ui->lineEditTooltip->clear();
             line.remove(QRegularExpression(QStringLiteral("^wmalauncher")));
             line.remove(QRegularExpression(QStringLiteral("\\s*&(?:\\s*sleep.*)?$")));
 
@@ -682,6 +694,10 @@ void MainWindow::parseFile(QFile &file)
                     if (!size.isEmpty()) {
                         ui->comboSize->setCurrentIndex(ui->comboSize->findText(size + "x" + size));
                     }
+                } else if (token == QLatin1String("--tooltip-text")) {
+                    QString tooltip;
+                    nextValue(&tooltip);
+                    ui->lineEditTooltip->setText(tooltip);
                 } else if (token == QLatin1String("-x") || token == QLatin1String("--exit-on-right-click")) {
                     // not used right now
                 } else {
@@ -772,17 +788,20 @@ void MainWindow::buttonSave_clicked()
     for (const auto &app : std::as_const(apps)) {
         const QString command = (app.at(Info::App).endsWith(QLatin1String(".desktop")))
                                     ? "--desktop-file " + quoteArgument(app.at(Info::App))
-                                    : "--command " + quoteArgument(app.at(Info::Command)) + " --icon "
-                                          + quoteArgument(app.at(Info::Icon));
+                                    : "--command " + app.at(Info::Command) + " --icon " + quoteArgument(app.at(Info::Icon));
         QString extraOptions = app.at(Info::Extra);
         if (!extraOptions.isEmpty() && !extraOptions.startsWith(QLatin1Char(' '))) {
             extraOptions.prepend(QLatin1Char(' '));
         }
+        QString tooltipOption;
+        if (!app.at(Info::Tooltip).isEmpty()) {
+            tooltipOption = QStringLiteral(" --tooltip-text ") + quoteDouble(app.at(Info::Tooltip));
+        }
         out << "wmalauncher " + command + " --background-color \"" + app.at(Info::BgColor)
                    + "\" --hover-background-color \"" + app.at(Info::BgHoverColor) + "\" --border-color \""
                    + app.at(Info::BorderColor) + "\" --hover-border-color \"" + app.at(Info::BorderHoverColor)
-                   + "\" --window-size " + app.at(Info::Size).section(QStringLiteral("x"), 0, 0) + extraOptions
-                   + "& sleep 0.1\n";
+                   + "\" --window-size " + app.at(Info::Size).section(QStringLiteral("x"), 0, 0) + tooltipOption
+                   + extraOptions + "& sleep 0.1\n";
     }
     file.close();
     QFile::setPermissions(file_name, QFlag(0x744));
@@ -891,6 +910,7 @@ void MainWindow::resetAdd()
     ui->radioDesktop->click();
     emit ui->radioDesktop->toggled(true);
     ui->buttonAdd->setDisabled(true);
+    ui->lineEditTooltip->clear();
 
     QString size;
     if (ui->checkApplyStyleToAll->isChecked() && index != 0) { // set style according to the first item
@@ -928,6 +948,7 @@ void MainWindow::setConnections()
 #endif
     connect(ui->comboSize, &QComboBox::currentTextChanged, this, &MainWindow::comboSize_currentTextChanged);
     connect(ui->lineEditCommand, &QLineEdit::textEdited, this, &MainWindow::lineEditCommand_textEdited);
+    connect(ui->lineEditTooltip, &QLineEdit::textEdited, this, &MainWindow::lineEditTooltip_textEdited);
     connect(ui->radioDesktop, &QRadioButton::toggled, this, &MainWindow::radioDesktop_toggled);
     connect(ui->toolBackground, &QToolButton::clicked, this, [this] { pickColor(ui->widgetBackground); });
     connect(ui->toolBorder, &QToolButton::clicked, this, [this] { pickColor(ui->widgetBorder); });
@@ -960,6 +981,8 @@ void MainWindow::showApp(int idx, int old_idx)
         ui->buttonSelectIcon->setToolTip(apps.at(idx).at(Info::Icon));
         ui->buttonSelectIcon->setStyleSheet(QStringLiteral("text-align: right; padding: 3px;"));
     }
+
+    ui->lineEditTooltip->setText(apps.at(idx).at(Info::Tooltip));
 
     ui->radioCommand->blockSignals(false);
     ui->radioDesktop->blockSignals(false);
@@ -998,6 +1021,7 @@ void MainWindow::buttonSelectApp_clicked()
         ui->buttonSelectApp->setText(file);
         ui->buttonAdd->setEnabled(true);
         ui->buttonSelectApp->setProperty("extra_options", QString()); // reset extra options when changing the app.
+        ui->lineEditTooltip->clear();
         itemChanged();
     }
 }
@@ -1129,13 +1153,22 @@ void MainWindow::lineEditCommand_textEdited()
 {
     ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
     if (ui->buttonSelectIcon->text() != tr("Select icon...")) {
-        ui->buttonSelectApp->setProperty("extra_options", QString()); // reset extra options when changing the command
         ui->buttonNext->setEnabled(true);
         changed = true;
     } else {
         ui->buttonNext->setEnabled(false);
         return;
     }
+    updateAppList(index);
+    if (!parsing) {
+        checkDoneEditing();
+    }
+}
+
+void MainWindow::lineEditTooltip_textEdited()
+{
+    changed = true;
+    updateAppList(index);
     if (!parsing) {
         checkDoneEditing();
     }
@@ -1148,6 +1181,7 @@ void MainWindow::buttonAdd_clicked()
     list_icons.insert(index, new QLabel());
     const QStringList app_info {ui->buttonSelectApp->text(),
                                 ui->lineEditCommand->text(),
+                                ui->lineEditTooltip->text(),
                                 ui->buttonSelectIcon->text(),
                                 ui->comboSize->currentText(),
                                 ui->widgetBackground->palette().color(QWidget::backgroundRole()).name(),

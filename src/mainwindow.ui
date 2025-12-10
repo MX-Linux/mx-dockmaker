@@ -241,7 +241,7 @@
          <string>Add New Application</string>
         </property>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="2" column="0">
+         <item row="3" column="0">
           <widget class="QLabel" name="labelSize">
            <property name="text">
             <string>Size</string>
@@ -329,7 +329,7 @@
            </layout>
           </widget>
          </item>
-         <item row="3" column="1">
+         <item row="4" column="1">
           <widget class="QWidget" name="widgetBackground" native="true">
            <property name="mouseTracking">
             <bool>false</bool>
@@ -408,14 +408,14 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="4">
+         <item row="4" column="4">
           <widget class="QLabel" name="label">
            <property name="text">
             <string>Hover Background</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="1" colspan="4">
+         <item row="3" column="1" colspan="4">
           <widget class="QComboBox" name="comboSize">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -469,7 +469,7 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="2">
+         <item row="4" column="2">
           <spacer name="horizontalSpacer_4">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -570,7 +570,7 @@
            </layout>
           </widget>
          </item>
-         <item row="3" column="5">
+         <item row="4" column="5">
           <widget class="QWidget" name="widgetHoverBackground" native="true">
            <property name="mouseTracking">
             <bool>false</bool>
@@ -636,13 +636,30 @@
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QRadioButton" name="radioCommand">
+         <widget class="QRadioButton" name="radioCommand">
+          <property name="text">
+           <string>Command</string>
+          </property>
+         </widget>
+        </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="labelTooltip">
            <property name="text">
-            <string>Command</string>
+            <string>Tooltip</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="8">
+         <item row="2" column="1" colspan="6">
+          <widget class="QLineEdit" name="lineEditTooltip">
+           <property name="minimumSize">
+            <size>
+             <width>250</width>
+             <height>0</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="8">
           <spacer name="horizontalSpacer_2">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -658,7 +675,7 @@
            </property>
           </spacer>
          </item>
-         <item row="3" column="0">
+         <item row="4" column="0">
           <widget class="QLabel" name="labelBackground">
            <property name="text">
             <string>Background</string>
@@ -871,6 +888,7 @@
   <tabstop>buttonSelectApp</tabstop>
   <tabstop>radioCommand</tabstop>
   <tabstop>lineEditCommand</tabstop>
+  <tabstop>lineEditTooltip</tabstop>
   <tabstop>buttonSelectIcon</tabstop>
   <tabstop>comboSize</tabstop>
   <tabstop>checkApplyStyleToAll</tabstop>

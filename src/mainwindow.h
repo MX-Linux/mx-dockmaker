@@ -43,7 +43,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr, const QString &file = QString());
     ~MainWindow() override;
 
-    enum Info { App, Command, Icon, Size, BgColor, BgHoverColor, BorderColor, BorderHoverColor, Extra };
+    enum Info { App, Command, Tooltip, Icon, Size, BgColor, BgHoverColor, BorderColor, BorderHoverColor, Extra };
     bool checkDoneEditing();
     [[nodiscard]] bool isDockInMenu(const QString &file_name) const;
 
@@ -88,6 +88,7 @@ private slots:
     void comboSize_currentTextChanged();
     void itemChanged();
     void lineEditCommand_textEdited();
+    void lineEditTooltip_textEdited();
     void mousePressEvent(QMouseEvent *event) override;
     void pickColor(QWidget *widget);
     void radioDesktop_toggled(bool checked);
