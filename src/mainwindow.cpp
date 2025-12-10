@@ -42,12 +42,12 @@
 
 namespace
 {
-QString quoteArgument(const QString &arg)
+[[nodiscard]] QString quoteArgument(const QString &arg)
 {
     if (arg.isEmpty()) {
         return QStringLiteral("''");
     }
-    QString escaped = arg;
+    auto escaped = arg;
     escaped.replace(QLatin1Char('\''), QStringLiteral("'\"'\"'")); // POSIX-safe single-quote escaping
     return QLatin1Char('\'') + escaped + QLatin1Char('\'');
 }
@@ -69,7 +69,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-bool MainWindow::isDockInMenu(const QString &file_name)
+bool MainWindow::isDockInMenu(const QString &file_name) const
 {
     if (dock_name.isEmpty()) {
         return false;
@@ -217,7 +217,7 @@ void MainWindow::setup(const QString &file)
 }
 
 // Find icon file by name
-QPixmap MainWindow::findIcon(QString icon_name, QSize size)
+[[nodiscard]] QPixmap MainWindow::findIcon(QString icon_name, QSize size)
 {
     if (icon_name.isEmpty()) {
         return {};
@@ -265,7 +265,7 @@ QPixmap MainWindow::findIcon(QString icon_name, QSize size)
     return (!out.isEmpty()) ? QIcon(out).pixmap(size) : QPixmap();
 }
 
-QString MainWindow::getDockName(const QString &file_name)
+[[nodiscard]] QString MainWindow::getDockName(const QString &file_name)
 {
     const QRegularExpression re_file(".*" + QFileInfo(file_name).fileName());
     const QRegularExpression re_name(QStringLiteral("\\(.*\\)"));
@@ -301,7 +301,7 @@ QString MainWindow::getDockName(const QString &file_name)
     return name;
 }
 
-QString MainWindow::inputDockName()
+[[nodiscard]] QString MainWindow::inputDockName()
 {
     bool ok = false;
     QString text = QInputDialog::getText(nullptr, tr("Dock name"), tr("Enter the name to show in the Menu:"),
@@ -472,8 +472,8 @@ void MainWindow::moveDock()
     // replace string
     re.setPattern(QStringLiteral("^sed -i.*"));
     re.setPatternOptions(QRegularExpression::MultilineOption);
-    const QString new_line = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: "
-                             + slit_location + "/' $HOME/.fluxbox/init";
+    const QString newLine = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: "
+                            + slit_location + "/' $HOME/.fluxbox/init";
 
     if (!file.open(QFile::Text | QFile::ReadWrite | QFile::Truncate)) {
         qDebug() << "Could not open file:" << file.fileName();
@@ -495,10 +495,10 @@ void MainWindow::moveDock()
 
     // if location line not found add it at the beginning
     if (!re.match(text).hasMatch()) {
-        out << "#set up slit location\n" + new_line + "\n";
+        out << "#set up slit location\n" + newLine + "\n";
         out << text.remove(QStringLiteral("#set up slit location\n"));
     } else {
-        out << text.replace(re, new_line);
+        out << text.replace(re, newLine);
     }
     file.close();
     cmd.run("pkill wmalauncher;" + file.fileName() + "&disown", true);
@@ -746,15 +746,15 @@ void MainWindow::buttonSave_clicked()
             .remove(QStringLiteral("pkill wmalauncher\n\n"))
             .remove(QStringLiteral("pkill wmalauncher\n"));
         QRegularExpression re(QStringLiteral("^sed -i.*"), QRegularExpression::MultilineOption);
-        QString new_line = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: "
-                           + slit_location + "/' $HOME/.fluxbox/init";
+        QString newLine = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: "
+                          + slit_location + "/' $HOME/.fluxbox/init";
 
         // if location line not found add it at the beginning
         if (!re.match(file_content).hasMatch()) {
-            out << "#set up slit location\n" + new_line + "\n";
+            out << "#set up slit location\n" + newLine + "\n";
             out << file_content.remove(QStringLiteral("#set up slit location\n"));
         } else {
-            out << file_content.replace(re, new_line);
+            out << file_content.replace(re, newLine);
         }
     }
     for (const auto &app : std::as_const(apps)) {

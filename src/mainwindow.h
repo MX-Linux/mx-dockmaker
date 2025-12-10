@@ -45,7 +45,7 @@ public:
 
     enum Info { App, Command, Icon, Size, BgColor, BgHoverColor, BorderColor, BorderHoverColor, Extra };
     bool checkDoneEditing();
-    bool isDockInMenu(const QString &file_name);
+    [[nodiscard]] bool isDockInMenu(const QString &file_name) const;
 
     void addDockToMenu(const QString &file_name);
     void blockComboSignals(bool block);
@@ -62,10 +62,10 @@ public:
     void showApp(int i, int old_idx);
     void updateAppList(int idx);
 
-    QPixmap findIcon(QString icon_name, QSize size);
     QString pickSlitLocation();
-    static QString getDockName(const QString &file_name);
-    static QString inputDockName();
+    [[nodiscard]] QPixmap findIcon(QString icon_name, QSize size);
+    [[nodiscard]] static QString getDockName(const QString &file_name);
+    [[nodiscard]] static QString inputDockName();
 
 public slots:
 
@@ -102,12 +102,12 @@ private:
     bool parsing = false;
     int index = 0;
     QList<QLabel *> list_icons;
+    QList<QStringList> apps;
+    QSettings settings;
     QString dock_name;
     QString file_content;
     QString file_name;
     QString slit_location;
-    QSettings settings;
-    QList<QStringList> apps;
 };
 
 #endif
