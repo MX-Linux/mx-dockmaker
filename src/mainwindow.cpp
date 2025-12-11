@@ -799,9 +799,10 @@ void MainWindow::updateAppList(int idx)
 
 void MainWindow::addDockToMenu(const QString &file_name)
 {
-    cmd.run(R"(sed -i '/\[submenu\] (Docks)/a \\t\t\t[exec] ()" + dock_name + ") {" + file_name + "}' "
-                + QDir::homePath() + "/.fluxbox/submenus/appearance",
-            true);
+    // Use file manager to add dock to menu
+    if (!m_fileManager->addToMenu(file_name, dock_name)) {
+        qDebug() << "Failed to add dock to menu:" << file_name;
+    }
 }
 
 void MainWindow::deleteDock()
@@ -819,9 +820,8 @@ void MainWindow::deleteDock()
 
         if (confirmation == QMessageBox::Yes) {
             if (QFile::remove(selectedDock)) {
-                cmd.run("sed -ni '\\|" + selectedDock + "|!p' " + QDir::homePath() + "/.fluxbox/submenus/appearance",
-                        true);
-                cmd.run(QStringLiteral("pkill wmalauncher"), true);
+                // Use file manager for menu operations
+    m_fileManager->addToMenu(selectedDock, dock_name);
             } else {
                 QMessageBox::warning(this, tr("Error"), tr("Failed to delete the selected dock."));
             }
@@ -919,18 +919,14 @@ void MainWindow::moveIcon(int pos)
     }
 
     changed = true;
-    // Swap the applications in the list
-    apps.swapItemsAt(index, newIndex);
+    // Move application in the configuration
+    m_configuration->moveApplication(index, newIndex);
 
     auto refreshIconAt = [this](int pos) {
-        QString appName = apps.at(pos).at(Info::App);
-        QString customIcon;
-        if (!appName.endsWith(QLatin1String(".desktop"))) {
-            customIcon = apps.at(pos).at(Info::Icon);
-        }
-        displayIcon(appName, pos, customIcon);
-        QString tooltip = apps.at(pos).at(Info::Tooltip);
-        list_icons.at(pos)->setProperty("icon_tooltip", tooltip);
+        DockIconInfo iconInfo = m_configuration->getApplication(pos);
+        QString customIcon = iconInfo.isDesktopFile() ? QString() : iconInfo.customIcon;
+        displayIcon(iconInfo.appName, pos, customIcon);
+        list_icons.at(pos)->setProperty("icon_tooltip", iconInfo.tooltip);
     };
 
     refreshIconAt(index);
@@ -1164,7 +1160,10 @@ void MainWindow::buttonSave_clicked()
         new_file = true;
     }
     QFile file(file_name);
-    cmd.run("cp " + file_name + " " + file_name + ".~", true);
+    // Create backup using file manager
+    if (!m_fileManager->createBackup(file_name)) {
+        qDebug() << "Failed to create backup of:" << file_name;
+    }
     if (!file.open(QFile::Text | QFile::WriteOnly)) {
         qDebug() << "Could not open file:" << file.fileName();
         return;

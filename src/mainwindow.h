@@ -109,14 +109,13 @@ private:
     void updateUIFromConfiguration();
     void updateConfigurationFromUI();
 
-    // Legacy methods (temporary during refactoring)
+// Legacy methods (temporary during refactoring)
     void displayIcon(const QString &app_name, int location, const QString &custom_icon = QString());
     void createInsertionIndicators();
     void positionInsertionIndicators();
     void updateInsertionIndicators(const QPoint &mousePos);
     void parseFile(QFile &file);
     void addDockToMenu(const QString &file_name);
-    
     [[nodiscard]] static QString getDockName(const QString &file_name);
 
     Ui::MainWindow *ui;
@@ -143,6 +142,9 @@ private:
     QString dock_name;
     QString file_name;
     QString file_content;
+    
+    // Legacy apps variable (will be removed after migration)
+    QList<QStringList> apps;
 
     // Drag and drop state
     QLabel *dragIndicator = nullptr;
@@ -154,8 +156,7 @@ private:
     // Other legacy variables
     QString slit_location;
 
-    // Temporary apps variable (will be removed after migration)
-    QList<QStringList> apps;
+    
 
     // Icon styling constants
     static constexpr int kIconBorderWidth = 4;
