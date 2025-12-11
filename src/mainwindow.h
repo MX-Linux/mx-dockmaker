@@ -96,7 +96,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QProcess proc;
     Cmd cmd;
 
     bool changed = false;

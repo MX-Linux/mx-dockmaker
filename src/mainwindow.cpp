@@ -147,7 +147,7 @@ bool MainWindow::checkDoneEditing()
     }
 }
 
-// setup versious items first time program runs
+// setup various items first time program runs
 void MainWindow::setup(const QString &file)
 {
     changed = false;
@@ -371,6 +371,10 @@ void MainWindow::itemChanged()
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     auto *clickedWidget = this->childAt(event->pos());
+
+    if (!clickedWidget) {
+        return;
+    }
 
     if (clickedWidget == ui->widgetBackground || clickedWidget == ui->widgetHoverBackground
         || clickedWidget == ui->widgetBorder || clickedWidget == ui->widgetHoverBorder) {

@@ -102,7 +102,7 @@ set(UI_FILES
 )
 
 set(RESOURCE_FILES
-    src/images.qrc
+    images.qrc
 )
 
 # Get all translation files
