@@ -116,7 +116,7 @@ private:
     void updateInsertionIndicators(const QPoint &mousePos);
     void parseFile(QFile &file);
     void addDockToMenu(const QString &file_name);
-    [[nodiscard]] QPixmap findIcon(const QString &icon_name, const QSize &size);
+    
     [[nodiscard]] static QString getDockName(const QString &file_name);
 
     Ui::MainWindow *ui;
