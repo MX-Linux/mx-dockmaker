@@ -25,17 +25,17 @@
 #include <QColorDialog>
 #include <QDebug>
 #include <QFileDialog>
-#include <QRegularExpression>
 #include <QInputDialog>
 #include <QProcess>
+#include <QRegularExpression>
 #include <QSet>
 #include <QTimer>
 
-#include "picklocation.h"
 #include "about.h"
+#include "picklocation.h"
 
 #ifndef VERSION
-    #define VERSION "?.?.?.?"
+#define VERSION "?.?.?.?"
 #endif
 #include "cmd.h"
 #include <sys/stat.h>
@@ -189,7 +189,7 @@ void MainWindow::setup(const QString &file)
         return;
     }
 
-    auto *mbox = new QMessageBox(nullptr);
+    auto *mbox = new QMessageBox(this);
     mbox->setText(tr("This tool allows you to create a new dock with one or more applications. "
                      "You can also edit or delete a dock created earlier."));
     mbox->setIcon(QMessageBox::Question);
@@ -215,7 +215,6 @@ void MainWindow::setup(const QString &file)
         deleteDock();
         setup();
     } else if (clickedButton == editBtn) {
-        this->show();
         editDock();
     } else if (clickedButton == createBtn) {
         newDock();
@@ -394,16 +393,23 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
     }
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    event->accept();
+    this->hide();
+    QTimer::singleShot(0, this, [this]() { setup(""); }); // Show operation selection dialog again
+}
+
 void MainWindow::updateAppList(int idx)
 {
-    const QStringList app_info = QStringList(
-        {ui->buttonSelectApp->text(), ui->lineEditCommand->text(), ui->lineEditTooltip->text(),
-         ui->buttonSelectIcon->text(), ui->comboSize->currentText(),
-         ui->widgetBackground->palette().color(QWidget::backgroundRole()).name(),
-         ui->widgetHoverBackground->palette().color(QWidget::backgroundRole()).name(),
-         ui->widgetBorder->palette().color(QWidget::backgroundRole()).name(),
-         ui->widgetHoverBorder->palette().color(QWidget::backgroundRole()).name(),
-         ui->buttonSelectApp->property("extra_options").toString()});
+    const QStringList app_info
+        = QStringList({ui->buttonSelectApp->text(), ui->lineEditCommand->text(), ui->lineEditTooltip->text(),
+                       ui->buttonSelectIcon->text(), ui->comboSize->currentText(),
+                       ui->widgetBackground->palette().color(QWidget::backgroundRole()).name(),
+                       ui->widgetHoverBackground->palette().color(QWidget::backgroundRole()).name(),
+                       ui->widgetBorder->palette().color(QWidget::backgroundRole()).name(),
+                       ui->widgetHoverBorder->palette().color(QWidget::backgroundRole()).name(),
+                       ui->buttonSelectApp->property("extra_options").toString()});
     (idx < apps.size()) ? apps.replace(idx, app_info) : apps.push_back(app_info);
 }
 
@@ -419,12 +425,12 @@ void MainWindow::deleteDock()
     hide();
 
     const QString selectedDock
-        = QFileDialog::getOpenFileName(nullptr, tr("Select dock to delete"), QDir::homePath() + "/.fluxbox/scripts",
+        = QFileDialog::getOpenFileName(this, tr("Select dock to delete"), QDir::homePath() + "/.fluxbox/scripts",
                                        tr("Dock Files (*.mxdk);;All Files (*.*)"));
 
     if (!selectedDock.isEmpty()) {
         const QMessageBox::StandardButton confirmation = QMessageBox::question(
-            nullptr, tr("Confirmation"), tr("Are you sure you want to delete %1?").arg(selectedDock),
+            this, tr("Confirmation"), tr("Are you sure you want to delete %1?").arg(selectedDock),
             QMessageBox::Yes | QMessageBox::Cancel);
 
         if (confirmation == QMessageBox::Yes) {
@@ -433,7 +439,7 @@ void MainWindow::deleteDock()
                         true);
                 cmd.run(QStringLiteral("pkill wmalauncher"), true);
             } else {
-                QMessageBox::warning(nullptr, tr("Error"), tr("Failed to delete the selected dock."));
+                QMessageBox::warning(this, tr("Error"), tr("Failed to delete the selected dock."));
             }
         }
     }
@@ -455,7 +461,7 @@ void MainWindow::moveDock()
                                           "BottomRight"});
 
     const QString selected_dock
-        = QFileDialog::getOpenFileName(nullptr, tr("Select dock to move"), QDir::homePath() + "/.fluxbox/scripts",
+        = QFileDialog::getOpenFileName(this, tr("Select dock to move"), QDir::homePath() + "/.fluxbox/scripts",
                                        tr("Dock Files (*.mxdk);;All Files (*.*)"));
     if (selected_dock.isEmpty()) {
         setup();
@@ -466,7 +472,7 @@ void MainWindow::moveDock()
 
     if (!file.open(QFile::Text | QFile::ReadOnly)) {
         qDebug() << "Could not open file:" << file.fileName();
-        QMessageBox::warning(nullptr, tr("Could not open file"), tr("Could not open file"));
+        QMessageBox::warning(this, tr("Could not open file"), tr("Could not open file"));
         setup();
         return;
     }
@@ -491,7 +497,7 @@ void MainWindow::moveDock()
 
     if (!file.open(QFile::Text | QFile::ReadWrite | QFile::Truncate)) {
         qDebug() << "Could not open file:" << file.fileName();
-        QMessageBox::warning(nullptr, tr("Could not open file"), tr("Could not open file"));
+        QMessageBox::warning(this, tr("Could not open file"), tr("Could not open file"));
         setup();
         return;
     }
@@ -790,9 +796,10 @@ void MainWindow::buttonSave_clicked()
         }
     }
     for (const auto &app : std::as_const(apps)) {
-        const QString command = (app.at(Info::App).endsWith(QLatin1String(".desktop")))
-                                    ? "--desktop-file " + quoteArgument(app.at(Info::App))
-                                    : "--command " + app.at(Info::Command) + " --icon " + quoteArgument(app.at(Info::Icon));
+        const QString command
+            = (app.at(Info::App).endsWith(QLatin1String(".desktop")))
+                  ? "--desktop-file " + quoteArgument(app.at(Info::App))
+                  : "--command " + app.at(Info::Command) + " --icon " + quoteArgument(app.at(Info::Icon));
         QString extraOptions = app.at(Info::Extra);
         if (!extraOptions.isEmpty() && !extraOptions.startsWith(QLatin1Char(' '))) {
             extraOptions.prepend(QLatin1Char(' '));
@@ -1016,9 +1023,8 @@ void MainWindow::showApp(int idx, int old_idx)
 
 void MainWindow::buttonSelectApp_clicked()
 {
-    const QString selected
-        = QFileDialog::getOpenFileName(nullptr, tr("Select .desktop file"), QStringLiteral("/usr/share/applications"),
-                                       tr("Desktop Files (*.desktop)"));
+    const QString selected = QFileDialog::getOpenFileName(
+        this, tr("Select .desktop file"), QStringLiteral("/usr/share/applications"), tr("Desktop Files (*.desktop)"));
     const QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
         file_name = file;
@@ -1032,26 +1038,24 @@ void MainWindow::buttonSelectApp_clicked()
 
 void MainWindow::editDock(const QString &file_arg)
 {
-    this->hide();
-
     QString selected_dock;
     if (!file_arg.isEmpty() && QFile::exists(file_arg)) {
         selected_dock = file_arg;
     } else {
         selected_dock
-            = QFileDialog::getOpenFileName(nullptr, tr("Select a dock file"), QDir::homePath() + "/.fluxbox/scripts",
+            = QFileDialog::getOpenFileName(this, tr("Select a dock file"), QDir::homePath() + "/.fluxbox/scripts",
                                            tr("Dock Files (*.mxdk);;All Files (*.*)"));
     }
 
     if (!QFileInfo::exists(selected_dock)) {
-        QMessageBox::warning(nullptr, tr("No file selected"),
+        QMessageBox::warning(this, tr("No file selected"),
                              tr("You haven't selected any dock file to edit.\nCreating a new dock instead."));
         return;
     }
     QFile file(selected_dock);
     if (!file.open(QFile::Text | QFile::ReadOnly)) {
         qDebug() << "Could not open file:" << file.fileName();
-        QMessageBox::warning(nullptr, tr("Could not open file"),
+        QMessageBox::warning(this, tr("Could not open file"),
                              tr("Could not open selected file.\nCreating a new dock instead."));
         return;
     }
@@ -1137,7 +1141,7 @@ void MainWindow::buttonSelectIcon_clicked()
     } else {
         default_folder = QStringLiteral("/usr/share/icons/");
     }
-    QString selected = QFileDialog::getOpenFileName(nullptr, tr("Select icon"), default_folder,
+    QString selected = QFileDialog::getOpenFileName(this, tr("Select icon"), default_folder,
                                                     tr("Icons (*.png *.jpg *.bmp *.xpm *.svg)"));
     QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {

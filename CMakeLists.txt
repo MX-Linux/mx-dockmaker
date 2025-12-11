@@ -22,6 +22,14 @@
 
 cmake_minimum_required(VERSION 3.16)
 
+# Option to use clang for testing builds - needs to be early so project() picks it up
+option(USE_CLANG "Use clang compiler" OFF)
+if(USE_CLANG)
+    set(CMAKE_C_COMPILER clang CACHE STRING "C compiler" FORCE)
+    set(CMAKE_CXX_COMPILER clang++ CACHE STRING "C++ compiler" FORCE)
+    message(STATUS "Using clang compiler")
+endif()
+
 # Get version from debian/changelog
 execute_process(
     COMMAND dpkg-parsechangelog -SVersion
@@ -31,8 +39,10 @@ execute_process(
     RESULT_VARIABLE DPKG_RESULT
 )
 
-if(NOT DPKG_RESULT EQUAL 0)
-    message(FATAL_ERROR "Failed to get version from debian/changelog using dpkg-parsechangelog")
+# Fallback to a safe default when changelog parsing is unavailable
+if(NOT DPKG_RESULT EQUAL 0 OR PROJECT_VERSION_FROM_CHANGELOG STREQUAL "")
+    message(WARNING "Falling back to version 0.0.0 (dpkg-parsechangelog not available or failed)")
+    set(PROJECT_VERSION_FROM_CHANGELOG "0.0.0")
 endif()
 
 project(mx-dockmaker
@@ -165,6 +175,7 @@ endif()
 # Handle translations
 qt6_add_translations(mx-dockmaker
     TS_FILES ${TRANSLATION_FILES}
+    LRELEASE_OPTIONS -compress -nounfinished -removeidentical -silent
     QM_FILES_OUTPUT_VARIABLE qm_files
 )
 

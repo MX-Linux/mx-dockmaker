@@ -23,6 +23,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QCloseEvent>
 #include <QFile>
 #include <QMessageBox>
 #include <QMouseEvent>
@@ -89,6 +90,7 @@ private slots:
     void itemChanged();
     void lineEditCommand_textEdited();
     void lineEditTooltip_textEdited();
+    void closeEvent(QCloseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void pickColor(QWidget *widget);
     void radioDesktop_toggled(bool checked);
