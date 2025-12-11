@@ -118,6 +118,19 @@ void MainWindow::displayIcon(const QString &app_name, int location)
     list_icons.at(location)->setStyleSheet(
         "background-color: " + ui->widgetBackground->palette().color(QWidget::backgroundRole()).name()
         + ";border: 4px solid " + ui->widgetBorder->palette().color(QWidget::backgroundRole()).name() + ";");
+
+    // Set tooltip for the icon
+    if (location < apps.size()) {
+        QString tooltip = apps.at(location).at(Info::Tooltip);
+        if (!tooltip.isEmpty()) {
+            // Store tooltip in a custom property for event filtering
+            list_icons.at(location)->setProperty("icon_tooltip", tooltip);
+            // Install event filter to handle tooltips with standard styling
+            list_icons.at(location)->installEventFilter(this);
+        } else {
+            list_icons.at(location)->setProperty("icon_tooltip", QString());
+        }
+    }
 }
 
 bool MainWindow::checkDoneEditing()
@@ -391,6 +404,22 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             showApp(index = i, old_idx);
         }
     }
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    // Handle tooltips for icon labels with standard Qt styling
+    if (event->type() == QEvent::ToolTip) {
+        QLabel *label = qobject_cast<QLabel *>(obj);
+        if (label && list_icons.contains(label)) {
+            QString tooltip = label->property("icon_tooltip").toString();
+            if (!tooltip.isEmpty()) {
+                QToolTip::showText(QCursor::pos(), tooltip);
+                return true; // Event handled
+            }
+        }
+    }
+    return QDialog::eventFilter(obj, event);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

@@ -28,6 +28,7 @@
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QSettings>
+#include <QToolTip>
 
 #include "cmd.h"
 
@@ -91,6 +92,7 @@ private slots:
     void lineEditCommand_textEdited();
     void lineEditTooltip_textEdited();
     void closeEvent(QCloseEvent *event) override;
+    bool eventFilter(QObject *obj, QEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void pickColor(QWidget *widget);
     void radioDesktop_toggled(bool checked);
