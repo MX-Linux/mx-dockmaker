@@ -72,11 +72,23 @@ constexpr int kIconPadding = 4; // Space reserved around the icon so borders sta
 
 MainWindow::MainWindow(QWidget *parent, const QString &file)
     : QDialog(parent),
-      ui(new Ui::MainWindow)
+      ui(new Ui::MainWindow),
+      m_configuration(new DockConfiguration(this)),
+      m_fileManager(new DockFileManager(this)),
+      m_fileParser(new DockFileParser(this)),
+      m_iconManager(new DockIconManager(this)),
+      m_dragDropHandler(new IconDragDropHandler(this))
 {
     ui->setupUi(this);
     setConnections();
     setWindowFlags(Qt::Window); // for the close, min and max buttons
+    
+    // Connect signals from new architecture
+    connect(m_configuration, &DockConfiguration::configurationModified, this, [this]() {
+        changed = true;
+        checkDoneEditing();
+    });
+    
     setup(file);
 }
 
