@@ -22,8 +22,7 @@
  * along with mx-dockmaker.  If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
 
-#ifndef DOCKICONINFO_H
-#define DOCKICONINFO_H
+#pragma once
 
 #include <QColor>
 #include <QSize>
@@ -142,4 +141,3 @@ struct DockIconInfo
     }
 };
 
-#endif // DOCKICONINFO_H

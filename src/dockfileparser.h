@@ -22,8 +22,7 @@
  * along with mx-dockmaker.  If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
 
-#ifndef DOCKFILEPARSER_H
-#define DOCKFILEPARSER_H
+#pragma once
 
 #include <QFile>
 #include <QObject>
@@ -156,4 +155,3 @@ private:
     void clearLastError();
 };
 
-#endif // DOCKFILEPARSER_H

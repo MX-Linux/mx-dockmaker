@@ -1,5 +1,4 @@
-#ifndef PICKLOCATION_H
-#define PICKLOCATION_H
+#pragma once
 
 #include <QButtonGroup>
 #include <QDialog>
@@ -26,4 +25,4 @@ private:
     QButtonGroup *buttonGroup;
 };
 
-#endif // PICKLOCATION_H
+

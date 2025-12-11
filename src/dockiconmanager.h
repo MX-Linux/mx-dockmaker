@@ -22,8 +22,7 @@
  * along with mx-dockmaker.  If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
 
-#ifndef DOCKICONMANAGER_H
-#define DOCKICONMANAGER_H
+#pragma once
 
 #include <QColor>
 #include <QLabel>
@@ -186,4 +185,3 @@ private:
     void clearLastError();
 };
 
-#endif // DOCKICONMANAGER_H

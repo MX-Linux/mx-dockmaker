@@ -22,8 +22,7 @@
  * along with mx-dockmaker.  If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
 
-#ifndef ICONDRAGDROPHANDLER_H
-#define ICONDRAGDROPHANDLER_H
+#pragma once
 
 #include <QLabel>
 #include <QObject>
@@ -199,4 +198,3 @@ private:
     void cleanupInsertionIndicators();
 };
 
-#endif // ICONDRAGDROPHANDLER_H

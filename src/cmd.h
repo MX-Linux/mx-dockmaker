@@ -1,6 +1,5 @@
 
-#ifndef CMD_H
-#define CMD_H
+#pragma once
 
 #include <QProcess>
 
@@ -24,4 +23,4 @@ private:
     QString out_buffer;
 };
 
-#endif // CMD_H
+

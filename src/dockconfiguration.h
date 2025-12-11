@@ -22,8 +22,7 @@
  * along with mx-dockmaker.  If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
 
-#ifndef DOCKCONFIGURATION_H
-#define DOCKCONFIGURATION_H
+#pragma once
 
 #include <QList>
 #include <QObject>
@@ -244,4 +243,3 @@ private:
     bool isValidIndex(int index) const;
 };
 
-#endif // DOCKCONFIGURATION_H

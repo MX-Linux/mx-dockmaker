@@ -20,8 +20,7 @@
  * along with this package. If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QCloseEvent>
 #include <QFile>
@@ -163,4 +162,4 @@ private:
     static constexpr int kIconPadding = 4;
 };
 
-#endif
+
