@@ -89,6 +89,12 @@ QList<DockIconInfo> DockConfiguration::getApplications() const
     return m_applications;
 }
 
+void DockConfiguration::clearApplications()
+{
+    m_applications.clear();
+    emit configurationModified();
+}
+
 int DockConfiguration::getApplicationCount() const
 {
     return m_applications.size();

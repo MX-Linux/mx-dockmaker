@@ -34,6 +34,11 @@
 #include <QToolTip>
 
 #include "cmd.h"
+#include "dockconfiguration.h"
+#include "dockfilemanager.h"
+#include "dockfileparser.h"
+#include "dockiconmanager.h"
+#include "icondragdrophandler.h"
 
 namespace Ui
 {
@@ -45,26 +50,20 @@ class MainWindow : public QDialog
     Q_OBJECT
 
 public:
+    enum Info { App, Command, Tooltip, Icon, Size, BgColor, BgHoverColor, BorderColor, BorderHoverColor, Extra };
     explicit MainWindow(QWidget *parent = nullptr, const QString &file = QString());
     ~MainWindow() override;
 
-    enum Info { App, Command, Tooltip, Icon, Size, BgColor, BgHoverColor, BorderColor, BorderHoverColor, Extra };
     bool checkDoneEditing();
     [[nodiscard]] bool isDockInMenu(const QString &file_name) const;
 
-    void addDockToMenu(const QString &file_name);
     void blockComboSignals(bool block);
     void deleteDock();
-    void displayIcon(const QString &app_name, int location, const QString &custom_icon = QString());
     void editDock(const QString &file_arg = QString());
     void moveDock();
     void moveIcon(int pos);
     void moveIconToPosition(int fromIndex, int toIndex);
     void newDock();
-    void createInsertionIndicators();
-    void positionInsertionIndicators();
-    void updateInsertionIndicators(const QPoint &mousePos);
-    void parseFile(QFile &file);
     void resetAdd();
     void setConnections();
     void setup(const QString &file = QString());
@@ -72,8 +71,6 @@ public:
     void updateAppList(int idx);
 
     QString pickSlitLocation();
-    [[nodiscard]] QPixmap findIcon(QString icon_name, QSize size);
-    [[nodiscard]] static QString getDockName(const QString &file_name);
     [[nodiscard]] static QString inputDockName();
 
 public slots:
@@ -110,27 +107,60 @@ private slots:
 
 private:
     void applyIconStyles(int selectedIndex);
+    void updateUIFromConfiguration();
+    void updateConfigurationFromUI();
+
+    // Legacy methods (temporary during refactoring)
+    void displayIcon(const QString &app_name, int location, const QString &custom_icon = QString());
+    void createInsertionIndicators();
+    void positionInsertionIndicators();
+    void updateInsertionIndicators(const QPoint &mousePos);
+    void parseFile(QFile &file);
+    void addDockToMenu(const QString &file_name);
+    [[nodiscard]] QPixmap findIcon(const QString &icon_name, const QSize &size);
+    [[nodiscard]] static QString getDockName(const QString &file_name);
 
     Ui::MainWindow *ui;
-    Cmd cmd;
-
+    
+    // New architecture components
+    DockConfiguration *m_configuration;
+    DockFileManager *m_fileManager;
+    DockFileParser *m_fileParser;
+    DockIconManager *m_iconManager;
+    IconDragDropHandler *m_dragDropHandler;
+    
+    // Legacy support (temporary during refactoring)
+    QSettings settings;
     bool changed = false;
     bool parsing = false;
     int index = 0;
     QList<QLabel *> list_icons;
-    QList<QStringList> apps;
-    QSettings settings;
+    
+    // Current file tracking
+    QString currentFilePath;
+    
+    // Legacy variables (needed during migration)
+    Cmd cmd;
     QString dock_name;
-    QString file_content;
     QString file_name;
-    QString slit_location;
-
-    // Drag and drop support
+    QString file_content;
+    
+    // Drag and drop state
+    QLabel *dragIndicator = nullptr;
+    QList<QLabel *> insertionIndicators;
     bool dragging = false;
     int dragStartIndex = -1;
     QPoint dragStartPos;
-    QLabel *dragIndicator = nullptr;
-    QList<QLabel *> insertionIndicators;
+    
+    // Other legacy variables
+    QString slit_location;
+    
+    // Temporary apps variable (will be removed after migration)
+    QList<QStringList> apps;
+    
+    // Icon styling constants
+    static constexpr int kIconBorderWidth = 4;
+    static constexpr int kIconPadding = 4;
 };
 
 #endif

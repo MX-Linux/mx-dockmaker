@@ -119,8 +119,11 @@ void MainWindow::displayIcon(const QString &app_name, int location, const QStrin
         icon = ui->buttonSelectIcon->text();
     }
     QString sizeText = ui->comboSize->currentText();
-    if (location < apps.size() && !apps.at(location).at(Info::Size).isEmpty()) {
-        sizeText = apps.at(location).at(Info::Size);
+    if (location < m_configuration->getApplicationCount()) {
+        DockIconInfo info = m_configuration->getApplication(location);
+        if (!info.size.isEmpty()) {
+            sizeText = info.size;
+        }
     }
 
     const quint8 width = sizeText.section(QStringLiteral("x"), 0, 0).toUShort();
@@ -142,8 +145,9 @@ void MainWindow::displayIcon(const QString &app_name, int location, const QStrin
         + "px solid " + ui->widgetBorder->palette().color(QWidget::backgroundRole()).name() + ";");
 
     // Set tooltip for the icon
-    if (location < apps.size()) {
-        QString tooltip = apps.at(location).at(Info::Tooltip);
+    if (location < m_configuration->getApplicationCount()) {
+        DockIconInfo iconInfo = m_configuration->getApplication(location);
+        QString tooltip = iconInfo.tooltip;
         if (!tooltip.isEmpty()) {
             // Store tooltip in a custom property for event filtering
             list_icons.at(location)->setProperty("icon_tooltip", tooltip);
@@ -157,15 +161,16 @@ void MainWindow::displayIcon(const QString &app_name, int location, const QStrin
 
 void MainWindow::applyIconStyles(int selectedIndex)
 {
-    if (list_icons.isEmpty() || apps.isEmpty()) {
+    if (list_icons.isEmpty() || m_configuration->isEmpty()) {
         return;
     }
 
     const bool hasSelection = selectedIndex >= 0 && selectedIndex < list_icons.size();
 
-    for (int i = 0; i < list_icons.size() && i < apps.size(); ++i) {
-        QString bgColor = apps.at(i).at(Info::BgColor);
-        QString borderColor = apps.at(i).at(Info::BorderColor);
+    for (int i = 0; i < list_icons.size() && i < m_configuration->getApplicationCount(); ++i) {
+        DockIconInfo iconInfo = m_configuration->getApplication(i);
+        QString bgColor = iconInfo.backgroundColor.name();
+        QString borderColor = iconInfo.borderColor.name();
 
         bgColor.remove(QRegularExpression(";.*"));
         borderColor.remove(QRegularExpression(";.*"));
@@ -182,7 +187,7 @@ void MainWindow::applyIconStyles(int selectedIndex)
 
 bool MainWindow::checkDoneEditing()
 {
-    if (!apps.isEmpty()) {
+    if (!m_configuration->isEmpty()) {
         ui->buttonDelete->setEnabled(true);
     }
 
@@ -194,7 +199,7 @@ bool MainWindow::checkDoneEditing()
         if (index != 0) {
             ui->buttonPrev->setEnabled(true);
         }
-        if (index < apps.size() - 1 && apps.size() > 1) {
+        if (index < m_configuration->getApplicationCount() - 1 && m_configuration->getApplicationCount() > 1) {
             ui->buttonNext->setEnabled(true);
         }
         return true;
@@ -229,7 +234,7 @@ void MainWindow::setup(const QString &file)
         }
     }
     list_icons.clear();
-    apps.clear();
+    m_configuration->clearApplications();
     index = 0;
     parsing = false;
 
@@ -317,7 +322,7 @@ void MainWindow::setup(const QString &file)
 }
 
 // Find icon file by name
-[[nodiscard]] QPixmap MainWindow::findIcon(QString icon_name, QSize size)
+[[nodiscard]] QPixmap MainWindow::findIcon(const QString &icon_name, const QSize &size)
 {
     if (icon_name.isEmpty()) {
         return {};
@@ -330,12 +335,13 @@ void MainWindow::setup(const QString &file)
     if (!icon_name.endsWith(QLatin1String(".png")) && !icon_name.endsWith(QLatin1String(".svg"))
         && !icon_name.endsWith(QLatin1String(".xpm"))) {
         search_term = icon_name + ".*";
-    }
+}
 
-    icon_name.remove(QRegularExpression(QStringLiteral(R"(\.png$|\.svg$|\.xpm$")")));
+    QString iconName = icon_name;
+    iconName.remove(QRegularExpression(QStringLiteral(R"(\.png$|\.svg$|\.xpm$)")));
 
     // return the icon from the theme if it exists
-    if (!QIcon::fromTheme(icon_name).isNull()) {
+    if (!QIcon::fromTheme(iconName).isNull()) {
         return QIcon::fromTheme(icon_name).pixmap(size);
     }
 
@@ -415,14 +421,15 @@ void MainWindow::setup(const QString &file)
 void MainWindow::allItemsChanged()
 {
     changed = true;
-    for (int i = 0; i < apps.size(); ++i) {
-        const QStringList app_info = QStringList(
-            {apps.at(i).at(Info::App), apps.at(i).at(Info::Command), apps.at(i).at(Info::Tooltip),
-             apps.at(i).at(Info::Icon), ui->comboSize->currentText(),
-             ui->widgetBackground->palette().color(QWidget::backgroundRole()).name(),
-             ui->widgetHoverBackground->palette().color(QWidget::backgroundRole()).name(),
-             ui->widgetBorder->palette().color(QWidget::backgroundRole()).name(),
-             ui->widgetHoverBorder->palette().color(QWidget::backgroundRole()).name(), apps.at(i).at(Info::Extra)});
+    for (int i = 0; i < m_configuration->getApplicationCount(); ++i) {
+        DockIconInfo iconInfo = m_configuration->getApplication(i);
+        // Update iconInfo with current UI settings
+        iconInfo.size = ui->comboSize->currentText();
+        iconInfo.backgroundColor = ui->widgetBackground->palette().color(QWidget::backgroundRole());
+        iconInfo.hoverBackground = ui->widgetHoverBackground->palette().color(QWidget::backgroundRole());
+        iconInfo.borderColor = ui->widgetBorder->palette().color(QWidget::backgroundRole());
+        iconInfo.hoverBorder = ui->widgetHoverBorder->palette().color(QWidget::backgroundRole());
+        m_configuration->updateApplication(i, iconInfo);
         const quint8 width = ui->comboSize->currentText().section(QStringLiteral("x"), 0, 0).toUShort();
         const QSize size(width, width);
         const QSize containerSize = iconContainerSize(size);
@@ -433,7 +440,6 @@ void MainWindow::allItemsChanged()
 #endif
         list_icons.at(i)->setAlignment(Qt::AlignCenter);
         list_icons.at(i)->setFixedSize(containerSize);
-        (i < apps.size()) ? apps.replace(i, app_info) : apps.push_back(app_info);
     }
     applyIconStyles(index);
     checkDoneEditing();
@@ -1400,8 +1406,9 @@ void MainWindow::showApp(int idx, int old_idx)
     ui->radioCommand->blockSignals(true);
     ui->radioDesktop->blockSignals(true);
 
-    ui->buttonSelectApp->setText(apps.at(idx).at(Info::App));
-    if (apps.at(idx).at(0).endsWith(QLatin1String(".desktop")) || apps.at(idx).at(1).isEmpty()) {
+    DockIconInfo iconInfo = m_configuration->getApplication(idx);
+    ui->buttonSelectApp->setText(iconInfo.appName);
+    if (iconInfo.isDesktopFile() || iconInfo.command.isEmpty()) {
         ui->radioDesktop->setChecked(true);
         ui->lineEditCommand->clear();
         ui->buttonSelectApp->setEnabled(true);
@@ -1415,13 +1422,13 @@ void MainWindow::showApp(int idx, int old_idx)
         ui->buttonSelectApp->setEnabled(false);
         ui->lineEditCommand->setEnabled(true);
         ui->buttonSelectIcon->setEnabled(true);
-        ui->lineEditCommand->setText(apps.at(idx).at(Info::Command));
-        ui->buttonSelectIcon->setText(apps.at(idx).at(Info::Icon));
-        ui->buttonSelectIcon->setToolTip(apps.at(idx).at(Info::Icon));
+        ui->lineEditCommand->setText(iconInfo.command);
+        ui->buttonSelectIcon->setText(iconInfo.customIcon);
+        ui->buttonSelectIcon->setToolTip(iconInfo.customIcon);
         ui->buttonSelectIcon->setStyleSheet(QStringLiteral("text-align: right; padding: 3px;"));
     }
 
-    ui->lineEditTooltip->setText(apps.at(idx).at(Info::Tooltip));
+    ui->lineEditTooltip->setText(iconInfo.tooltip);
 
     ui->radioCommand->blockSignals(false);
     ui->radioDesktop->blockSignals(false);
@@ -1429,21 +1436,21 @@ void MainWindow::showApp(int idx, int old_idx)
     applyIconStyles(idx);
 
     blockComboSignals(true);
-    ui->comboSize->setCurrentIndex(ui->comboSize->findText(apps.at(idx).at(Info::Size)));
-    setColor(ui->widgetBackground, apps.at(idx).at(Info::BgColor));
-    setColor(ui->widgetBorder, apps.at(idx).at(Info::BorderColor));
-    setColor(ui->widgetHoverBackground, apps.at(idx).at(Info::BgHoverColor));
-    setColor(ui->widgetHoverBorder, apps.at(idx).at(Info::BorderHoverColor));
-    ui->buttonSelectApp->setProperty("extra_options", apps.at(idx).at(Info::Extra));
+    ui->comboSize->setCurrentIndex(ui->comboSize->findText(iconInfo.size));
+    setColor(ui->widgetBackground, iconInfo.backgroundColor.name());
+    setColor(ui->widgetBorder, iconInfo.borderColor.name());
+    setColor(ui->widgetHoverBackground, iconInfo.hoverBackground.name());
+    setColor(ui->widgetHoverBorder, iconInfo.hoverBorder.name());
+    ui->buttonSelectApp->setProperty("extra_options", iconInfo.extraOptions);
     blockComboSignals(false);
 
     // set buttons
-    ui->buttonNext->setDisabled(idx == apps.size() - 1 || apps.size() == 1);
+    ui->buttonNext->setDisabled(idx == m_configuration->getApplicationCount() - 1 || m_configuration->getApplicationCount() == 1);
     ui->buttonPrev->setDisabled(idx == 0);
-    ui->buttonAdd->setDisabled(apps.isEmpty());
+    ui->buttonAdd->setDisabled(m_configuration->isEmpty());
     ui->buttonDelete->setEnabled(true);
     ui->buttonMoveLeft->setDisabled(idx == 0);
-    ui->buttonMoveRight->setDisabled(idx == apps.size() - 1);
+    ui->buttonMoveRight->setDisabled(idx == m_configuration->getApplicationCount() - 1);
 }
 
 void MainWindow::buttonSelectApp_clicked()
@@ -1452,7 +1459,13 @@ void MainWindow::buttonSelectApp_clicked()
         this, tr("Select .desktop file"), QStringLiteral("/usr/share/applications"), tr("Desktop Files (*.desktop)"));
     const QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
-        file_name = file;
+        // Store the selected desktop file name in the current icon info
+        int currentIdx = index;
+        if (currentIdx >= 0 && currentIdx < m_configuration->getApplicationCount()) {
+            DockIconInfo iconInfo = m_configuration->getApplication(currentIdx);
+            iconInfo.appName = file;
+            m_configuration->updateApplication(currentIdx, iconInfo);
+        }
         ui->buttonSelectApp->setText(file);
         ui->buttonAdd->setEnabled(true);
         ui->buttonSelectApp->setProperty("extra_options", QString()); // reset extra options when changing the app.
@@ -1484,8 +1497,9 @@ void MainWindow::editDock(const QString &file_arg)
                              tr("Could not open selected file.\nCreating a new dock instead."));
         return;
     }
-    file_name = file.fileName();
-    dock_name = getDockName(file_name);
+    currentFilePath = file.fileName();
+    QString dockName = getDockName(currentFilePath);
+    m_configuration->setDockName(dockName);
 
     parseFile(file);
     file.close();
@@ -1498,7 +1512,7 @@ void MainWindow::editDock(const QString &file_arg)
 void MainWindow::newDock()
 {
     this->show();
-    apps.clear();
+    m_configuration->clearApplications();
     list_icons.clear();
 
     resetAdd();
@@ -1620,17 +1634,21 @@ void MainWindow::buttonAdd_clicked()
     index++;
     resetAdd();
     list_icons.insert(index, new QLabel());
-    const QStringList app_info {ui->buttonSelectApp->text(),
-                                ui->lineEditCommand->text(),
-                                ui->lineEditTooltip->text(),
-                                ui->buttonSelectIcon->text(),
-                                ui->comboSize->currentText(),
-                                ui->widgetBackground->palette().color(QWidget::backgroundRole()).name(),
-                                ui->widgetHoverBackground->palette().color(QWidget::backgroundRole()).name(),
-                                ui->widgetBorder->palette().color(QWidget::backgroundRole()).name(),
-                                ui->widgetHoverBorder->palette().color(QWidget::backgroundRole()).name(),
-                                ui->buttonSelectApp->property("extra_options").toString()};
-    apps.insert(index, app_info);
+    
+    // Create DockIconInfo from UI data
+    DockIconInfo iconInfo;
+    iconInfo.appName = ui->buttonSelectApp->text();
+    iconInfo.command = ui->lineEditCommand->text();
+    iconInfo.tooltip = ui->lineEditTooltip->text();
+    iconInfo.customIcon = ui->buttonSelectIcon->text();
+    iconInfo.size = ui->comboSize->currentText();
+    iconInfo.backgroundColor = ui->widgetBackground->palette().color(QWidget::backgroundRole());
+    iconInfo.hoverBackground = ui->widgetHoverBackground->palette().color(QWidget::backgroundRole());
+    iconInfo.borderColor = ui->widgetBorder->palette().color(QWidget::backgroundRole());
+    iconInfo.hoverBorder = ui->widgetHoverBorder->palette().color(QWidget::backgroundRole());
+    iconInfo.extraOptions = ui->buttonSelectApp->property("extra_options").toString();
+    
+    m_configuration->addApplication(iconInfo);
     ui->icons->insertWidget(index, list_icons.at(index));
     showApp(index, index - 1);
     itemChanged();
@@ -1646,7 +1664,7 @@ void MainWindow::buttonMoveLeft_clicked()
 
 void MainWindow::buttonMoveRight_clicked()
 {
-    if (index == apps.size() - 1) {
+    if (index == m_configuration->getApplicationCount() - 1) {
         return;
     }
     moveIcon(1);

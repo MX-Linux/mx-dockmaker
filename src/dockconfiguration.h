@@ -69,6 +69,11 @@ public:
     bool removeApplication(int index);
 
     /**
+     * @brief Clear all applications from the dock
+     */
+    void clearApplications();
+
+    /**
      * @brief Update an application in the dock
      * @param index Index of the application to update
      * @param iconInfo New icon information

@@ -97,6 +97,11 @@ set(SOURCES
     src/about.cpp
     src/cmd.cpp
     src/picklocation.cpp
+    src/dockconfiguration.cpp
+    src/dockfileparser.cpp
+    src/dockfilemanager.cpp
+    src/dockiconmanager.cpp
+    src/icondragdrophandler.cpp
 )
 
 set(HEADERS
@@ -104,6 +109,12 @@ set(HEADERS
     src/about.h
     src/cmd.h
     src/picklocation.h
+    src/dockiconinfo.h
+    src/dockconfiguration.h
+    src/dockfileparser.h
+    src/dockfilemanager.h
+    src/dockiconmanager.h
+    src/icondragdrophandler.h
 )
 
 set(UI_FILES
