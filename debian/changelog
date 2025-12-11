@@ -3,6 +3,8 @@ mx-dockmaker (25.12.2) mx; urgency=medium
   * Sanitize tooltip entry
   * Fix minor GUI issues, fix going back to menu when exiting the main window
   * Add tooltip to the preview icons
+  * Add drag & drop option to move icons
+  * Change how the selected icon show, keep size but add a dotted border
 
  -- Adrian <adrian@mxlinux.org>  Thu, 11 Dec 2025 13:29:32 -0500
 

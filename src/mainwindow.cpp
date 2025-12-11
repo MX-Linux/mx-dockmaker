@@ -230,6 +230,8 @@ void MainWindow::setup(const QString &file)
     }
     list_icons.clear();
     apps.clear();
+    index = 0;
+    parsing = false;
 
     // Clear the icons layout
     QLayout *layout = ui->icons->layout();
