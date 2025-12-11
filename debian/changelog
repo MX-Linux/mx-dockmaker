@@ -1,3 +1,10 @@
+mx-dockmaker (25.12.2) mx; urgency=medium
+
+  * Sanitize tooltip entry
+  * Fix minor GUI issues, fix going back to menu when exiting the main window
+
+ -- Adrian <adrian@mxlinux.org>  Thu, 11 Dec 2025 13:29:32 -0500
+
 mx-dockmaker (25.12.1) mx; urgency=medium
 
   * Add Tooltip edit option in UI

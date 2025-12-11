@@ -707,6 +707,9 @@ void MainWindow::parseFile(QFile &file)
                 } else if (token == QLatin1String("--tooltip-text")) {
                     QString tooltip;
                     nextValue(&tooltip);
+                    // Sanitize by removing quotes
+                    tooltip.remove(QLatin1Char('\''));
+                    tooltip.remove(QLatin1Char('"'));
                     ui->lineEditTooltip->setText(tooltip);
                 } else if (token == QLatin1String("-x") || token == QLatin1String("--exit-on-right-click")) {
                     // not used right now
@@ -1175,6 +1178,14 @@ void MainWindow::lineEditCommand_textEdited()
 
 void MainWindow::lineEditTooltip_textEdited()
 {
+    // Sanitize input by removing quotes
+    QString sanitizedText = ui->lineEditTooltip->text();
+    sanitizedText.remove(QLatin1Char('\''));
+    sanitizedText.remove(QLatin1Char('"'));
+    if (sanitizedText != ui->lineEditTooltip->text()) {
+        ui->lineEditTooltip->setText(sanitizedText);
+    }
+
     changed = true;
     updateAppList(index);
     if (!parsing) {
