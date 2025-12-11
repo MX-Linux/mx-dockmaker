@@ -120,46 +120,44 @@ private:
     [[nodiscard]] static QString getDockName(const QString &file_name);
 
     Ui::MainWindow *ui;
-    
+
     // New architecture components
     DockConfiguration *m_configuration;
     DockFileManager *m_fileManager;
     DockFileParser *m_fileParser;
     DockIconManager *m_iconManager;
     IconDragDropHandler *m_dragDropHandler;
-    
+
     // Legacy support (temporary during refactoring)
     QSettings settings;
     bool changed = false;
     bool parsing = false;
     int index = 0;
     QList<QLabel *> list_icons;
-    
+
     // Current file tracking
     QString currentFilePath;
-    
+
     // Legacy variables (needed during migration)
     Cmd cmd;
     QString dock_name;
     QString file_name;
     QString file_content;
-    
+
     // Drag and drop state
     QLabel *dragIndicator = nullptr;
     QList<QLabel *> insertionIndicators;
     bool dragging = false;
     int dragStartIndex = -1;
     QPoint dragStartPos;
-    
+
     // Other legacy variables
     QString slit_location;
-    
+
     // Temporary apps variable (will be removed after migration)
     QList<QStringList> apps;
-    
+
     // Icon styling constants
     static constexpr int kIconBorderWidth = 4;
     static constexpr int kIconPadding = 4;
 };
-
-

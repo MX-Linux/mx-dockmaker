@@ -63,7 +63,7 @@ namespace
 constexpr int kIconBorderWidth = 4;
 constexpr int kIconPadding = 4; // Space reserved around the icon so borders stay outside the artwork
 
-[[nodiscard]] QSize iconContainerSize(const QSize &iconSize)
+[[nodiscard]] QSize iconContainerSize(QSize iconSize)
 {
     return iconSize
            + QSize(2 * (kIconBorderWidth + kIconPadding), 2 * (kIconBorderWidth + kIconPadding)); // padding + border
@@ -82,13 +82,13 @@ MainWindow::MainWindow(QWidget *parent, const QString &file)
     ui->setupUi(this);
     setConnections();
     setWindowFlags(Qt::Window); // for the close, min and max buttons
-    
+
     // Connect signals from new architecture
     connect(m_configuration, &DockConfiguration::configurationModified, this, [this]() {
         changed = true;
         checkDoneEditing();
     });
-    
+
     setup(file);
 }
 
@@ -152,9 +152,8 @@ void MainWindow::displayIcon(const QString &app_name, int location, const QStrin
     list_icons.at(location)->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     list_icons.at(location)->setStyleSheet(
         "background-color: " + ui->widgetBackground->palette().color(QWidget::backgroundRole()).name()
-        + ";padding: " + QString::number(kIconPadding)
-        + "px;border: " + QString::number(kIconBorderWidth)
-        + "px solid " + ui->widgetBorder->palette().color(QWidget::backgroundRole()).name() + ";");
+        + ";padding: " + QString::number(kIconPadding) + "px;border: " + QString::number(kIconBorderWidth) + "px solid "
+        + ui->widgetBorder->palette().color(QWidget::backgroundRole()).name() + ";");
 
     // Set tooltip for the icon
     if (location < m_configuration->getApplicationCount()) {
@@ -263,9 +262,9 @@ void MainWindow::setup(const QString &file)
     changed = false;
     this->setWindowTitle(QStringLiteral("MX Dockmaker"));
     ui->labelUsage->setText(tr("1. Add applications to the dock one at a time\n"
-                                "2. Select a .desktop file or enter a command for the application you want\n"
-                                "3. Select icon attributes for size, background (black is standard) and border\n"
-                                "4. Press \"Add application\" to continue or \"Save\" to finish"));
+                               "2. Select a .desktop file or enter a command for the application you want\n"
+                               "3. Select icon attributes for size, background (black is standard) and border\n"
+                               "4. Press \"Add application\" to continue or \"Save\" to finish"));
     this->adjustSize();
 
     blockComboSignals(true);
@@ -347,7 +346,7 @@ void MainWindow::setup(const QString &file)
     if (!icon_name.endsWith(QLatin1String(".png")) && !icon_name.endsWith(QLatin1String(".svg"))
         && !icon_name.endsWith(QLatin1String(".xpm"))) {
         search_term = icon_name + ".*";
-}
+    }
 
     QString iconName = icon_name;
     iconName.remove(QRegularExpression(QStringLiteral(R"(\.png$|\.svg$|\.xpm$)")));
@@ -472,7 +471,9 @@ void MainWindow::createInsertionIndicators()
     }
     insertionIndicators.clear();
 
-    if (list_icons.isEmpty()) return;
+    if (list_icons.isEmpty()) {
+        return;
+    }
 
     // Get icon size from the first icon
     QSize iconSize = list_icons.first()->size();
@@ -495,7 +496,9 @@ void MainWindow::createInsertionIndicators()
 
 void MainWindow::positionInsertionIndicators()
 {
-    if (list_icons.isEmpty() || insertionIndicators.size() != list_icons.size() + 1) return;
+    if (list_icons.isEmpty() || insertionIndicators.size() != list_icons.size() + 1) {
+        return;
+    }
 
     // Position indicators: before first icon, between icons, and after last icon
     for (int i = 0; i < insertionIndicators.size(); ++i) {
@@ -537,7 +540,9 @@ void MainWindow::positionInsertionIndicators()
 
 void MainWindow::updateInsertionIndicators(const QPoint &mousePos)
 {
-    if (insertionIndicators.isEmpty()) return;
+    if (insertionIndicators.isEmpty()) {
+        return;
+    }
 
     // Hide all indicators first
     for (int i = 0; i < insertionIndicators.size(); ++i) {
@@ -664,7 +669,8 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
                 dragIndicator->setPixmap(sourceIcon->pixmap(Qt::ReturnByValue));
                 dragIndicator->setAlignment(Qt::AlignCenter);
                 dragIndicator->setFixedSize(sourceIcon->size());
-                dragIndicator->setStyleSheet("background: rgba(255, 255, 255, 128); border: 2px dashed #0078d4; opacity: 0.8;");
+                dragIndicator->setStyleSheet(
+                    "background: rgba(255, 255, 255, 128); border: 2px dashed #0078d4; opacity: 0.8;");
                 dragIndicator->setAttribute(Qt::WA_TransparentForMouseEvents);
                 dragIndicator->raise(); // Make sure it's on top
                 dragIndicator->show();
@@ -722,7 +728,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
                 // Dropping after last item - move to last position (no adjustment needed)
                 adjustedIndex = list_icons.size() - 1;
             } else if (adjustedIndex > dragStartIndex) {
-                adjustedIndex--;  // Account for the removed item
+                adjustedIndex--; // Account for the removed item
             }
             // Ensure adjustedIndex is within bounds
             if (adjustedIndex >= 0 && adjustedIndex < list_icons.size()) {
@@ -822,7 +828,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
     event->accept();
     this->hide();
-    QTimer::singleShot(0, this, [this]() { setup(""); });  // Show operation selection dialog again
+    QTimer::singleShot(0, this, [this]() { setup(""); }); // Show operation selection dialog again
 }
 
 void MainWindow::updateAppList(int idx)
@@ -1178,6 +1184,7 @@ void MainWindow::parseFile(QFile &file)
     ui->buttonSave->setDisabled(true);
     showApp(index = 0, -1);
     parsing = false;
+    checkDoneEditing(); // Update button states after parsing
 }
 
 void MainWindow::buttonSave_clicked()
@@ -1370,8 +1377,9 @@ void MainWindow::resetAdd()
     ui->lineEditTooltip->clear();
 
     QString size;
-    if (ui->checkApplyStyleToAll->isChecked() && index != 0) { // set style according to the first item
-        size = apps.at(0).at(Info::Size);
+    if (ui->checkApplyStyleToAll->isChecked() && index != 0 && m_configuration->getApplicationCount() > 0) { // set style according to the first item
+        DockIconInfo firstIcon = m_configuration->getApplication(0);
+        size = firstIcon.size;
     } else {
         size = settings.value(QStringLiteral("Size"), "48x48").toString();
     }
@@ -1457,12 +1465,14 @@ void MainWindow::showApp(int idx, int old_idx)
     blockComboSignals(false);
 
     // set buttons
-    ui->buttonNext->setDisabled(idx == m_configuration->getApplicationCount() - 1 || m_configuration->getApplicationCount() == 1);
+    ui->buttonNext->setDisabled(idx == m_configuration->getApplicationCount() - 1
+                                || m_configuration->getApplicationCount() == 1);
     ui->buttonPrev->setDisabled(idx == 0);
     ui->buttonAdd->setDisabled(m_configuration->isEmpty());
     ui->buttonDelete->setEnabled(true);
     ui->buttonMoveLeft->setDisabled(idx == 0);
     ui->buttonMoveRight->setDisabled(idx == m_configuration->getApplicationCount() - 1);
+    checkDoneEditing(); // Update button states based on current UI
 }
 
 void MainWindow::buttonSelectApp_clicked()
@@ -1528,6 +1538,7 @@ void MainWindow::newDock()
     list_icons.clear();
 
     resetAdd();
+    checkDoneEditing(); // Re-evaluate button states after reset
     ui->buttonSave->setEnabled(false);
     ui->buttonDelete->setEnabled(false);
 }
@@ -1646,7 +1657,7 @@ void MainWindow::buttonAdd_clicked()
     index++;
     resetAdd();
     list_icons.insert(index, new QLabel());
-    
+
     // Create DockIconInfo from UI data
     DockIconInfo iconInfo;
     iconInfo.appName = ui->buttonSelectApp->text();
@@ -1659,7 +1670,7 @@ void MainWindow::buttonAdd_clicked()
     iconInfo.borderColor = ui->widgetBorder->palette().color(QWidget::backgroundRole());
     iconInfo.hoverBorder = ui->widgetHoverBorder->palette().color(QWidget::backgroundRole());
     iconInfo.extraOptions = ui->buttonSelectApp->property("extra_options").toString();
-    
+
     m_configuration->addApplication(iconInfo);
     ui->icons->insertWidget(index, list_icons.at(index));
     showApp(index, index - 1);
