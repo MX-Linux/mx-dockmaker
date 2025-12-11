@@ -25,8 +25,11 @@
 
 #include <QCloseEvent>
 #include <QFile>
+#include <QLabel>
 #include <QMessageBox>
 #include <QMouseEvent>
+#include <QPoint>
+#include <QResizeEvent>
 #include <QSettings>
 #include <QToolTip>
 
@@ -52,11 +55,15 @@ public:
     void addDockToMenu(const QString &file_name);
     void blockComboSignals(bool block);
     void deleteDock();
-    void displayIcon(const QString &app_name, int location);
+    void displayIcon(const QString &app_name, int location, const QString &custom_icon = QString());
     void editDock(const QString &file_arg = QString());
     void moveDock();
     void moveIcon(int pos);
+    void moveIconToPosition(int fromIndex, int toIndex);
     void newDock();
+    void createInsertionIndicators();
+    void positionInsertionIndicators();
+    void updateInsertionIndicators(const QPoint &mousePos);
     void parseFile(QFile &file);
     void resetAdd();
     void setConnections();
@@ -93,12 +100,17 @@ private slots:
     void lineEditTooltip_textEdited();
     void closeEvent(QCloseEvent *event) override;
     bool eventFilter(QObject *obj, QEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
     void pickColor(QWidget *widget);
     void radioDesktop_toggled(bool checked);
     void setColor(QWidget *widget, const QColor &color);
 
 private:
+    void applyIconStyles(int selectedIndex);
+
     Ui::MainWindow *ui;
     Cmd cmd;
 
@@ -112,6 +124,13 @@ private:
     QString file_content;
     QString file_name;
     QString slit_location;
+
+    // Drag and drop support
+    bool dragging = false;
+    int dragStartIndex = -1;
+    QPoint dragStartPos;
+    QLabel *dragIndicator = nullptr;
+    QList<QLabel *> insertionIndicators;
 };
 
 #endif
