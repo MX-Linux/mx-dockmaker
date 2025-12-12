@@ -24,7 +24,9 @@
 
 #pragma once
 
+#include <QHash>
 #include <QLabel>
+#include <QPointer>
 #include <QObject>
 #include <QPoint>
 #include <QSize>
@@ -53,6 +55,8 @@ private:
     QLabel *m_dragIndicator;               ///< Visual drag indicator
     QList<QLabel *> m_iconLabels;          ///< List of icon labels
     QList<QLabel *> m_insertionIndicators; ///< Insertion point indicators
+    QPointer<QLabel> m_draggedIcon;        ///< Icon currently being dragged (for style restore)
+    QHash<QLabel *, QString> m_originalStyles; ///< Cached styles for icons while dragging
     QPoint m_dragStartPos;                 ///< Position where drag started
     QWidget *m_parentWidget;               ///< Widget receiving mouse events
     bool m_dragging;                       ///< Whether drag is in progress

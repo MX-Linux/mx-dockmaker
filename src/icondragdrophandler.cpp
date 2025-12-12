@@ -35,6 +35,7 @@ IconDragDropHandler::IconDragDropHandler(QObject *parent)
       m_dragging(false),
       m_dragStartIndex(-1),
       m_parentWidget(nullptr),
+      m_draggedIcon(nullptr),
       m_dragIndicator(nullptr)
 {
 }
@@ -47,6 +48,7 @@ IconDragDropHandler::~IconDragDropHandler()
 void IconDragDropHandler::setIconLabels(const QList<QLabel *> &iconLabels)
 {
     m_iconLabels = iconLabels;
+    m_originalStyles.clear();
     cleanupInsertionIndicators();
     createInsertionIndicators();
 }
@@ -185,9 +187,11 @@ void IconDragDropHandler::cleanup()
     cleanupDragIndicator();
     cleanupInsertionIndicators();
     m_iconLabels.clear();
+    m_originalStyles.clear();
     m_dragging = false;
     m_dragStartIndex = -1;
     m_dragStartPos = QPoint();
+    m_draggedIcon = nullptr;
     m_parentWidget = nullptr;
 }
 
@@ -300,6 +304,8 @@ void IconDragDropHandler::createDragIndicator(QLabel *sourceIcon, QWidget *paren
         return;
     }
 
+    m_draggedIcon = sourceIcon;
+
     m_dragIndicator = new QLabel(parentWidget);
     m_dragIndicator->setPixmap(sourceIcon->pixmap(Qt::ReturnByValue));
     m_dragIndicator->setAlignment(Qt::AlignCenter);
@@ -310,9 +316,11 @@ void IconDragDropHandler::createDragIndicator(QLabel *sourceIcon, QWidget *paren
     m_dragIndicator->show();
 
     // Make source icon semi-transparent
-    QString originalStyle = sourceIcon->styleSheet();
+    const QString originalStyle = sourceIcon->styleSheet();
+    if (!m_originalStyles.contains(sourceIcon)) {
+        m_originalStyles.insert(sourceIcon, originalStyle);
+    }
     sourceIcon->setStyleSheet(originalStyle + "opacity: 0.5;");
-    sourceIcon->setProperty("original_style", originalStyle);
 }
 
 int IconDragDropHandler::findClosestInsertionPoint(QPoint mousePos)
@@ -363,14 +371,20 @@ void IconDragDropHandler::cleanupDragIndicator()
     }
 
     // Restore original style of source icon
-    if (m_dragStartIndex >= 0 && m_dragStartIndex < m_iconLabels.size()) {
-        QLabel *sourceIcon = m_iconLabels.at(m_dragStartIndex);
-        QString originalStyle = sourceIcon->property("original_style").toString();
-        if (!originalStyle.isEmpty()) {
-            sourceIcon->setStyleSheet(originalStyle);
-            sourceIcon->setProperty("original_style", QVariant());
+    QLabel *sourceIcon = m_draggedIcon;
+    if (!sourceIcon && m_dragStartIndex >= 0 && m_dragStartIndex < m_iconLabels.size()) {
+        sourceIcon = m_iconLabels.at(m_dragStartIndex);
+    }
+
+    if (sourceIcon) {
+        auto it = m_originalStyles.find(sourceIcon);
+        if (it != m_originalStyles.end()) {
+            sourceIcon->setStyleSheet(it.value());
+            m_originalStyles.erase(it);
         }
     }
+
+    m_draggedIcon = nullptr;
 }
 
 void IconDragDropHandler::cleanupInsertionIndicators()
