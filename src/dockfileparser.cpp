@@ -70,6 +70,8 @@ bool DockFileParser::parseFile(const QString &filePath, DockConfiguration &confi
     const bool success = parseContent(content, configuration);
     if (success) {
         configuration.setFileName(filePath);
+    } else {
+        emit parsingError(m_lastError);
     }
 
     emit parsingCompleted(success);
@@ -321,7 +323,6 @@ bool DockFileParser::isKnownOption(const QString &token)
 void DockFileParser::setLastError(const QString &error)
 {
     m_lastError = error;
-    emit parsingError(error);
 }
 
 void DockFileParser::clearLastError()
