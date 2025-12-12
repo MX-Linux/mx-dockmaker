@@ -49,14 +49,6 @@ namespace
     return QLatin1Char('\'') + escaped + QLatin1Char('\'');
 }
 
-[[nodiscard]] QString quoteDouble(const QString &arg)
-{
-    auto escaped = arg;
-    escaped.replace(QLatin1Char('\\'), QStringLiteral("\\\\"));
-    escaped.replace(QLatin1Char('"'), QStringLiteral("\\\""));
-    return QLatin1Char('"') + escaped + QLatin1Char('"');
-}
-
 constexpr int kIconBorderWidth = 4;
 constexpr int kIconPadding = 4; // Space reserved around the icon so borders stay outside the artwork
 
@@ -639,16 +631,6 @@ void MainWindow::comboSize_currentTextChanged()
     itemChanged();
 }
 
-void MainWindow::comboBgColor_currentTextChanged()
-{
-    itemChanged();
-}
-
-void MainWindow::comboBorderColor_currentTextChanged()
-{
-    itemChanged();
-}
-
 void MainWindow::buttonNext_clicked()
 {
     blockComboSignals(true);
@@ -814,13 +796,6 @@ void MainWindow::buttonSelectApp_clicked()
         this, tr("Select .desktop file"), QStringLiteral("/usr/share/applications"), tr("Desktop Files (*.desktop)"));
     const QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
-        // Store the selected desktop file name in the current icon info
-        int currentIdx = index;
-        if (currentIdx >= 0 && currentIdx < m_configuration->getApplicationCount()) {
-            DockIconInfo iconInfo = m_configuration->getApplication(currentIdx);
-            iconInfo.appName = file;
-            m_configuration->updateApplication(currentIdx, iconInfo);
-        }
         ui->buttonSelectApp->setText(file);
         ui->buttonAdd->setEnabled(true);
         ui->buttonSelectApp->setProperty("extra_options", QString()); // reset extra options when changing the app.
@@ -904,7 +879,6 @@ void MainWindow::buttonPrev_clicked()
 {
     blockComboSignals(true);
     updateAppList(index);
-    int oldIndex = index;
     showApp(--index);
     blockComboSignals(false);
 }

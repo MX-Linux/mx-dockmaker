@@ -78,12 +78,12 @@ struct DockIconInfo {
                 hoverBackground.name(),
                 borderColor.name(),
                 hoverBorder.name(),
-                extraOptions};
+                extraOptions.isEmpty() ? QString() : extraOptions};
     }
     static DockIconInfo fromStringList(const QStringList &list)
     {
         DockIconInfo info;
-        if (list.size() >= 11) {
+        if (list.size() >= 10) {
             info.appName = list.at(0);
             info.command = list.at(1);
             info.tooltip = list.at(2);
@@ -93,7 +93,9 @@ struct DockIconInfo {
             info.hoverBackground = QColor(list.at(6));
             info.borderColor = QColor(list.at(7));
             info.hoverBorder = QColor(list.at(8));
-            info.extraOptions = list.at(9);
+            if (list.size() >= 10) {
+                info.extraOptions = list.at(9);
+            }
         }
         return info;
     }

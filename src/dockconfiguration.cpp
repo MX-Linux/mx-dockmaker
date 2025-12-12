@@ -201,7 +201,8 @@ QString DockConfiguration::getFileName() const
 
 void DockConfiguration::clear()
 {
-    const bool wasEmpty = m_applications.isEmpty();
+    const bool hadContent = !m_applications.isEmpty() || !m_dockName.isEmpty()
+                            || !m_slitLocation.isEmpty() || !m_fileName.isEmpty();
 
     m_applications.clear();
     m_dockName.clear();
@@ -209,7 +210,7 @@ void DockConfiguration::clear()
     m_fileName.clear();
     m_modified = false;
 
-    if (!wasEmpty) {
+    if (hadContent) {
         emit configurationModified();
     }
 }

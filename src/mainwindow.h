@@ -81,8 +81,6 @@ private slots:
     void buttonSelectIcon_clicked();
     void checkApplyStyleToAll_stateChanged(int arg1);
     void closeEvent(QCloseEvent *event) override;
-    void comboBgColor_currentTextChanged();
-    void comboBorderColor_currentTextChanged();
     void comboSize_currentTextChanged();
     void itemChanged();
     void lineEditCommand_textEdited();

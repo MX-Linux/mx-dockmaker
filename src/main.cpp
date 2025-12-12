@@ -76,27 +76,19 @@ int main(int argc, char *argv[])
     parser.addPositionalArgument("file", QObject::tr("Dock file to edit (optional)"), "[file]");
     parser.process(a);
 
-    // root guard
-    if (QProcess::execute("/bin/bash", {"-c", "logname |grep -q ^root$"}) == 0) {
-        QMessageBox::critical(
-            nullptr, QObject::tr("Error"),
-            QObject::tr(
-                "You seem to be logged in as root, please log out and log in as normal user to use this program."));
-        exit(EXIT_FAILURE);
-    }
-
-    if (getuid() != 0) {
-        QString file;
-        const QStringList positionalArgs = parser.positionalArguments();
-        if (!positionalArgs.isEmpty() && QFile::exists(positionalArgs.first())) {
-            file = positionalArgs.first();
-        }
-        MainWindow w(nullptr, file);
-        w.show();
-        return QApplication::exec();
-    } else {
-        QApplication::beep();
-        QMessageBox::critical(nullptr, QObject::tr("Error"), QObject::tr("You must run this program as normal user."));
+    // Root guard - prevent running as root
+    if (getuid() == 0) {
+        QMessageBox::critical(nullptr, QObject::tr("Error"),
+                              QObject::tr("You must run this program as normal user."));
         return EXIT_FAILURE;
     }
+
+    QString file;
+    const QStringList positionalArgs = parser.positionalArguments();
+    if (!positionalArgs.isEmpty() && QFile::exists(positionalArgs.first())) {
+        file = positionalArgs.first();
+    }
+    MainWindow w(nullptr, file);
+    w.show();
+    return QApplication::exec();
 }

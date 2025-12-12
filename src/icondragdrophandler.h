@@ -48,7 +48,6 @@ public:
 signals:
     void dragEnded(int fromIndex, int toIndex);
     void dragStarted(int index);
-    void iconClicked(int index);
 
 private:
     QLabel *m_dragIndicator;               ///< Visual drag indicator
