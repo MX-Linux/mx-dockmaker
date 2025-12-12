@@ -60,6 +60,7 @@ private:
 
     QString generateDockContent(const DockConfiguration &configuration);
     static QString escapeShellArg(const QString &arg);
+    static QString escapeSedArg(const QString &arg);
     static bool runCommandQuiet(const QString &command, const QStringList &args = {});
     void clearLastError();
     void setLastError(const QString &error);

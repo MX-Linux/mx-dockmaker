@@ -202,9 +202,11 @@ bool DockFileManager::addToMenu(const QString &filePath, const QString &dockName
     emit operationStarted(operation);
 
     const QString command = QStringLiteral("sed");
+    const QString escapedDockName = escapeSedArg(dockName);
+    const QString escapedFilePath = escapeSedArg(filePath);
     const QStringList args
         = {QStringLiteral("-i"),
-           QStringLiteral("/\\[submenu\\] (Docks)/a \\t\\t\\t[exec] (%1) {%2}").arg(dockName, filePath),
+           QStringLiteral("/\\[submenu\\] (Docks)/a \\t\\t\\t[exec] (%1) {%2}").arg(escapedDockName, escapedFilePath),
            QDir::homePath() + QStringLiteral("/.fluxbox/submenus/appearance")};
 
     if (!runCommandQuiet(command, args)) {
@@ -225,7 +227,8 @@ bool DockFileManager::removeFromMenu(const QString &filePath)
     emit operationStarted(operation);
 
     const QString command = QStringLiteral("sed");
-    const QStringList args = {QStringLiteral("-ni"), QStringLiteral("\\|%1|!p").arg(filePath),
+    const QString escapedFilePath = escapeSedArg(filePath);
+    const QStringList args = {QStringLiteral("-ni"), QStringLiteral("\\|%1|!p").arg(escapedFilePath),
                               QDir::homePath() + QStringLiteral("/.fluxbox/submenus/appearance")};
 
     if (!runCommandQuiet(command, args)) {
@@ -392,6 +395,18 @@ QString DockFileManager::escapeShellArg(const QString &arg)
     QString escaped = arg;
     escaped.replace(QLatin1Char('\''), QStringLiteral("'\"'\"'"));
     return QLatin1Char('\'') + escaped + QLatin1Char('\'');
+}
+
+QString DockFileManager::escapeSedArg(const QString &arg)
+{
+    if (arg.isEmpty()) {
+        return QString();
+    }
+
+    // Escape sed metacharacters: / \ & | ! $ ^ * ? . [ ] { } ( ) + =
+    QString escaped = arg;
+    escaped.replace(QRegularExpression(QStringLiteral("([/\\\\&|!$^*?.\\[\\]{}\\(\\)\\+=])")), QStringLiteral("\\\\1"));
+    return escaped;
 }
 
 void DockFileManager::setLastError(const QString &error)
