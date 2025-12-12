@@ -249,7 +249,7 @@ bool DockFileManager::removeFromMenu(const QString &filePath)
     return true;
 }
 
-bool DockFileManager::isInMenu(const QString &filePath)
+bool DockFileManager::isInMenu(const QString &filePath) const
 {
     QFile menuFile(QDir::homePath() + FLUXBOX_SUBMENUS_DIR);
     if (!menuFile.open(QFile::Text | QFile::ReadOnly)) {

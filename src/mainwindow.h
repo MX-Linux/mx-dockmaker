@@ -93,7 +93,7 @@ private slots:
     void resizeEvent(QResizeEvent *event) override;
     void setColor(QWidget *widget, const QColor &color);
     void setColorFromString(QWidget *widget, const QString &colorString, const QColor &fallbackColor);
-    QString validateSizeString(const QString &sizeString, const QString &fallbackSize);
+    QString validateSizeString(const QString &sizeString, const QString &fallbackSize) const;
 
 private:
     Ui::MainWindow *ui;

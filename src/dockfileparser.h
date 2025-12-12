@@ -36,7 +36,7 @@ class DockFileParser : public QObject
 {
     Q_OBJECT
 public:
-    QString extractSlitLocation(const QString &content);
+    QString extractSlitLocation(const QString &content) const;
     QString getLastError() const;
     bool parseContent(const QString &content, DockConfiguration &configuration);
     bool parseFile(const QString &filePath, DockConfiguration &configuration);

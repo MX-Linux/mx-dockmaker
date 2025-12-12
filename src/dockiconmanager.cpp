@@ -258,7 +258,7 @@ QPixmap DockIconManager::findFilesystemIcon(const QString &iconName, QSize size)
     return QPixmap();
 }
 
-QStringList DockIconManager::getIconSearchPaths()
+QStringList DockIconManager::getIconSearchPaths() const
 {
     return {QDir::homePath() + "/.local/share/icons/",
             "/usr/share/pixmaps/",
@@ -269,7 +269,7 @@ QStringList DockIconManager::getIconSearchPaths()
             "/usr/share/icons/Adwaita/48x48/legacy/"};
 }
 
-QString DockIconManager::generateIconStyle(const DockIconInfo &iconInfo, bool isSelected)
+QString DockIconManager::generateIconStyle(const DockIconInfo &iconInfo, bool isSelected) const
 {
     QString style
         = QStringLiteral("background-color: %1; padding: %2px;").arg(iconInfo.backgroundColor.name()).arg(ICON_PADDING);

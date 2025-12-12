@@ -945,7 +945,7 @@ void MainWindow::setColorFromString(QWidget *widget, const QString &colorString,
     }
 }
 
-QString MainWindow::validateSizeString(const QString &sizeString, const QString &fallbackSize)
+QString MainWindow::validateSizeString(const QString &sizeString, const QString &fallbackSize) const
 {
     // List of valid sizes available in the UI combo box
     static const QStringList validSizes = {"32x32", "36x36", "40x40", "48x48", "64x64"};

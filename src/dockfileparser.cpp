@@ -113,7 +113,7 @@ bool DockFileParser::parseContent(const QString &content, DockConfiguration &con
     return true;
 }
 
-QString DockFileParser::extractSlitLocation(const QString &content)
+QString DockFileParser::extractSlitLocation(const QString &content) const
 {
     for (const QString &location : POSSIBLE_LOCATIONS) {
         if (content.contains(location)) {

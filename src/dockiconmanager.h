@@ -58,8 +58,8 @@ private:
     QPixmap findFilesystemIcon(const QString &iconName, QSize size);
     QPixmap findThemeIcon(const QString &iconName, QSize size);
     QPixmap searchIconInPaths(const QString &iconName, QSize size);
-    QString generateIconStyle(const DockIconInfo &iconInfo, bool isSelected);
-    QStringList getIconSearchPaths();
+    QString generateIconStyle(const DockIconInfo &iconInfo, bool isSelected) const;
+    QStringList getIconSearchPaths() const;
     static constexpr int ICON_BORDER_WIDTH = 4;
     static constexpr int ICON_PADDING = 4;
     void clearLastError();

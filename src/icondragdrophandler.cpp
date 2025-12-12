@@ -332,7 +332,7 @@ int IconDragDropHandler::findClosestInsertionPoint(QPoint mousePos)
     return closestIndex;
 }
 
-bool IconDragDropHandler::isIconLabel(QWidget *widget, const QList<QLabel *> &iconLabels)
+bool IconDragDropHandler::isIconLabel(QWidget *widget, const QList<QLabel *> &iconLabels) const
 {
     QLabel *label = qobject_cast<QLabel *>(widget);
     if (!label) {
@@ -342,7 +342,7 @@ bool IconDragDropHandler::isIconLabel(QWidget *widget, const QList<QLabel *> &ic
     return iconLabels.contains(label);
 }
 
-int IconDragDropHandler::getIconLabelIndex(QLabel *label)
+int IconDragDropHandler::getIconLabelIndex(QLabel *label) const
 {
     return m_iconLabels.indexOf(label);
 }
