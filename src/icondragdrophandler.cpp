@@ -81,7 +81,8 @@ int IconDragDropHandler::handleMousePress(QMouseEvent *event, QWidget *clickedWi
 
 bool IconDragDropHandler::handleMouseMove(QMouseEvent *event, QWidget *parentWidget)
 {
-    if (m_dragStartIndex < 0) {
+    if (m_dragStartIndex < 0 || m_dragStartIndex >= m_iconLabels.size()) {
+        resetDragState();
         return false;
     }
 
@@ -112,7 +113,12 @@ bool IconDragDropHandler::handleMouseMove(QMouseEvent *event, QWidget *parentWid
 
 int IconDragDropHandler::handleMouseRelease(QMouseEvent *event)
 {
-    if (!m_dragging || m_dragStartIndex < 0) {
+    if (!m_dragging) {
+        return -1;
+    }
+
+    if (m_dragStartIndex < 0 || m_dragStartIndex >= m_iconLabels.size()) {
+        resetDragState();
         return -1;
     }
 
