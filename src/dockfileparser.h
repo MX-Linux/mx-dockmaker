@@ -43,7 +43,6 @@ public:
     bool validateFile(const QString &filePath);
     explicit DockFileParser(QObject *parent = nullptr);
     static QString extractDockName(const QString &fileName);
-    ~DockFileParser() = default;
 
 signals:
     void parsingCompleted(bool success);

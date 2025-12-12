@@ -44,7 +44,6 @@ public:
     static QStringList getAvailableIconSizes();
     void applyIconStyle(const DockIconInfo &iconInfo, QLabel *label, bool isSelected = false);
     void displayIcon(const DockIconInfo &iconInfo, QLabel *label, int selectedIndex = -1, int currentIndex = -1);
-    ~DockIconManager() = default;
 
 signals:
     void iconError(const QString &operation, const QString &error);

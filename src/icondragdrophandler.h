@@ -43,7 +43,7 @@ public:
     void handleResizeEvent(QResizeEvent *event);
     void resetDragState();
     void setIconLabels(const QList<QLabel *> &iconLabels);
-    ~IconDragDropHandler();
+    ~IconDragDropHandler() override;
 
 signals:
     void dragEnded(int fromIndex, int toIndex);

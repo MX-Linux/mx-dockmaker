@@ -48,7 +48,6 @@ public:
     explicit DockFileManager(QObject *parent = nullptr);
     static QString getDefaultDockDirectory();
     static void killAndWaitForProcess(const QString &processName);
-    ~DockFileManager() = default;
 
 signals:
     void operationCompleted(const QString &operation, bool success);

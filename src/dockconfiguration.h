@@ -35,7 +35,6 @@ class DockConfiguration : public QObject
     Q_OBJECT
 public:
     explicit DockConfiguration(QObject *parent = nullptr);
-    ~DockConfiguration() = default;
 
     // Explicitly disable copy operations (QObject already disables them, but make intent clear)
     DockConfiguration(const DockConfiguration&) = delete;
