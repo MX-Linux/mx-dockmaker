@@ -237,36 +237,6 @@ bool DockConfiguration::isValid() const
     return false;
 }
 
-QList<QStringList> DockConfiguration::toLegacyFormat() const
-{
-    QList<QStringList> legacyData;
-    legacyData.reserve(m_applications.size());
-
-    for (const auto &app : m_applications) {
-        legacyData.append(app.toStringList());
-    }
-
-    return legacyData;
-}
-
-void DockConfiguration::fromLegacyFormat(const QList<QStringList> &legacyData)
-{
-    clear();
-    m_applications.reserve(legacyData.size());
-
-    for (const auto &appData : legacyData) {
-        DockIconInfo info = DockIconInfo::fromStringList(appData);
-        if (info.isValid()) {
-            m_applications.append(info);
-        }
-    }
-
-    if (!m_applications.isEmpty()) {
-        m_modified = true;
-        emit configurationModified();
-    }
-}
-
 bool DockConfiguration::isValidIndex(int index) const
 {
     return index >= 0 && index < m_applications.size();

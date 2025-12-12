@@ -67,10 +67,6 @@ public:
     void clear();
     void markAsSaved();
 
-    // Legacy compatibility
-    QList<QStringList> toLegacyFormat() const;
-    void fromLegacyFormat(const QList<QStringList> &legacyData);
-
 signals:
     void applicationAdded(int index);
     void applicationRemoved(int index);
