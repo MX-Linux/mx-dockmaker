@@ -54,14 +54,12 @@ bool DockFileManager::saveConfiguration(const DockConfiguration &configuration, 
         return false;
     }
 
-    // Create backup if requested
-    if (createBackup && QFileInfo::exists(filePath)) {
-        if (!DockFileManager::createBackup(filePath)) {
-            setLastError(tr("Failed to create backup file"));
-            emit operationError(operation, m_lastError);
-            emit operationCompleted(operation, false);
-            return false;
-        }
+    // Create backup if requested (createBackup handles non-existent files gracefully)
+    if (createBackup && !DockFileManager::createBackup(filePath)) {
+        setLastError(tr("Failed to create backup file"));
+        emit operationError(operation, m_lastError);
+        emit operationCompleted(operation, false);
+        return false;
     }
 
     QFile file(filePath);
@@ -261,6 +259,12 @@ bool DockFileManager::createBackup(const QString &filePath)
     clearLastError();
     const QString operation = tr("Creating backup of %1").arg(filePath);
     emit operationStarted(operation);
+
+    // If source file doesn't exist, there's nothing to backup - return success
+    if (!QFile::exists(filePath)) {
+        emit operationCompleted(operation, true);
+        return true;
+    }
 
     QString backupPath = filePath + ".~";
     if (QFile::exists(backupPath)) {
