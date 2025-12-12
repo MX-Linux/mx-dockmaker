@@ -28,6 +28,7 @@
 #include <QMouseEvent>
 #include <QResizeEvent>
 #include <QWidget>
+#include <climits>
 
 IconDragDropHandler::IconDragDropHandler(QObject *parent)
     : QObject(parent),
