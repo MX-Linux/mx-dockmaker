@@ -35,6 +35,10 @@
 #include <QThread>
 #include <QTimer>
 
+// Fluxbox directory constants
+static const QString FLUXBOX_SCRIPTS_DIR = QStringLiteral("/.fluxbox/scripts");
+static const QString FLUXBOX_SUBMENUS_DIR = QStringLiteral("/.fluxbox/submenus/appearance");
+
 DockFileManager::DockFileManager(QObject *parent)
     : QObject(parent)
 {
@@ -207,7 +211,7 @@ bool DockFileManager::addToMenu(const QString &filePath, const QString &dockName
     const QStringList args
         = {QStringLiteral("-i"),
            QStringLiteral("/\\[submenu\\] (Docks)/a \\t\\t\\t[exec] (%1) {%2}").arg(escapedDockName, escapedFilePath),
-           QDir::homePath() + QStringLiteral("/.fluxbox/submenus/appearance")};
+           QDir::homePath() + FLUXBOX_SUBMENUS_DIR};
 
     if (!runCommandQuiet(command, args)) {
         setLastError(tr("Failed to add dock to Fluxbox menu"));
@@ -229,7 +233,7 @@ bool DockFileManager::removeFromMenu(const QString &filePath)
     const QString command = QStringLiteral("sed");
     const QString escapedFilePath = escapeSedArg(filePath);
     const QStringList args = {QStringLiteral("-ni"), QStringLiteral("\\|%1|!p").arg(escapedFilePath),
-                              QDir::homePath() + QStringLiteral("/.fluxbox/submenus/appearance")};
+                              QDir::homePath() + FLUXBOX_SUBMENUS_DIR};
 
     if (!runCommandQuiet(command, args)) {
         setLastError(tr("Failed to remove dock from Fluxbox menu"));
@@ -247,7 +251,7 @@ bool DockFileManager::removeFromMenu(const QString &filePath)
 
 bool DockFileManager::isInMenu(const QString &filePath)
 {
-    QFile menuFile(QDir::homePath() + "/.fluxbox/submenus/appearance");
+    QFile menuFile(QDir::homePath() + FLUXBOX_SUBMENUS_DIR);
     if (!menuFile.open(QFile::Text | QFile::ReadOnly)) {
         return false;
     }
@@ -307,7 +311,7 @@ bool DockFileManager::setExecutable(const QString &filePath)
 
 bool DockFileManager::ensureScriptsDirectory()
 {
-    QString scriptsDir = QDir::homePath() + "/.fluxbox/scripts";
+    QString scriptsDir = QDir::homePath() + FLUXBOX_SCRIPTS_DIR;
     QDir dir;
 
     if (!dir.exists(scriptsDir)) {
@@ -322,7 +326,7 @@ bool DockFileManager::ensureScriptsDirectory()
 
 QString DockFileManager::getDefaultDockDirectory()
 {
-    return QDir::homePath() + "/.fluxbox/scripts";
+    return QDir::homePath() + FLUXBOX_SCRIPTS_DIR;
 }
 
 QString DockFileManager::getLastError() const
