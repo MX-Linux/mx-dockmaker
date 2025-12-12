@@ -37,6 +37,10 @@ public:
     explicit DockConfiguration(QObject *parent = nullptr);
     ~DockConfiguration() = default;
 
+    // Explicitly disable copy operations (QObject already disables them, but make intent clear)
+    DockConfiguration(const DockConfiguration&) = delete;
+    DockConfiguration& operator=(const DockConfiguration&) = delete;
+
     // Application management
     DockIconInfo getApplication(int index) const;
     QList<DockIconInfo> getApplications() const;
