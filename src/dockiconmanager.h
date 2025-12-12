@@ -36,10 +36,10 @@ class DockIconManager : public QObject
 {
     Q_OBJECT
 public:
-    QPixmap findIcon(const QString &iconName, const QSize &size);
+    QPixmap findIcon(const QString &iconName, QSize size);
     QString getLastError() const;
     explicit DockIconManager(QObject *parent = nullptr);
-    static QSize getIconContainerSize(const QSize &iconSize);
+    static QSize getIconContainerSize(QSize iconSize);
     static QString getDefaultIconSize();
     static QStringList getAvailableIconSizes();
     void applyIconStyle(const DockIconInfo &iconInfo, QLabel *label, bool isSelected = false);
@@ -55,9 +55,9 @@ private:
     QString m_lastError; ///< Last error message
 
     // Icon styling constants
-    QPixmap findFilesystemIcon(const QString &iconName, const QSize &size);
-    QPixmap findThemeIcon(const QString &iconName, const QSize &size);
-    QPixmap searchIconInPaths(const QString &iconName, const QSize &size);
+    QPixmap findFilesystemIcon(const QString &iconName, QSize size);
+    QPixmap findThemeIcon(const QString &iconName, QSize size);
+    QPixmap searchIconInPaths(const QString &iconName, QSize size);
     QString generateIconStyle(const DockIconInfo &iconInfo, bool isSelected);
     QStringList getIconSearchPaths();
     static constexpr int ICON_BORDER_WIDTH = 4;

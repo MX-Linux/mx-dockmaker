@@ -203,7 +203,6 @@ void MainWindow::setup(const QString &file)
     parsing = false;
     changed = false;
 
-    changed = false;
     ui->buttonSave->setEnabled(false);
     this->setWindowTitle(QStringLiteral("MX Dockmaker"));
     ui->labelUsage->setText(tr("1. Add applications to the dock one at a time\n"

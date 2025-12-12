@@ -224,22 +224,18 @@ void IconDragDropHandler::positionInsertionIndicators()
 
         if (i == 0) {
             // Before first icon
-            if (!m_iconLabels.isEmpty()) {
-                QLabel *firstIcon = m_iconLabels.first();
-                QPoint iconPos = firstIcon->mapTo(m_parentWidget, QPoint(0, 0));
-                int centerY = iconPos.y() + firstIcon->height() / 2 - indicator->height() / 2;
-                QPoint pos(iconPos.x() - indicator->width() - 5, centerY);
-                indicator->move(pos);
-            }
+            QLabel *firstIcon = m_iconLabels.first();
+            QPoint iconPos = firstIcon->mapTo(m_parentWidget, QPoint(0, 0));
+            int centerY = iconPos.y() + firstIcon->height() / 2 - indicator->height() / 2;
+            QPoint pos(iconPos.x() - indicator->width() - 5, centerY);
+            indicator->move(pos);
         } else if (i == m_insertionIndicators.size() - 1) {
             // After last icon
-            if (!m_iconLabels.isEmpty()) {
-                QLabel *lastIcon = m_iconLabels.last();
-                QPoint iconPos = lastIcon->mapTo(m_parentWidget, QPoint(lastIcon->width(), 0));
-                int centerY = iconPos.y() + lastIcon->height() / 2 - indicator->height() / 2;
-                QPoint pos(iconPos.x() + 5, centerY);
-                indicator->move(pos);
-            }
+            QLabel *lastIcon = m_iconLabels.last();
+            QPoint iconPos = lastIcon->mapTo(m_parentWidget, QPoint(lastIcon->width(), 0));
+            int centerY = iconPos.y() + lastIcon->height() / 2 - indicator->height() / 2;
+            QPoint pos(iconPos.x() + 5, centerY);
+            indicator->move(pos);
         } else {
             // Between icons i-1 and i
             if (i - 1 < m_iconLabels.size() && i < m_iconLabels.size()) {
@@ -312,7 +308,7 @@ void IconDragDropHandler::createDragIndicator(QLabel *sourceIcon, QWidget *paren
     sourceIcon->setProperty("original_style", originalStyle);
 }
 
-int IconDragDropHandler::findClosestInsertionPoint(const QPoint &mousePos)
+int IconDragDropHandler::findClosestInsertionPoint(QPoint mousePos)
 {
     if (m_insertionIndicators.isEmpty()) {
         return -1;
