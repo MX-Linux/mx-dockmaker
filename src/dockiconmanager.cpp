@@ -45,6 +45,7 @@ QPixmap DockIconManager::findIcon(const QString &iconName, QSize size)
 
     if (iconName.isEmpty()) {
         setLastError(tr("Icon name is empty"));
+        emit iconError(tr("Icon operation"), m_lastError);
         emit iconSearchCompleted(iconName, false);
         return QPixmap();
     }
@@ -73,6 +74,7 @@ QPixmap DockIconManager::findIcon(const QString &iconName, QSize size)
     }
 
     setLastError(tr("Icon not found: %1").arg(iconName));
+    emit iconError(tr("Icon operation"), m_lastError);
     emit iconSearchCompleted(iconName, false);
     return QPixmap();
 }
@@ -83,6 +85,7 @@ void DockIconManager::displayIcon(const DockIconInfo &iconInfo, QLabel *label, i
 
     if (!label) {
         setLastError(tr("Invalid label provided"));
+        emit iconError(tr("Icon operation"), m_lastError);
         return;
     }
 
@@ -102,9 +105,11 @@ void DockIconManager::displayIcon(const DockIconInfo &iconInfo, QLabel *label, i
                 iconPath = match.captured(1);
             } else {
                 setLastError(tr("Could not find icon in .desktop file: %1").arg(iconInfo.appName));
+                emit iconError(tr("Icon operation"), m_lastError);
             }
         } else {
             setLastError(tr("Could not open .desktop file: %1").arg(iconInfo.appName));
+            emit iconError(tr("Icon operation"), m_lastError);
         }
     }
     if (iconPath.isEmpty() && !iconInfo.isDesktopFile()) {
@@ -286,7 +291,6 @@ QString DockIconManager::generateIconStyle(const DockIconInfo &iconInfo, bool is
 void DockIconManager::setLastError(const QString &error)
 {
     m_lastError = error;
-    emit iconError(tr("Icon operation"), error);
 }
 
 void DockIconManager::clearLastError()

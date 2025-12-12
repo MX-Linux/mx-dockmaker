@@ -45,5 +45,5 @@ void DeletionTest::removeSingleApplicationDoesNotCrash()
     QVERIFY(config.isEmpty());
 }
 
-QTEST_MAIN(DeletionTest)
+QTEST_GUILESS_MAIN(DeletionTest)
 #include "deletion_test.moc"

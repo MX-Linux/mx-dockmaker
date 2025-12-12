@@ -97,5 +97,5 @@ void DockFileParserTest::parsesQuotedDesktopAndIconValues()
     QCOMPARE(app.customIcon, QStringLiteral("/usr/share/icons/my icon.png"));
 }
 
-QTEST_MAIN(DockFileParserTest)
+QTEST_GUILESS_MAIN(DockFileParserTest)
 #include "dockfileparser_test.moc"

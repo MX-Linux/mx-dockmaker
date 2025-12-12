@@ -54,7 +54,6 @@ bool DockFileManager::saveConfiguration(const DockConfiguration &configuration, 
 
     // Ensure scripts directory exists
     if (!ensureScriptsDirectory()) {
-        setLastError(tr("Failed to create scripts directory"));
         emit operationError(operation, m_lastError);
         emit operationCompleted(operation, false);
         return false;
@@ -62,7 +61,6 @@ bool DockFileManager::saveConfiguration(const DockConfiguration &configuration, 
 
     // Create backup if requested (createBackup handles non-existent files gracefully)
     if (createBackup && !DockFileManager::createBackup(filePath)) {
-        setLastError(tr("Failed to create backup file"));
         emit operationError(operation, m_lastError);
         emit operationCompleted(operation, false);
         return false;
@@ -82,7 +80,6 @@ bool DockFileManager::saveConfiguration(const DockConfiguration &configuration, 
 
     // Set executable permissions
     if (!setExecutable(filePath)) {
-        setLastError(tr("Failed to set executable permissions"));
         emit operationError(operation, m_lastError);
         emit operationCompleted(operation, false);
         return false;
@@ -417,7 +414,6 @@ QString DockFileManager::escapeSedArg(const QString &arg)
 void DockFileManager::setLastError(const QString &error)
 {
     m_lastError = error;
-    emit operationError(tr("File operation"), error);
 }
 
 void DockFileManager::clearLastError()
