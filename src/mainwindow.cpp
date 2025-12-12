@@ -215,7 +215,8 @@ void MainWindow::setup(const QString &file)
     settings.setValue(QStringLiteral("FrameColor"), settings.value(QStringLiteral("FrameColor"), "white").toString());
     settings.setValue(QStringLiteral("FrameHoverColor"),
                       settings.value(QStringLiteral("FrameHoverColor"), "white").toString());
-    settings.setValue(QStringLiteral("Size"), settings.value(QStringLiteral("Size"), "48x48").toString());
+    QString sizeValue = validateSizeString(settings.value(QStringLiteral("Size"), "48x48").toString(), "48x48");
+    settings.setValue(QStringLiteral("Size"), sizeValue);
 
     // Set default values with validation
     setColorFromString(ui->widgetBackground, settings.value("BackgroundColor").toString(), QColor(Qt::black));
@@ -690,7 +691,7 @@ void MainWindow::resetAdd()
         DockIconInfo firstIcon = m_configuration->getApplication(0);
         size = firstIcon.size;
     } else {
-        size = settings.value(QStringLiteral("Size"), "48x48").toString();
+        size = validateSizeString(settings.value(QStringLiteral("Size"), "48x48").toString(), "48x48");
     }
 
     blockComboSignals(true);
@@ -935,6 +936,22 @@ void MainWindow::setColorFromString(QWidget *widget, const QString &colorString,
     }
 }
 
+QString MainWindow::validateSizeString(const QString &sizeString, const QString &fallbackSize)
+{
+    // List of valid sizes available in the UI combo box
+    static const QStringList validSizes = {"32x32", "36x36", "40x40", "48x48", "64x64"};
+
+    // Check if the size string is in the list of valid sizes
+    if (validSizes.contains(sizeString)) {
+        return sizeString;
+    }
+
+    // If not valid, log warning and return fallback
+    qWarning() << tr("Invalid size '%1' in settings, must be one of: %2, using fallback '%3'")
+                  .arg(sizeString, validSizes.join(", "), fallbackSize);
+    return fallbackSize;
+}
+
 void MainWindow::buttonSelectIcon_clicked()
 {
     ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
@@ -1011,7 +1028,7 @@ void MainWindow::buttonAdd_clicked()
         iconInfo.borderColor = firstIcon.borderColor;
         iconInfo.hoverBorder = firstIcon.hoverBorder;
     } else {
-        iconInfo.size = settings.value(QStringLiteral("Size"), "48x48").toString();
+        iconInfo.size = validateSizeString(settings.value(QStringLiteral("Size"), "48x48").toString(), "48x48");
         iconInfo.backgroundColor = QColor(settings.value(QStringLiteral("BackgroundColor"), "black").toString());
         iconInfo.hoverBackground = QColor(settings.value(QStringLiteral("BackgroundHoverColor"), "black").toString());
         iconInfo.borderColor = QColor(settings.value(QStringLiteral("FrameColor"), "white").toString());
