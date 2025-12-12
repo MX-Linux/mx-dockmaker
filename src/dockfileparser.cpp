@@ -36,10 +36,16 @@ const QStringList DockFileParser::POSSIBLE_LOCATIONS({"TopLeft", "TopCenter", "T
                                                       "LeftCenter", "RightCenter", "LeftBottom", "RightBottom",
                                                       "BottomLeft", "BottomCenter", "BottomRight"});
 
-const QSet<QString> DockFileParser::KNOWN_OPTIONS({"-d", "--desktop-file", "-c", "--command", "-i", "--icon", "-k",
+const QSet<QString> DockFileParser::KNOWN_OPTIONS = {"-d", "--desktop-file", "-c", "--command", "-i", "--icon", "-k",
                                                    "--background-color", "-K", "--hover-background-color", "-b",
                                                    "--border-color", "-B", "--hover-border-color", "-w",
-                                                   "--window-size", "--tooltip-text", "-x", "--exit-on-right-click"});
+                                                   "--window-size", "--tooltip-text", "-x", "--exit-on-right-click"};
+
+// Static regex patterns to avoid recompilation
+static const QRegularExpression wmalauncherPrefixRe(QStringLiteral("^wmalauncher"));
+static const QRegularExpression sleepSuffixRe(QStringLiteral("\\s*&(?:\\s*sleep.*)?$"));
+static const QRegularExpression tokenRe(QStringLiteral(R"((\"[^\"]*\"|'[^']*'|\S+))"));
+static const QRegularExpression nameCaptureRe(QStringLiteral("\\((.*)\\)"));
 
 DockFileParser::DockFileParser(QObject *parent)
     : QObject(parent)
@@ -129,12 +135,11 @@ QString DockFileParser::extractDockName(const QString &fileName)
         submenusFile.close();
 
         QRegularExpression fileRe(".*" + baseName + ".*");
-        QRegularExpression nameRe("\\((.*)\\)");
 
         QRegularExpressionMatch fileMatch = fileRe.match(content);
         if (fileMatch.hasMatch()) {
             QString matchedText = fileMatch.captured();
-            QRegularExpressionMatch nameMatch = nameRe.match(matchedText);
+            QRegularExpressionMatch nameMatch = nameCaptureRe.match(matchedText);
             if (nameMatch.hasMatch()) {
                 QString name = nameMatch.captured(1);
                 if (name.length() >= 2) {
@@ -191,11 +196,9 @@ DockIconInfo DockFileParser::parseWmalauncherLine(const QString &line)
     DockIconInfo info;
 
     QString cleanLine = line;
-    cleanLine.remove(QRegularExpression(QStringLiteral("^wmalauncher")));
-    cleanLine.remove(QRegularExpression(QStringLiteral("\\s*&(?:\\s*sleep.*)?$")));
-
-    QRegularExpression tokenRe(QStringLiteral(R"((\"[^\"]*\"|'[^']*'|\S+))"));
-    auto matchIt = tokenRe.globalMatch(cleanLine);
+    cleanLine.remove(wmalauncherPrefixRe);
+    cleanLine.remove(sleepSuffixRe);
+    auto matchIt = ::tokenRe.globalMatch(cleanLine);
 
     QStringList tokens;
     while (matchIt.hasNext()) {
