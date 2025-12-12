@@ -230,22 +230,22 @@ void MainWindow::setup(const QString &file)
         return;
     }
 
-    auto *mbox = new QMessageBox(this);
-    mbox->setText(tr("This tool allows you to create a new dock with one or more applications. "
-                     "You can also edit or delete a dock created earlier."));
-    mbox->setIcon(QMessageBox::Question);
-    mbox->setWindowTitle(tr("Operation mode"));
+    QMessageBox mbox(this);
+    mbox.setText(tr("This tool allows you to create a new dock with one or more applications. "
+                    "You can also edit or delete a dock created earlier."));
+    mbox.setIcon(QMessageBox::Question);
+    mbox.setWindowTitle(tr("Operation mode"));
 
-    auto *moveBtn = mbox->addButton(tr("&Move"), QMessageBox::NoRole);
-    auto *deleteBtn = mbox->addButton(tr("&Delete"), QMessageBox::NoRole);
-    auto *editBtn = mbox->addButton(tr("&Edit"), QMessageBox::NoRole);
-    auto *createBtn = mbox->addButton(tr("C&reate"), QMessageBox::NoRole);
-    auto *closeBtn = mbox->addButton(tr("&Close"), QMessageBox::RejectRole);
+    auto *moveBtn = mbox.addButton(tr("&Move"), QMessageBox::NoRole);
+    auto *deleteBtn = mbox.addButton(tr("&Delete"), QMessageBox::NoRole);
+    auto *editBtn = mbox.addButton(tr("&Edit"), QMessageBox::NoRole);
+    auto *createBtn = mbox.addButton(tr("C&reate"), QMessageBox::NoRole);
+    auto *closeBtn = mbox.addButton(tr("&Close"), QMessageBox::RejectRole);
 
     this->hide();
-    mbox->exec();
+    mbox.exec();
 
-    auto *clickedButton = mbox->clickedButton();
+    auto *clickedButton = mbox.clickedButton();
 
     if (clickedButton == closeBtn) {
         QTimer::singleShot(0, QApplication::instance(), &QGuiApplication::quit);
@@ -260,8 +260,6 @@ void MainWindow::setup(const QString &file)
     } else if (clickedButton == createBtn) {
         newDock();
     }
-
-    delete mbox;
 }
 
 [[nodiscard]] QString MainWindow::inputDockName()
