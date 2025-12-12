@@ -110,7 +110,6 @@ private:
 
     QSettings settings;
     bool changed = false;
-    bool parsing = false;
     int index = 0;
     QList<QLabel *> listIcons;
     QString slitLocation;

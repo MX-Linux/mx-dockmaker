@@ -28,6 +28,7 @@
 #include <QInputDialog>
 #include <QProcess>
 #include <QRegularExpression>
+#include <QSignalBlocker>
 #include <QTimer>
 
 #include "about.h"
@@ -83,9 +84,6 @@ MainWindow::MainWindow(QWidget *parent, const QString &file)
 
     // Connect signals from new architecture
     connect(m_configuration, &DockConfiguration::configurationModified, this, [this]() {
-        if (parsing) {
-            return;
-        }
         changed = true;
         checkDoneEditing();
     });
@@ -201,7 +199,6 @@ void MainWindow::setup(const QString &file)
     m_configuration->clear();
     renderIconsFromConfiguration();
     index = 0;
-    parsing = false;
     changed = false;
 
     ui->buttonSave->setEnabled(false);
@@ -687,6 +684,7 @@ void MainWindow::buttonDelete_clicked()
 
 void MainWindow::resetAdd()
 {
+    QSignalBlocker blockSizeCombo(ui->comboSize);
     ui->buttonSelectApp->setText(tr("Select..."));
     ui->buttonSelectApp->setProperty("extra_options", QString());
     ui->radioDesktop->click();
@@ -703,9 +701,7 @@ void MainWindow::resetAdd()
         size = validateSizeString(settings.value(SETTING_SIZE, DEFAULT_SIZE).toString(), DEFAULT_SIZE);
     }
 
-    blockComboSignals(true);
     ui->comboSize->setCurrentIndex(ui->comboSize->findText(size));
-    blockComboSignals(false);
 
     ui->buttonSelectIcon->setToolTip(QString());
     ui->buttonSelectIcon->setStyleSheet(QStringLiteral("text-align: center; padding: 3px;"));
@@ -747,8 +743,9 @@ void MainWindow::showApp(int idx)
         return;
     }
 
-    ui->radioCommand->blockSignals(true);
-    ui->radioDesktop->blockSignals(true);
+    QSignalBlocker blockRadioCommand(ui->radioCommand);
+    QSignalBlocker blockRadioDesktop(ui->radioDesktop);
+    QSignalBlocker blockSizeCombo(ui->comboSize);
 
     const DockIconInfo iconInfo = m_configuration->getApplication(idx);
     ui->buttonSelectApp->setText(iconInfo.appName);
@@ -774,19 +771,14 @@ void MainWindow::showApp(int idx)
 
     ui->lineEditTooltip->setText(iconInfo.tooltip);
 
-    ui->radioCommand->blockSignals(false);
-    ui->radioDesktop->blockSignals(false);
-
     applyIconStyles(idx);
 
-    blockComboSignals(true);
     ui->comboSize->setCurrentIndex(ui->comboSize->findText(iconInfo.size));
     setColor(ui->widgetBackground, iconInfo.backgroundColor.name());
     setColor(ui->widgetBorder, iconInfo.borderColor.name());
     setColor(ui->widgetHoverBackground, iconInfo.hoverBackground.name());
     setColor(ui->widgetHoverBorder, iconInfo.hoverBorder.name());
     ui->buttonSelectApp->setProperty("extra_options", iconInfo.extraOptions);
-    blockComboSignals(false);
 
     // set buttons
     ui->buttonNext->setDisabled(idx == m_configuration->getApplicationCount() - 1
@@ -815,6 +807,7 @@ void MainWindow::buttonSelectApp_clicked()
 
 void MainWindow::editDock(const QString &file_arg)
 {
+    QSignalBlocker configBlocker(m_configuration);
     m_configuration->clear();
     renderIconsFromConfiguration();
     index = 0;
@@ -833,13 +826,11 @@ void MainWindow::editDock(const QString &file_arg)
                              tr("You haven't selected any dock file to edit.\nCreating a new dock instead."));
         return;
     }
-    parsing = true;
 
     if (!m_fileManager->loadConfiguration(selected_dock, *m_configuration)) {
         qDebug() << "Could not load configuration:" << selected_dock << m_fileManager->getLastError();
         QMessageBox::warning(this, tr("Could not open file"),
-                             tr("Could not open selected file.\nCreating a new dock instead."));
-        parsing = false;
+                              tr("Could not open selected file.\nCreating a new dock instead."));
         return;
     }
 
@@ -865,7 +856,6 @@ void MainWindow::editDock(const QString &file_arg)
     ui->labelUsage->setText(tr("1. Edit applications one at a time using the Back and Next buttons\n"
                                "2. Add or delete applications as you like\n"
                                "3. When finished click Save"));
-    parsing = false;
     changed = false;
     checkDoneEditing();
     this->show();
@@ -904,9 +894,7 @@ void MainWindow::radioDesktop_toggled(bool checked)
     } else {
         ui->buttonSelectApp->setText(tr("Select..."));
     }
-    if (!parsing) {
-        checkDoneEditing();
-    }
+    checkDoneEditing();
 }
 
 void MainWindow::pickColor(QWidget *widget)
@@ -983,9 +971,7 @@ void MainWindow::buttonSelectIcon_clicked()
         applyIconStyles(index);
         changed = true;
     }
-    if (!parsing) {
-        checkDoneEditing();
-    }
+    checkDoneEditing();
 }
 
 void MainWindow::lineEditCommand_textEdited()
@@ -993,9 +979,7 @@ void MainWindow::lineEditCommand_textEdited()
     changed = true;
     ui->buttonNext->setEnabled(ui->buttonSelectIcon->text() != tr("Select icon..."));
     updateAppList(index);
-    if (!parsing) {
-        checkDoneEditing();
-    }
+    checkDoneEditing();
 }
 
 void MainWindow::lineEditTooltip_textEdited()
@@ -1007,12 +991,11 @@ void MainWindow::lineEditTooltip_textEdited()
     if (sanitizedText != ui->lineEditTooltip->text()) {
         ui->lineEditTooltip->setText(sanitizedText);
     }
+    checkDoneEditing();
 
     changed = true;
     updateAppList(index);
-    if (!parsing) {
-        checkDoneEditing();
-    }
+    checkDoneEditing();
 }
 
 void MainWindow::buttonAdd_clicked()
