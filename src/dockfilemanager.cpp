@@ -32,6 +32,7 @@
 #include <QRegularExpression>
 #include <QStandardPaths>
 #include <QTextStream>
+#include <QThread>
 #include <QTimer>
 
 DockFileManager::DockFileManager(QObject *parent)
@@ -186,8 +187,8 @@ bool DockFileManager::moveDockFile(const QString &oldFilePath, const QString &ne
     out << updatedContent;
     file.close();
 
-    // Restart wmalauncher
-    QProcess::execute(QStringLiteral("pkill"), QStringList() << QStringLiteral("wmalauncher"));
+    // Restart wmalauncher - kill and wait for process to terminate before starting new instance
+    killAndWaitForProcess(QStringLiteral("wmalauncher"));
     QProcess::startDetached(oldFilePath, {});
 
     emit operationCompleted(operation, true);
@@ -234,8 +235,8 @@ bool DockFileManager::removeFromMenu(const QString &filePath)
         return false;
     }
 
-    // Restart wmalauncher
-    QProcess::execute(QStringLiteral("pkill"), QStringList() << QStringLiteral("wmalauncher"));
+    // Kill wmalauncher to reload menu - wait for process to terminate
+    killAndWaitForProcess(QStringLiteral("wmalauncher"));
 
     emit operationCompleted(operation, true);
     return true;
@@ -410,4 +411,34 @@ bool DockFileManager::runCommandQuiet(const QString &command, const QStringList 
     proc.start(command, args);
     proc.waitForFinished();
     return proc.exitStatus() == QProcess::NormalExit && proc.exitCode() == 0;
+}
+
+void DockFileManager::killAndWaitForProcess(const QString &processName)
+{
+    // Use pkill to terminate the process
+    QProcess pkill;
+    pkill.start(QStringLiteral("pkill"), {processName});
+    pkill.waitForFinished(1000); // Wait up to 1 second for pkill to complete
+
+    // Give the process time to actually terminate
+    // Use pgrep to check if process still exists
+    constexpr int maxAttempts = 10;
+    constexpr int sleepMs = 100; // 100ms between checks
+    for (int i = 0; i < maxAttempts; ++i) {
+        QProcess pgrep;
+        pgrep.start(QStringLiteral("pgrep"), {QStringLiteral("-x"), processName});
+        pgrep.waitForFinished(500);
+
+        // If pgrep returns non-zero, the process doesn't exist anymore
+        if (pgrep.exitCode() != 0) {
+            return; // Process terminated successfully
+        }
+
+        // Process still running, wait a bit
+        QThread::msleep(sleepMs);
+    }
+
+    // If we get here, process is still running - try forceful kill
+    QProcess::execute(QStringLiteral("pkill"), {QStringLiteral("-9"), processName});
+    QThread::msleep(200); // Give it time to die
 }

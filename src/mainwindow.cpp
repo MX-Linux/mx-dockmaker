@@ -592,7 +592,7 @@ void MainWindow::buttonSave_clicked()
     QMessageBox::information(this, tr("Dock saved"),
                              tr("The dock has been saved.\n\n"
                                 "To edit the newly created dock please select 'Edit an existing dock'."));
-    QProcess::execute(QStringLiteral("pkill"), {"wmalauncher"});
+    DockFileManager::killAndWaitForProcess(QStringLiteral("wmalauncher"));
     QProcess::startDetached(targetFile, {});
     index = 0;
     resetAdd();
