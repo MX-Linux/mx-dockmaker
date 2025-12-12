@@ -45,7 +45,6 @@ const QSet<QString> DockFileParser::KNOWN_OPTIONS = {"-d", "--desktop-file", "-c
 static const QRegularExpression wmalauncherPrefixRe(QStringLiteral("^wmalauncher"));
 static const QRegularExpression sleepSuffixRe(QStringLiteral("\\s*&(?:\\s*sleep.*)?$"));
 static const QRegularExpression tokenRe(QStringLiteral(R"((\"[^\"]*\"|'[^']*'|\S+))"));
-static const QRegularExpression nameCaptureRe(QStringLiteral("\\((.*)\\)"));
 
 DockFileParser::DockFileParser(QObject *parent)
     : QObject(parent)
@@ -134,17 +133,21 @@ QString DockFileParser::extractDockName(const QString &fileName)
         QString content = submenusFile.readAll();
         submenusFile.close();
 
-        QRegularExpression fileRe(".*" + baseName + ".*");
+        const QStringList lines = content.split('\n');
+        for (const QString &line : lines) {
+            if (!line.contains(baseName)) {
+                continue;
+            }
 
-        QRegularExpressionMatch fileMatch = fileRe.match(content);
-        if (fileMatch.hasMatch()) {
-            QString matchedText = fileMatch.captured();
-            QRegularExpressionMatch nameMatch = nameCaptureRe.match(matchedText);
-            if (nameMatch.hasMatch()) {
-                QString name = nameMatch.captured(1);
-                if (name.length() >= 2) {
-                    return name.mid(1, name.length() - 2); // Remove parentheses
-                }
+            const int openParen = line.indexOf(QLatin1Char('('));
+            const int closeParen = line.indexOf(QLatin1Char(')'), openParen + 1);
+            if (openParen < 0 || closeParen <= openParen + 1) {
+                continue;
+            }
+
+            QString name = line.mid(openParen + 1, closeParen - openParen - 1);
+            if (name.length() >= 2) {
+                return name.mid(1, name.length() - 2); // Remove outer quotes if present
             }
         }
     }

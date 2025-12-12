@@ -38,7 +38,7 @@ void DockFileParserTest::parsesMultipleEntriesAndDefaults()
     const QString content = QStringLiteral(
         "wmalauncher --desktop-file app.desktop --background-color black --hover-background-color black "
         "--border-color white --hover-border-color white --window-size 64\n"
-        "wmalauncher --command 'echo hi' --icon /usr/share/icons/hi.png --background-color black "
+        "wmalauncher --command echo hi --icon /usr/share/icons/hi.png --background-color black "
         "--hover-background-color black --border-color white --hover-border-color white\n");
 
     DockConfiguration configuration;
