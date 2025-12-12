@@ -31,6 +31,8 @@ class DockFileParserTest : public QObject
 
 private slots:
     void parsesMultipleEntriesAndDefaults();
+    void parsesCommandsWithQuotedArguments();
+    void parsesQuotedDesktopAndIconValues();
 };
 
 void DockFileParserTest::parsesMultipleEntriesAndDefaults()
@@ -55,6 +57,44 @@ void DockFileParserTest::parsesMultipleEntriesAndDefaults()
     QCOMPARE(second.iconSize(), QSize(48, 48)); // falls back to default size when not provided
     QCOMPARE(second.size, QStringLiteral("48x48"));
     QVERIFY(second.isValid());
+}
+
+void DockFileParserTest::parsesCommandsWithQuotedArguments()
+{
+    const QString content = QStringLiteral(
+        "wmalauncher --command echo \"hello world\" --icon /usr/share/icons/hello.png --background-color black "
+        "--hover-background-color black --border-color white --hover-border-color white\n"
+        "wmalauncher --command /usr/bin/my_app \"arg one\" 'arg two with space' --icon /usr/share/icons/app.png "
+        "--background-color black --hover-background-color black --border-color white --hover-border-color white\n");
+
+    DockConfiguration configuration;
+    DockFileParser parser;
+
+    QVERIFY(parser.parseContent(content, configuration));
+    QCOMPARE(configuration.getApplicationCount(), 2);
+
+    const DockIconInfo first = configuration.getApplication(0);
+    QCOMPARE(first.command, QStringLiteral("echo hello world"));
+
+    const DockIconInfo second = configuration.getApplication(1);
+    QCOMPARE(second.command, QStringLiteral("/usr/bin/my_app arg one arg two with space"));
+}
+
+void DockFileParserTest::parsesQuotedDesktopAndIconValues()
+{
+    const QString content = QStringLiteral(
+        "wmalauncher --desktop-file \"my app.desktop\" --icon '/usr/share/icons/my icon.png' "
+        "--background-color black --hover-background-color black --border-color white --hover-border-color white\n");
+
+    DockConfiguration configuration;
+    DockFileParser parser;
+
+    QVERIFY(parser.parseContent(content, configuration));
+    QCOMPARE(configuration.getApplicationCount(), 1);
+
+    const DockIconInfo app = configuration.getApplication(0);
+    QCOMPARE(app.appName, QStringLiteral("my app.desktop"));
+    QCOMPARE(app.customIcon, QStringLiteral("/usr/share/icons/my icon.png"));
 }
 
 QTEST_MAIN(DockFileParserTest)
