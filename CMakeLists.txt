@@ -82,6 +82,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     Core
     Gui
     Widgets
+    Test
     LinguistTools
 )
 
@@ -95,7 +96,6 @@ set(SOURCES
     src/main.cpp
     src/mainwindow.cpp
     src/about.cpp
-    src/cmd.cpp
     src/picklocation.cpp
     src/dockconfiguration.cpp
     src/dockfileparser.cpp
@@ -107,7 +107,6 @@ set(SOURCES
 set(HEADERS
     src/mainwindow.h
     src/about.h
-    src/cmd.h
     src/picklocation.h
     src/dockiconinfo.h
     src/dockconfiguration.h
@@ -159,6 +158,42 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR USE_CLANG)
     target_compile_options(mx-dockmaker PRIVATE -Werror=return-stack-address)
 else()
     target_compile_options(mx-dockmaker PRIVATE -Werror=return-local-addr)
+endif()
+
+option(ENABLE_TESTS "Build unit tests" OFF)
+if(ENABLE_TESTS)
+    enable_testing()
+    add_executable(dockfileparser_test
+        tests/dockfileparser_test.cpp
+        src/dockfileparser.cpp
+        src/dockconfiguration.cpp
+        src/dockfileparser.h
+        src/dockconfiguration.h
+        src/dockiconinfo.h
+    )
+    set_target_properties(dockfileparser_test PROPERTIES AUTOMOC ON)
+    target_include_directories(dockfileparser_test PRIVATE src)
+    target_link_libraries(dockfileparser_test
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Test
+    )
+    add_test(NAME dockfileparser_test COMMAND dockfileparser_test)
+
+    add_executable(deletion_test
+        tests/deletion_test.cpp
+        src/dockconfiguration.cpp
+        src/dockconfiguration.h
+        src/dockiconinfo.h
+    )
+    set_target_properties(deletion_test PROPERTIES AUTOMOC ON)
+    target_include_directories(deletion_test PRIVATE src)
+    target_link_libraries(deletion_test
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Test
+    )
+    add_test(NAME deletion_test COMMAND deletion_test)
 endif()
 
 # Set compile definitions

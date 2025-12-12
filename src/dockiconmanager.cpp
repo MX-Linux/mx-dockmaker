@@ -28,6 +28,8 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QIcon>
+#include <QPainter>
+#include <QProcess>
 #include <QRegularExpression>
 #include <QStandardPaths>
 
@@ -75,8 +77,7 @@ QPixmap DockIconManager::findIcon(const QString &iconName, const QSize &size)
     return QPixmap();
 }
 
-void DockIconManager::displayIcon(const DockIconInfo &iconInfo, QLabel *label, 
-                                int selectedIndex, int currentIndex)
+void DockIconManager::displayIcon(const DockIconInfo &iconInfo, QLabel *label, int selectedIndex, int currentIndex)
 {
     clearLastError();
 
@@ -94,7 +95,7 @@ void DockIconManager::displayIcon(const DockIconInfo &iconInfo, QLabel *label,
         if (desktopFile.open(QFile::ReadOnly)) {
             QString content = desktopFile.readAll();
             desktopFile.close();
-            
+
             QRegularExpression re(QStringLiteral("^Icon=(.*)$"), QRegularExpression::MultilineOption);
             auto match = re.match(content);
             if (match.hasMatch()) {
@@ -106,13 +107,27 @@ void DockIconManager::displayIcon(const DockIconInfo &iconInfo, QLabel *label,
             setLastError(tr("Could not open .desktop file: %1").arg(iconInfo.appName));
         }
     }
+    if (iconPath.isEmpty() && !iconInfo.isDesktopFile()) {
+        iconPath = QStringLiteral("application-x-executable");
+    }
 
     QSize iconSize = iconInfo.iconSize();
     QPixmap pixmap = findIcon(iconPath, iconSize);
-    
+
     if (pixmap.isNull()) {
-        // Use a default icon or empty pixmap
+        // Use a default fallback icon
         pixmap = QIcon::fromTheme(QStringLiteral("application-x-executable")).pixmap(iconSize);
+
+        // If theme icon is also missing, create a simple placeholder
+        if (pixmap.isNull()) {
+            pixmap = QPixmap(iconSize);
+            pixmap.fill(Qt::gray);
+            // Draw a simple "?" icon
+            QPainter painter(&pixmap);
+            painter.setPen(Qt::white);
+            painter.setFont(QFont("Sans", iconSize.height() / 2));
+            painter.drawText(pixmap.rect(), Qt::AlignCenter, "?");
+        }
     }
 
     QSize containerSize = getIconContainerSize(iconSize);
@@ -143,8 +158,7 @@ void DockIconManager::applyIconStyle(const DockIconInfo &iconInfo, QLabel *label
 
 QSize DockIconManager::getIconContainerSize(const QSize &iconSize)
 {
-    return iconSize + QSize(2 * (ICON_BORDER_WIDTH + ICON_PADDING), 
-                          2 * (ICON_BORDER_WIDTH + ICON_PADDING));
+    return iconSize + QSize(2 * (ICON_BORDER_WIDTH + ICON_PADDING), 2 * (ICON_BORDER_WIDTH + ICON_PADDING));
 }
 
 QString DockIconManager::getDefaultIconSize()
@@ -154,15 +168,8 @@ QString DockIconManager::getDefaultIconSize()
 
 QStringList DockIconManager::getAvailableIconSizes()
 {
-    return {
-        QStringLiteral("16x16"),
-        QStringLiteral("24x24"),
-        QStringLiteral("32x32"),
-        QStringLiteral("48x48"),
-        QStringLiteral("64x64"),
-        QStringLiteral("96x96"),
-        QStringLiteral("128x128")
-    };
+    return {QStringLiteral("16x16"), QStringLiteral("24x24"), QStringLiteral("32x32"),  QStringLiteral("48x48"),
+            QStringLiteral("64x64"), QStringLiteral("96x96"), QStringLiteral("128x128")};
 }
 
 QString DockIconManager::getLastError() const
@@ -203,9 +210,8 @@ QPixmap DockIconManager::findFilesystemIcon(const QString &iconName, const QSize
     QString searchTerm = iconName;
 
     // Add extension if not present
-    if (!iconName.endsWith(QLatin1String(".png")) && 
-        !iconName.endsWith(QLatin1String(".svg")) && 
-        !iconName.endsWith(QLatin1String(".xpm"))) {
+    if (!iconName.endsWith(QLatin1String(".png")) && !iconName.endsWith(QLatin1String(".svg"))
+        && !iconName.endsWith(QLatin1String(".xpm"))) {
         searchTerm = iconName + ".*";
     }
 
@@ -228,18 +234,18 @@ QPixmap DockIconManager::findFilesystemIcon(const QString &iconName, const QSize
     }
 
     // Use recursive search as last resort (more expensive)
-    QStringList recursivePaths = {
-        QStringLiteral("/usr/share/icons/hicolor/48x48/"),
-        QStringLiteral("/usr/share/icons/hicolor/"),
-        QStringLiteral("/usr/share/icons/")
-    };
-
-    QString cmd = QStringLiteral("find %1 -iname \"%2\" -print -quit 2>/dev/null")
-                     .arg(recursivePaths.join(QStringLiteral(" ")), searchTerm);
-    
-    QString result = m_cmd.getCmdOut(cmd, true);
-    if (!result.isEmpty()) {
-        return QIcon(result.trimmed()).pixmap(size);
+    const QStringList recursivePaths
+        = {QStringLiteral("/usr/share/icons/hicolor/48x48/"), QStringLiteral("/usr/share/icons/hicolor/"),
+           QStringLiteral("/usr/share/icons/")};
+    for (const QString &root : recursivePaths) {
+        QProcess proc;
+        proc.start(QStringLiteral("find"),
+                   {root, QStringLiteral("-iname"), searchTerm, QStringLiteral("-print"), QStringLiteral("-quit")});
+        proc.waitForFinished();
+        const QString result = QString::fromLocal8Bit(proc.readAllStandardOutput()).trimmed();
+        if (!result.isEmpty()) {
+            return QIcon(result).pixmap(size);
+        }
     }
 
     return QPixmap();
@@ -247,26 +253,19 @@ QPixmap DockIconManager::findFilesystemIcon(const QString &iconName, const QSize
 
 QStringList DockIconManager::getIconSearchPaths()
 {
-    return {
-        QDir::homePath() + "/.local/share/icons/",
-        "/usr/share/pixmaps/",
-        "/usr/local/share/icons/",
-        "/usr/share/icons/hicolor/48x48/apps/"
-    };
+    return {QDir::homePath() + "/.local/share/icons/", "/usr/share/pixmaps/", "/usr/local/share/icons/",
+            "/usr/share/icons/hicolor/48x48/apps/"};
 }
 
 QString DockIconManager::generateIconStyle(const DockIconInfo &iconInfo, bool isSelected)
 {
-    QString style = QStringLiteral("background-color: %1; padding: %2px;")
-                   .arg(iconInfo.backgroundColor.name())
-                   .arg(ICON_PADDING);
+    QString style
+        = QStringLiteral("background-color: %1; padding: %2px;").arg(iconInfo.backgroundColor.name()).arg(ICON_PADDING);
 
     if (isSelected) {
         style += QStringLiteral("border: %1px dotted #0078d4;").arg(ICON_BORDER_WIDTH);
     } else {
-        style += QStringLiteral("border: %1px solid %2;")
-                   .arg(ICON_BORDER_WIDTH)
-                   .arg(iconInfo.borderColor.name());
+        style += QStringLiteral("border: %1px solid %2;").arg(ICON_BORDER_WIDTH).arg(iconInfo.borderColor.name());
     }
 
     return style;

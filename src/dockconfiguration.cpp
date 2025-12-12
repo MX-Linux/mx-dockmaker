@@ -30,19 +30,40 @@ DockConfiguration::DockConfiguration(QObject *parent)
 {
 }
 
-int DockConfiguration::addApplication(const DockIconInfo &iconInfo)
+int DockConfiguration::addApplication(const DockIconInfo &iconInfo, bool validate)
 {
-    if (!iconInfo.isValid()) {
+    if (validate && !iconInfo.isValid()) {
         return -1;
     }
 
     m_applications.append(iconInfo);
     m_modified = true;
-    
+
     emit applicationAdded(m_applications.size() - 1);
     emit configurationModified();
-    
+
     return m_applications.size() - 1;
+}
+
+bool DockConfiguration::insertApplication(int index, const DockIconInfo &iconInfo, bool validate)
+{
+    if (validate && !iconInfo.isValid()) {
+        return false;
+    }
+
+    // Clamp index to valid range [0, size()]
+    // Allowing index == size() for appending
+    if (index < 0 || index > m_applications.size()) {
+        return false;
+    }
+
+    m_applications.insert(index, iconInfo);
+    m_modified = true;
+
+    emit applicationAdded(index);
+    emit configurationModified();
+
+    return true;
 }
 
 bool DockConfiguration::removeApplication(int index)
@@ -53,10 +74,10 @@ bool DockConfiguration::removeApplication(int index)
 
     m_applications.removeAt(index);
     m_modified = true;
-    
+
     emit applicationRemoved(index);
     emit configurationModified();
-    
+
     return true;
 }
 
@@ -68,10 +89,10 @@ bool DockConfiguration::updateApplication(int index, const DockIconInfo &iconInf
 
     m_applications[index] = iconInfo;
     m_modified = true;
-    
+
     emit applicationUpdated(index);
     emit configurationModified();
-    
+
     return true;
 }
 
@@ -80,7 +101,7 @@ DockIconInfo DockConfiguration::getApplication(int index) const
     if (!isValidIndex(index)) {
         return DockIconInfo();
     }
-    
+
     return m_applications.at(index);
 }
 
@@ -114,10 +135,10 @@ bool DockConfiguration::moveApplication(int fromIndex, int toIndex)
     DockIconInfo info = m_applications.takeAt(fromIndex);
     m_applications.insert(toIndex, info);
     m_modified = true;
-    
+
     emit applicationsReordered();
     emit configurationModified();
-    
+
     return true;
 }
 
@@ -129,10 +150,10 @@ bool DockConfiguration::swapApplications(int index1, int index2)
 
     m_applications.swapItemsAt(index1, index2);
     m_modified = true;
-    
+
     emit applicationsReordered();
     emit configurationModified();
-    
+
     return true;
 }
 
@@ -181,13 +202,13 @@ QString DockConfiguration::getFileName() const
 void DockConfiguration::clear()
 {
     const bool wasEmpty = m_applications.isEmpty();
-    
+
     m_applications.clear();
     m_dockName.clear();
     m_slitLocation.clear();
     m_fileName.clear();
     m_modified = false;
-    
+
     if (!wasEmpty) {
         emit configurationModified();
     }
@@ -219,11 +240,11 @@ QList<QStringList> DockConfiguration::toLegacyFormat() const
 {
     QList<QStringList> legacyData;
     legacyData.reserve(m_applications.size());
-    
+
     for (const auto &app : m_applications) {
         legacyData.append(app.toStringList());
     }
-    
+
     return legacyData;
 }
 
@@ -231,14 +252,14 @@ void DockConfiguration::fromLegacyFormat(const QList<QStringList> &legacyData)
 {
     clear();
     m_applications.reserve(legacyData.size());
-    
+
     for (const auto &appData : legacyData) {
         DockIconInfo info = DockIconInfo::fromStringList(appData);
         if (info.isValid()) {
             m_applications.append(info);
         }
     }
-    
+
     if (!m_applications.isEmpty()) {
         m_modified = true;
         emit configurationModified();

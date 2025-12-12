@@ -30,10 +30,11 @@
 #include <QWidget>
 
 IconDragDropHandler::IconDragDropHandler(QObject *parent)
-    : QObject(parent)
-    , m_dragging(false)
-    , m_dragStartIndex(-1)
-    , m_dragIndicator(nullptr)
+    : QObject(parent),
+      m_dragging(false),
+      m_dragStartIndex(-1),
+      m_parentWidget(nullptr),
+      m_dragIndicator(nullptr)
 {
 }
 
@@ -49,8 +50,7 @@ void IconDragDropHandler::setIconLabels(const QList<QLabel *> &iconLabels)
     createInsertionIndicators();
 }
 
-int IconDragDropHandler::handleMousePress(QMouseEvent *event, QWidget *clickedWidget, 
-                                       const QList<QLabel *> &iconLabels)
+int IconDragDropHandler::handleMousePress(QMouseEvent *event, QWidget *clickedWidget, const QList<QLabel *> &iconLabels)
 {
     if (!clickedWidget || event->button() != Qt::LeftButton) {
         return -1;
@@ -80,27 +80,29 @@ int IconDragDropHandler::handleMousePress(QMouseEvent *event, QWidget *clickedWi
 
 bool IconDragDropHandler::handleMouseMove(QMouseEvent *event, QWidget *parentWidget)
 {
-    if (m_dragStartIndex < 0 || m_dragging) {
-        return m_dragging;
+    if (m_dragStartIndex < 0) {
+        return false;
     }
 
-    // Check if we've moved enough to start dragging
-    QPoint delta = event->pos() - m_dragStartPos;
-    if (delta.manhattanLength() > QApplication::startDragDistance()) {
-        m_dragging = true;
-        emit dragStarted(m_dragStartIndex);
+    if (!m_dragging) {
+        // Check if we've moved enough to start dragging
+        QPoint delta = event->pos() - m_dragStartPos;
+        if (delta.manhattanLength() > QApplication::startDragDistance()) {
+            m_dragging = true;
+            m_parentWidget = parentWidget;
+            emit dragStarted(m_dragStartIndex);
 
-        if (m_dragStartIndex < m_iconLabels.size()) {
-            QLabel *sourceIcon = m_iconLabels.at(m_dragStartIndex);
-            createDragIndicator(sourceIcon, parentWidget);
-            createInsertionIndicators();
+            if (m_dragStartIndex < m_iconLabels.size()) {
+                QLabel *sourceIcon = m_iconLabels.at(m_dragStartIndex);
+                createDragIndicator(sourceIcon, parentWidget);
+                createInsertionIndicators();
+            }
         }
     }
 
     // Update drag indicator position and insertion indicators
     if (m_dragging && m_dragIndicator) {
-        m_dragIndicator->move(event->pos() - QPoint(m_dragIndicator->width() / 2, 
-                                                   m_dragIndicator->height() / 2));
+        m_dragIndicator->move(event->pos() - QPoint(m_dragIndicator->width() / 2, m_dragIndicator->height() / 2));
         updateInsertionIndicators(event->pos());
     }
 
@@ -123,7 +125,7 @@ int IconDragDropHandler::handleMouseRelease(QMouseEvent *event)
             // Dropping after last item
             targetIndex = m_iconLabels.size() - 1;
         } else if (targetIndex > m_dragStartIndex) {
-            targetIndex--;  // Account for the removed item
+            targetIndex--; // Account for the removed item
         }
 
         // Ensure targetIndex is within bounds
@@ -137,6 +139,7 @@ int IconDragDropHandler::handleMouseRelease(QMouseEvent *event)
     cleanupInsertionIndicators();
     m_dragging = false;
     m_dragStartIndex = -1;
+    m_parentWidget = nullptr;
 
     return targetIndex;
 }
@@ -144,7 +147,7 @@ int IconDragDropHandler::handleMouseRelease(QMouseEvent *event)
 void IconDragDropHandler::handleResizeEvent(QResizeEvent *event)
 {
     Q_UNUSED(event)
-    
+
     // Reposition insertion indicators when window is resized
     if (!m_insertionIndicators.isEmpty()) {
         positionInsertionIndicators();
@@ -178,6 +181,7 @@ void IconDragDropHandler::cleanup()
     m_dragging = false;
     m_dragStartIndex = -1;
     m_dragStartPos = QPoint();
+    m_parentWidget = nullptr;
 }
 
 void IconDragDropHandler::createInsertionIndicators()
@@ -185,7 +189,7 @@ void IconDragDropHandler::createInsertionIndicators()
     // Clear any existing indicators
     cleanupInsertionIndicators();
 
-    if (m_iconLabels.isEmpty()) {
+    if (m_iconLabels.isEmpty() || !m_parentWidget) {
         return;
     }
 
@@ -196,7 +200,7 @@ void IconDragDropHandler::createInsertionIndicators()
     int numIndicators = m_iconLabels.size() + 1;
 
     for (int i = 0; i < numIndicators; ++i) {
-        QLabel *indicator = new QLabel();
+        QLabel *indicator = new QLabel(m_parentWidget);
         indicator->setFixedSize(iconSize);
         indicator->setStyleSheet("background: rgba(0, 120, 212, 180); border: 2px solid #0078d4; border-radius: 4px;");
         indicator->setAttribute(Qt::WA_TransparentForMouseEvents);
@@ -210,7 +214,7 @@ void IconDragDropHandler::createInsertionIndicators()
 
 void IconDragDropHandler::positionInsertionIndicators()
 {
-    if (m_iconLabels.isEmpty() || m_insertionIndicators.size() != m_iconLabels.size() + 1) {
+    if (m_iconLabels.isEmpty() || m_insertionIndicators.size() != m_iconLabels.size() + 1 || !m_parentWidget) {
         return;
     }
 
@@ -222,63 +226,66 @@ void IconDragDropHandler::positionInsertionIndicators()
             // Before first icon
             if (!m_iconLabels.isEmpty()) {
                 QLabel *firstIcon = m_iconLabels.first();
-                QPoint iconPos = firstIcon->mapTo(firstIcon->parentWidget(), QPoint(0, 0));
+                QPoint iconPos = firstIcon->mapTo(m_parentWidget, QPoint(0, 0));
                 int centerY = iconPos.y() + firstIcon->height() / 2 - indicator->height() / 2;
                 QPoint pos(iconPos.x() - indicator->width() - 5, centerY);
                 indicator->move(pos);
-                indicator->setParent(firstIcon->parentWidget());
             }
         } else if (i == m_insertionIndicators.size() - 1) {
             // After last icon
             if (!m_iconLabels.isEmpty()) {
                 QLabel *lastIcon = m_iconLabels.last();
-                QPoint iconPos = lastIcon->mapTo(lastIcon->parentWidget(), QPoint(lastIcon->width(), 0));
+                QPoint iconPos = lastIcon->mapTo(m_parentWidget, QPoint(lastIcon->width(), 0));
                 int centerY = iconPos.y() + lastIcon->height() / 2 - indicator->height() / 2;
                 QPoint pos(iconPos.x() + 5, centerY);
                 indicator->move(pos);
-                indicator->setParent(lastIcon->parentWidget());
             }
         } else {
             // Between icons i-1 and i
             if (i - 1 < m_iconLabels.size() && i < m_iconLabels.size()) {
                 QLabel *leftIcon = m_iconLabels.at(i - 1);
                 QLabel *rightIcon = m_iconLabels.at(i);
-                QPoint leftPos = leftIcon->mapTo(leftIcon->parentWidget(), QPoint(leftIcon->width(), 0));
-                QPoint rightPos = rightIcon->mapTo(rightIcon->parentWidget(), QPoint(0, 0));
+                QPoint leftPos = leftIcon->mapTo(m_parentWidget, QPoint(leftIcon->width(), 0));
+                QPoint rightPos = rightIcon->mapTo(m_parentWidget, QPoint(0, 0));
                 int centerX = (leftPos.x() + rightPos.x()) / 2;
                 int centerY = leftPos.y() + leftIcon->height() / 2 - indicator->height() / 2;
                 QPoint pos(centerX - indicator->width() / 2, centerY);
                 indicator->move(pos);
-                indicator->setParent(leftIcon->parentWidget());
             }
         }
     }
 }
 
-void IconDragDropHandler::updateInsertionIndicators(const QPoint &mousePos)
+void IconDragDropHandler::updateInsertionIndicators(QPoint mousePos)
 {
     if (m_insertionIndicators.isEmpty()) {
         return;
     }
 
     // Hide all indicators first
-    for (QLabel *indicator : m_insertionIndicators) {
-        indicator->hide();
+    for (int i = 0; i < m_insertionIndicators.size(); ++i) {
+        m_insertionIndicators.at(i)->hide();
     }
 
     // Find which insertion point is closest to the mouse
-    int closestIndex = findClosestInsertionPoint(mousePos);
+    int closestIndex = -1;
+    int minDistance = INT_MAX;
 
-    // Show only the closest indicator if it's within a reasonable distance
-    if (closestIndex >= 0) {
-        QLabel *indicator = m_insertionIndicators.at(closestIndex);
+    for (int i = 0; i < m_insertionIndicators.size(); ++i) {
+        QLabel *indicator = m_insertionIndicators.at(i);
         QPoint indicatorPos = indicator->pos() + QPoint(indicator->width() / 2, indicator->height() / 2);
         int distance = QPoint(mousePos - indicatorPos).manhattanLength();
 
-        if (distance < DROP_THRESHOLD) {
-            indicator->show();
-            indicator->raise();
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestIndex = i;
         }
+    }
+
+    // Show only the closest indicator if it's within a reasonable distance
+    if (closestIndex >= 0 && minDistance < DROP_THRESHOLD) {
+        m_insertionIndicators.at(closestIndex)->show();
+        m_insertionIndicators.at(closestIndex)->raise();
     }
 }
 
@@ -316,8 +323,9 @@ int IconDragDropHandler::findClosestInsertionPoint(const QPoint &mousePos)
 
     for (int i = 0; i < m_insertionIndicators.size(); ++i) {
         QLabel *indicator = m_insertionIndicators.at(i);
-        QPoint indicatorPos = indicator->pos() + QPoint(indicator->width() / 2, indicator->height() / 2);
-        int distance = QPoint(mousePos - indicatorPos).manhattanLength();
+        QRect indicatorRect = indicator->geometry();
+        QPoint center = indicatorRect.center();
+        int distance = QPoint(mousePos - center).manhattanLength();
 
         if (distance < minDistance) {
             minDistance = distance;

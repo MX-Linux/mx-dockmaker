@@ -32,24 +32,14 @@
 #include <QTextStream>
 
 // Static constants
-const QStringList DockFileParser::POSSIBLE_LOCATIONS({
-    "TopLeft", "TopCenter", "TopRight", "LeftTop", "RightTop", "LeftCenter",
-    "RightCenter", "LeftBottom", "RightBottom", "BottomLeft", "BottomCenter",
-    "BottomRight"
-});
+const QStringList DockFileParser::POSSIBLE_LOCATIONS({"TopLeft", "TopCenter", "TopRight", "LeftTop", "RightTop",
+                                                      "LeftCenter", "RightCenter", "LeftBottom", "RightBottom",
+                                                      "BottomLeft", "BottomCenter", "BottomRight"});
 
-const QSet<QString> DockFileParser::KNOWN_OPTIONS({
-    "-d", "--desktop-file",
-    "-c", "--command",
-    "-i", "--icon",
-    "-k", "--background-color",
-    "-K", "--hover-background-color",
-    "-b", "--border-color",
-    "-B", "--hover-border-color",
-    "-w", "--window-size",
-    "--tooltip-text",
-    "-x", "--exit-on-right-click"
-});
+const QSet<QString> DockFileParser::KNOWN_OPTIONS({"-d", "--desktop-file", "-c", "--command", "-i", "--icon", "-k",
+                                                   "--background-color", "-K", "--hover-background-color", "-b",
+                                                   "--border-color", "-B", "--hover-border-color", "-w",
+                                                   "--window-size", "--tooltip-text", "-x", "--exit-on-right-click"});
 
 DockFileParser::DockFileParser(QObject *parent)
     : QObject(parent)
@@ -92,15 +82,15 @@ bool DockFileParser::parseContent(const QString &content, DockConfiguration &con
     }
 
     QStringList lines = content.split('\n', Qt::SkipEmptyParts);
-    
+
     for (const QString &line : lines) {
         QString trimmedLine = line.trimmed();
-        
+
         if (trimmedLine.startsWith(QLatin1String("sed -i"))) {
             // This is a slit relocation command, already handled above
             continue;
         }
-        
+
         if (trimmedLine.startsWith(QLatin1String("wmalauncher"))) {
             DockIconInfo iconInfo = parseWmalauncherLine(trimmedLine);
             if (iconInfo.isValid()) {
@@ -131,16 +121,16 @@ QString DockFileParser::extractDockName(const QString &fileName)
 {
     QFileInfo fileInfo(fileName);
     QString baseName = fileInfo.baseName();
-    
+
     // Try to extract name from submenus file
     QFile submenusFile(QDir::homePath() + "/.fluxbox/submenus/appearance");
     if (submenusFile.open(QFile::Text | QFile::ReadOnly)) {
         QString content = submenusFile.readAll();
         submenusFile.close();
-        
+
         QRegularExpression fileRe(".*" + baseName + ".*");
         QRegularExpression nameRe("\\((.*)\\)");
-        
+
         QRegularExpressionMatch fileMatch = fileRe.match(content);
         if (fileMatch.hasMatch()) {
             QString matchedText = fileMatch.captured();
@@ -153,7 +143,7 @@ QString DockFileParser::extractDockName(const QString &fileName)
             }
         }
     }
-    
+
     // Fallback to user input
     return QString();
 }
@@ -161,23 +151,23 @@ QString DockFileParser::extractDockName(const QString &fileName)
 bool DockFileParser::validateFile(const QString &filePath)
 {
     clearLastError();
-    
+
     QFileInfo fileInfo(filePath);
     if (!fileInfo.exists()) {
         setLastError(tr("File does not exist: %1").arg(filePath));
         return false;
     }
-    
+
     if (!fileInfo.isReadable()) {
         setLastError(tr("File is not readable: %1").arg(filePath));
         return false;
     }
-    
+
     if (!filePath.endsWith(QLatin1String(".mxdk"))) {
         setLastError(tr("File does not have .mxdk extension: %1").arg(filePath));
         return false;
     }
-    
+
     // Try to parse the file
     QFile testFile(filePath);
     if (!testFile.open(QFile::Text | QFile::ReadOnly)) {
@@ -186,7 +176,7 @@ bool DockFileParser::validateFile(const QString &filePath)
     }
     QString content = testFile.readAll();
     testFile.close();
-    
+
     DockConfiguration testConfig;
     return parseContent(content, testConfig);
 }
@@ -199,28 +189,28 @@ QString DockFileParser::getLastError() const
 DockIconInfo DockFileParser::parseWmalauncherLine(const QString &line)
 {
     DockIconInfo info;
-    
+
     QString cleanLine = line;
     cleanLine.remove(QRegularExpression(QStringLiteral("^wmalauncher")));
     cleanLine.remove(QRegularExpression(QStringLiteral("\\s*&(?:\\s*sleep.*)?$")));
-    
+
     QRegularExpression tokenRe(QStringLiteral(R"((\"[^\"]*\"|'[^']*'|\S+))"));
     auto matchIt = tokenRe.globalMatch(cleanLine);
-    
+
     QStringList tokens;
     while (matchIt.hasNext()) {
         tokens << matchIt.next().captured(0);
     }
-    
+
     for (int i = 0; i < tokens.size(); ++i) {
         const QString token = tokens.at(i);
-        
+
         auto nextValue = [&](QString *out) {
             if (i + 1 < tokens.size()) {
                 *out = stripQuotes(tokens.at(++i));
             }
         };
-        
+
         if (token == QLatin1String("-d") || token == QLatin1String("--desktop-file")) {
             QString value;
             nextValue(&value);
@@ -271,7 +261,7 @@ DockIconInfo DockFileParser::parseWmalauncherLine(const QString &line)
             QString size;
             nextValue(&size);
             if (!size.isEmpty()) {
-                info.size = size;
+                info.size = size + QLatin1Char('x') + size;
             }
         } else if (token == QLatin1String("--tooltip-text")) {
             QString tooltip;
@@ -292,7 +282,7 @@ DockIconInfo DockFileParser::parseWmalauncherLine(const QString &line)
                     ++i;
                 }
             }
-            
+
             if (!info.extraOptions.isEmpty()) {
                 info.extraOptions += QLatin1Char(' ');
             }
@@ -302,15 +292,15 @@ DockIconInfo DockFileParser::parseWmalauncherLine(const QString &line)
             }
         }
     }
-    
+
     return info;
 }
 
 QString DockFileParser::stripQuotes(const QString &value)
 {
     if (value.size() >= 2) {
-        if ((value.startsWith(QLatin1Char('"')) && value.endsWith(QLatin1Char('"'))) ||
-            (value.startsWith(QLatin1Char('\'')) && value.endsWith(QLatin1Char('\'')))) {
+        if ((value.startsWith(QLatin1Char('"')) && value.endsWith(QLatin1Char('"')))
+            || (value.startsWith(QLatin1Char('\'')) && value.endsWith(QLatin1Char('\'')))) {
             return value.mid(1, value.size() - 2);
         }
     }

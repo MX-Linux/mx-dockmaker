@@ -28,100 +28,58 @@
 #include <QSize>
 #include <QString>
 
-/**
- * @brief Structure containing all information for a single dock icon
- */
-struct DockIconInfo
-{
+struct DockIconInfo {
     // Application information
-    QString appName;           ///< Name of the application or .desktop file
-    QString command;           ///< Command to execute
-    QString tooltip;           ///< Tooltip text to display
-    QString customIcon;        ///< Custom icon path (empty if using theme icon)
+    QString appName;    ///< Name of the application or .desktop file
+    QString command;    ///< Command to execute
+    QString customIcon; ///< Custom icon path (empty if using theme icon)
+    QString tooltip;    ///< Tooltip text to display
 
     // Visual properties
-    QString size;              ///< Icon size (e.g., "48x48")
-    QColor backgroundColor;    ///< Normal background color
-    QColor hoverBackground;   ///< Hover background color
-    QColor borderColor;        ///< Normal border color
-    QColor hoverBorder;        ///< Hover border color
+    QColor backgroundColor = Qt::black;     ///< Normal background color
+    QColor borderColor = Qt::white;         ///< Normal border color
+    QColor hoverBackground = Qt::black;     ///< Hover background color
+    QColor hoverBorder = Qt::white;         ///< Hover border color
+    QString size = QStringLiteral("48x48"); ///< Icon size (e.g., "48x48")
 
     // Additional options
-    QString extraOptions;      ///< Additional command-line options
+    QString extraOptions; ///< Additional command-line options
 
-    /**
-     * @brief Default constructor
-     */
     DockIconInfo() = default;
-
-    /**
-     * @brief Constructor with essential parameters
-     * @param app Application name or .desktop file
-     * @param cmd Command to execute
-     */
     DockIconInfo(const QString &app, const QString &cmd)
-        : appName(app)
-        , command(cmd)
-        , size("48x48")
-        , backgroundColor(Qt::black)
-        , hoverBackground(Qt::black)
-        , borderColor(Qt::white)
-        , hoverBorder(Qt::white)
-    {}
-
-    /**
-     * @brief Check if this is a desktop file application
-     * @return true if appName ends with .desktop
-     */
+        : appName(app),
+          command(cmd)
+    {
+    }
     bool isDesktopFile() const
     {
         return appName.endsWith(QLatin1String(".desktop"));
     }
-
-    /**
-     * @brief Check if the icon info is valid (has required fields)
-     * @return true if required fields are not empty
-     */
     bool isValid() const
     {
-        return !appName.isEmpty() && (!isDesktopFile() || !command.isEmpty());
+        if (isDesktopFile()) {
+            return !appName.isEmpty();
+        }
+        return !command.isEmpty();
     }
-
-    /**
-     * @brief Get the icon size as QSize
-     * @return QSize object representing the icon size
-     */
     QSize iconSize() const
     {
         const quint8 width = size.section(QLatin1Char('x'), 0, 0).toUShort();
         return QSize(width, width);
     }
-
-    /**
-     * @brief Convert to string list for legacy compatibility
-     * @return String list with all fields in order
-     */
     QStringList toStringList() const
     {
-        return {
-            appName,
-            command,
-            tooltip,
-            customIcon,
-            size,
-            backgroundColor.name(),
-            hoverBackground.name(),
-            borderColor.name(),
-            hoverBorder.name(),
-            extraOptions
-        };
+        return {appName,
+                command,
+                tooltip,
+                customIcon,
+                size,
+                backgroundColor.name(),
+                hoverBackground.name(),
+                borderColor.name(),
+                hoverBorder.name(),
+                extraOptions};
     }
-
-    /**
-     * @brief Create from string list for legacy compatibility
-     * @param list String list with all fields in order
-     * @return DockIconInfo object
-     */
     static DockIconInfo fromStringList(const QStringList &list)
     {
         DockIconInfo info;
@@ -140,4 +98,3 @@ struct DockIconInfo
         return info;
     }
 };
-

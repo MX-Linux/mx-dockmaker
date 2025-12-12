@@ -30,6 +30,7 @@ BUILD_TYPE="Release"
 USE_CLANG=false
 CLEAN=false
 DEBIAN_BUILD=false
+RUN_TESTS=false
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -50,6 +51,10 @@ while [[ $# -gt 0 ]]; do
             DEBIAN_BUILD=true
             shift
             ;;
+        --test)
+            RUN_TESTS=true
+            shift
+            ;;
         -h|--help)
             echo "Usage: $0 [OPTIONS]"
             echo "Options:"
@@ -57,6 +62,7 @@ while [[ $# -gt 0 ]]; do
             echo "  -c, --clang     Use clang compiler"
             echo "  --clean         Clean build directory before building"
             echo "  --debian        Build Debian package"
+            echo "  --test          Enable tests and run ctest after build"
             echo "  -h, --help      Show this help message"
             exit 0
             ;;
@@ -119,12 +125,20 @@ if [ "$USE_CLANG" = true ]; then
     CMAKE_ARGS+=(-DUSE_CLANG=ON)
     echo "Using clang compiler"
 fi
+if [ "$RUN_TESTS" = true ]; then
+    CMAKE_ARGS+=(-DENABLE_TESTS=ON)
+fi
 
 cmake "${CMAKE_ARGS[@]}"
 
 # Build the project
 echo "Building project with Ninja..."
 cmake --build "$BUILD_DIR" --parallel
+
+if [ "$RUN_TESTS" = true ]; then
+    echo "Running tests..."
+    (cd "$BUILD_DIR" && QT_QPA_PLATFORM=offscreen ctest --output-on-failure)
+fi
 
 echo "Build completed successfully!"
 echo "Executable: $BUILD_DIR/mx-dockmaker"

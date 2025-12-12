@@ -1,7 +1,7 @@
 /**********************************************************************
  *  mainwindow.cpp
  **********************************************************************
- * Copyright (C) 2020 MX Authors
+ * Copyright (C) 2020-2025 MX Authors
  *
  * Authors: Adrian
  *          MX Linux <http://mxlinux.org>
@@ -28,7 +28,6 @@
 #include <QInputDialog>
 #include <QProcess>
 #include <QRegularExpression>
-#include <QSet>
 #include <QTimer>
 
 #include "about.h"
@@ -37,8 +36,6 @@
 #ifndef VERSION
 #define VERSION "?.?.?.?"
 #endif
-#include "cmd.h"
-#include <sys/stat.h>
 
 namespace
 {
@@ -85,6 +82,9 @@ MainWindow::MainWindow(QWidget *parent, const QString &file)
 
     // Connect signals from new architecture
     connect(m_configuration, &DockConfiguration::configurationModified, this, [this]() {
+        if (parsing) {
+            return;
+        }
         changed = true;
         checkDoneEditing();
     });
@@ -94,119 +94,86 @@ MainWindow::MainWindow(QWidget *parent, const QString &file)
 
 MainWindow::~MainWindow()
 {
-    cmd.close();
     delete ui;
 }
 
-bool MainWindow::isDockInMenu(const QString &file_name) const
+void MainWindow::renderIconAt(int location)
 {
-    if (dock_name.isEmpty()) {
-        return false;
+    if (location < 0 || location >= m_configuration->getApplicationCount()) {
+        return;
     }
-    return getDockName(file_name) == dock_name;
+
+    while (listIcons.size() <= location) {
+        auto *label = new QLabel(this);
+        listIcons.append(label);
+        ui->icons->addWidget(label);
+    }
+
+    DockIconInfo iconInfo = m_configuration->getApplication(location);
+    m_iconManager->displayIcon(iconInfo, listIcons.at(location), index, location);
+
+    // Ensure tooltips use the standard styling
+    listIcons.at(location)->installEventFilter(this);
+    syncDragHandler();
 }
 
-void MainWindow::displayIcon(const QString &app_name, int location, const QString &custom_icon)
+void MainWindow::renderIconsFromConfiguration()
 {
-    QString icon;
-    if (!custom_icon.isEmpty()) {
-        // Use the provided custom icon
-        icon = custom_icon;
-    } else if (app_name.endsWith(QLatin1String(".desktop"))) {
-        QFile file("/usr/share/applications/" + app_name);
-        if (file.open(QFile::ReadOnly)) {
-            QString text = file.readAll();
-            file.close();
-            QRegularExpression re(QStringLiteral("^Icon=(.*)$"), QRegularExpression::MultilineOption);
-            auto match = re.match(text);
-            if (match.hasMatch()) {
-                icon = match.captured(1);
-            } else {
-                qDebug() << "Could not find icon in file " << file.fileName();
-            }
-        } else {
-            qDebug() << "Could not open file " << file.fileName();
-        }
-    } else {
-        icon = ui->buttonSelectIcon->text();
+    // Clear existing icons
+    for (QLabel *icon : listIcons) {
+        delete icon;
     }
-    QString sizeText = ui->comboSize->currentText();
-    if (location < m_configuration->getApplicationCount()) {
-        DockIconInfo info = m_configuration->getApplication(location);
-        if (!info.size.isEmpty()) {
-            sizeText = info.size;
+    listIcons.clear();
+
+    if (ui->icons->layout()) {
+        QLayoutItem *item;
+        while ((item = ui->icons->layout()->takeAt(0)) != nullptr) {
+            delete item->widget();
+            delete item;
         }
     }
 
-    const quint8 width = sizeText.section(QStringLiteral("x"), 0, 0).toUShort();
-    const QSize iconSize(width, width);
-    const QSize containerSize = iconContainerSize(iconSize);
-    const QPixmap pix = m_iconManager->findIcon(icon, iconSize).scaled(iconSize);
-    if (location == list_icons.size()) {
-        list_icons << new QLabel(this);
-        ui->icons->addWidget(list_icons.constLast());
+    const int appCount = m_configuration->getApplicationCount();
+    for (int i = 0; i < appCount; ++i) {
+        renderIconAt(i);
     }
-    list_icons.at(location)->setPixmap(pix);
-    list_icons.at(location)->setAlignment(Qt::AlignCenter);
-    list_icons.at(location)->setFixedSize(containerSize);
-    list_icons.at(location)->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    list_icons.at(location)->setStyleSheet(
-        "background-color: " + ui->widgetBackground->palette().color(QWidget::backgroundRole()).name()
-        + ";padding: " + QString::number(kIconPadding) + "px;border: " + QString::number(kIconBorderWidth) + "px solid "
-        + ui->widgetBorder->palette().color(QWidget::backgroundRole()).name() + ";");
 
-    // Set tooltip for the icon
-    if (location < m_configuration->getApplicationCount()) {
-        DockIconInfo iconInfo = m_configuration->getApplication(location);
-        QString tooltip = iconInfo.tooltip;
-        if (!tooltip.isEmpty()) {
-            // Store tooltip in a custom property for event filtering
-            list_icons.at(location)->setProperty("icon_tooltip", tooltip);
-            // Install event filter to handle tooltips with standard styling
-            list_icons.at(location)->installEventFilter(this);
-        } else {
-            list_icons.at(location)->setProperty("icon_tooltip", QString());
-        }
+    syncDragHandler();
+}
+
+void MainWindow::syncDragHandler()
+{
+    if (m_dragDropHandler) {
+        m_dragDropHandler->setIconLabels(listIcons);
     }
 }
 
 void MainWindow::applyIconStyles(int selectedIndex)
 {
-    if (list_icons.isEmpty() || m_configuration->isEmpty()) {
+    if (listIcons.isEmpty() || m_configuration->isEmpty()) {
         return;
     }
 
-    const bool hasSelection = selectedIndex >= 0 && selectedIndex < list_icons.size();
-
-    for (int i = 0; i < list_icons.size() && i < m_configuration->getApplicationCount(); ++i) {
+    for (int i = 0; i < listIcons.size() && i < m_configuration->getApplicationCount(); ++i) {
         DockIconInfo iconInfo = m_configuration->getApplication(i);
-        QString bgColor = iconInfo.backgroundColor.name();
-        QString borderColor = iconInfo.borderColor.name();
-
-        bgColor.remove(QRegularExpression(";.*"));
-        borderColor.remove(QRegularExpression(";.*"));
-
-        QString style = QStringLiteral("background-color: %1; padding: %2px;").arg(bgColor).arg(kIconPadding);
-        if (hasSelection && i == selectedIndex) {
-            style += QStringLiteral("border: %1px dotted #0078d4;").arg(kIconBorderWidth);
-        } else {
-            style += QStringLiteral("border: %1px solid %2;").arg(kIconBorderWidth).arg(borderColor);
-        }
-        list_icons.at(i)->setStyleSheet(style);
+        const bool isSelected = selectedIndex >= 0 && selectedIndex == i;
+        m_iconManager->applyIconStyle(iconInfo, listIcons.at(i), isSelected);
     }
 }
 
 bool MainWindow::checkDoneEditing()
 {
-    if (!m_configuration->isEmpty()) {
-        ui->buttonDelete->setEnabled(true);
-    }
+    const bool hasSelection = ui->buttonSelectApp->text() != tr("Select...") || !ui->lineEditCommand->text().isEmpty();
 
-    if (ui->buttonSelectApp->text() != tr("Select...") || !ui->lineEditCommand->text().isEmpty()) {
-        if (changed) {
-            ui->buttonSave->setEnabled(true);
-        }
-        ui->buttonAdd->setEnabled(true);
+    // Save only becomes active after a user change
+    ui->buttonSave->setEnabled(changed && hasSelection);
+
+    const bool hasApps = !m_configuration->isEmpty();
+    ui->buttonDelete->setEnabled(hasApps);
+
+    ui->buttonAdd->setEnabled(true); // Always allow adding a new entry, even when empty
+
+    if (hasSelection) {
         if (index != 0) {
             ui->buttonPrev->setEnabled(true);
         }
@@ -214,52 +181,30 @@ bool MainWindow::checkDoneEditing()
             ui->buttonNext->setEnabled(true);
         }
         return true;
-    } else {
-        ui->buttonSave->setEnabled(false);
-        ui->buttonPrev->setEnabled(false);
-        ui->buttonNext->setEnabled(false);
-        ui->buttonAdd->setEnabled(false);
-        return false;
     }
+
+    ui->buttonSave->setEnabled(false);
+    ui->buttonPrev->setEnabled(false);
+    ui->buttonNext->setEnabled(false);
+    return false;
 }
 
 // setup various items first time program runs
 void MainWindow::setup(const QString &file)
 {
     // Clean up any drag and drop state
-    if (dragIndicator) {
-        delete dragIndicator;
-        dragIndicator = nullptr;
+    if (m_dragDropHandler) {
+        m_dragDropHandler->cleanup();
     }
-    for (QLabel *indicator : insertionIndicators) {
-        delete indicator;
-    }
-    insertionIndicators.clear();
-    dragging = false;
-    dragStartIndex = -1;
 
-    // Clear existing icons to ensure clean state
-    for (QLabel *icon : list_icons) {
-        if (icon) {
-            delete icon;
-        }
-    }
-    list_icons.clear();
-    m_configuration->clearApplications();
+    m_configuration->clear();
+    renderIconsFromConfiguration();
     index = 0;
     parsing = false;
-
-    // Clear the icons layout
-    QLayout *layout = ui->icons->layout();
-    if (layout) {
-        QLayoutItem *item;
-        while ((item = layout->takeAt(0)) != nullptr) {
-            delete item->widget();
-            delete item;
-        }
-    }
+    changed = false;
 
     changed = false;
+    ui->buttonSave->setEnabled(false);
     this->setWindowTitle(QStringLiteral("MX Dockmaker"));
     ui->labelUsage->setText(tr("1. Add applications to the dock one at a time\n"
                                "2. Select a .desktop file or enter a command for the application you want\n"
@@ -269,12 +214,7 @@ void MainWindow::setup(const QString &file)
 
     blockComboSignals(true);
 
-    while (ui->icons->layout()->count() > 0) {
-        delete ui->icons->layout()->itemAt(0)->widget();
-    }
-
     ui->comboSize->setCurrentIndex(ui->comboSize->findText(QStringLiteral("48x48")));
-    file_content.clear();
 
     // Write configs if not there
     settings.setValue(QStringLiteral("BackgroundColor"),
@@ -292,6 +232,7 @@ void MainWindow::setup(const QString &file)
     setColor(ui->widgetHoverBorder, settings.value("FrameHoverColor").toString());
 
     blockComboSignals(false);
+    ui->buttonSave->setEnabled(false);
 
     if (!file.isEmpty() && QFile::exists(file)) {
         editDock(file);
@@ -332,45 +273,6 @@ void MainWindow::setup(const QString &file)
     delete mbox;
 }
 
-// Find icon file by name
-    // This method is now handled by DockIconManager class
-
-[[nodiscard]] QString MainWindow::getDockName(const QString &file_name)
-{
-    const QRegularExpression re_file(".*" + QFileInfo(file_name).fileName());
-    const QRegularExpression re_name(QStringLiteral("\\(.*\\)"));
-
-    // check if dock name is in /usr/share...
-    QFile file(QStringLiteral("/usr/share/mxflux/menu/appearance"));
-
-    if (file.open(QFile::Text | QFile::ReadOnly)) {
-        QString text = file.readAll();
-        file.close();
-
-        text = re_file.match(text).captured();
-        QString name = re_name.match(text).captured().mid(1);
-        name.chop(1);
-        if (!name.isEmpty()) {
-            return name;
-        }
-    }
-
-    // find dock name in submenus file
-    file.setFileName(QDir::homePath() + "/.fluxbox/submenus/appearance");
-
-    if (!file.open(QFile::Text | QFile::ReadOnly)) {
-        return {};
-    }
-    QString text = file.readAll();
-    file.close();
-
-    text = re_file.match(text).captured();
-
-    QString name = re_name.match(text).captured().mid(1);
-    name.chop(1);
-    return name;
-}
-
 [[nodiscard]] QString MainWindow::inputDockName()
 {
     bool ok = false;
@@ -397,13 +299,9 @@ void MainWindow::allItemsChanged()
         const quint8 width = ui->comboSize->currentText().section(QStringLiteral("x"), 0, 0).toUShort();
         const QSize size(width, width);
         const QSize containerSize = iconContainerSize(size);
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-        list_icons.at(i)->setPixmap(list_icons.at(i)->pixmap()->scaled(size));
-#else
-        list_icons.at(i)->setPixmap(list_icons.at(i)->pixmap(Qt::ReturnByValue).scaled(size));
-#endif
-        list_icons.at(i)->setAlignment(Qt::AlignCenter);
-        list_icons.at(i)->setFixedSize(containerSize);
+        listIcons.at(i)->setPixmap(listIcons.at(i)->pixmap(Qt::ReturnByValue).scaled(size));
+        listIcons.at(i)->setAlignment(Qt::AlignCenter);
+        listIcons.at(i)->setFixedSize(containerSize);
     }
     applyIconStyles(index);
     checkDoneEditing();
@@ -411,117 +309,9 @@ void MainWindow::allItemsChanged()
 
 QString MainWindow::pickSlitLocation()
 {
-    auto *const pick = new PickLocation(slit_location, this);
+    auto *const pick = new PickLocation(slitLocation, this);
     pick->exec();
     return pick->button;
-}
-
-void MainWindow::createInsertionIndicators()
-{
-    // Clear any existing indicators
-    for (QLabel *indicator : insertionIndicators) {
-        delete indicator;
-    }
-    insertionIndicators.clear();
-
-    if (list_icons.isEmpty()) {
-        return;
-    }
-
-    // Get icon size from the first icon
-    QSize iconSize = list_icons.first()->size();
-
-    // Create insertion points: before first, between each pair, and after last
-    int numIndicators = list_icons.size() + 1;
-
-    for (int i = 0; i < numIndicators; ++i) {
-        QLabel *indicator = new QLabel(this);
-        indicator->setFixedSize(iconSize);
-        indicator->setStyleSheet("background: rgba(0, 120, 212, 180); border: 2px solid #0078d4; border-radius: 4px;");
-        indicator->setAttribute(Qt::WA_TransparentForMouseEvents);
-        indicator->hide(); // Initially hidden
-        insertionIndicators.append(indicator);
-    }
-
-    // Position the indicators
-    positionInsertionIndicators();
-}
-
-void MainWindow::positionInsertionIndicators()
-{
-    if (list_icons.isEmpty() || insertionIndicators.size() != list_icons.size() + 1) {
-        return;
-    }
-
-    // Position indicators: before first icon, between icons, and after last icon
-    for (int i = 0; i < insertionIndicators.size(); ++i) {
-        QLabel *indicator = insertionIndicators.at(i);
-
-        if (i == 0) {
-            // Before first icon
-            if (!list_icons.isEmpty()) {
-                QLabel *firstIcon = list_icons.first();
-                QPoint iconPos = firstIcon->mapTo(this, QPoint(0, 0));
-                int centerY = iconPos.y() + firstIcon->height() / 2 - indicator->height() / 2;
-                QPoint pos(iconPos.x() - indicator->width() - 5, centerY);
-                indicator->move(pos);
-            }
-        } else if (i == insertionIndicators.size() - 1) {
-            // After last icon
-            if (!list_icons.isEmpty()) {
-                QLabel *lastIcon = list_icons.last();
-                QPoint iconPos = lastIcon->mapTo(this, QPoint(lastIcon->width(), 0));
-                int centerY = iconPos.y() + lastIcon->height() / 2 - indicator->height() / 2;
-                QPoint pos(iconPos.x() + 5, centerY);
-                indicator->move(pos);
-            }
-        } else {
-            // Between icons i-1 and i
-            if (i - 1 < list_icons.size() && i < list_icons.size()) {
-                QLabel *leftIcon = list_icons.at(i - 1);
-                QLabel *rightIcon = list_icons.at(i);
-                QPoint leftPos = leftIcon->mapTo(this, QPoint(leftIcon->width(), 0));
-                QPoint rightPos = rightIcon->mapTo(this, QPoint(0, 0));
-                int centerX = (leftPos.x() + rightPos.x()) / 2;
-                int centerY = leftPos.y() + leftIcon->height() / 2 - indicator->height() / 2;
-                QPoint pos(centerX - indicator->width() / 2, centerY);
-                indicator->move(pos);
-            }
-        }
-    }
-}
-
-void MainWindow::updateInsertionIndicators(const QPoint &mousePos)
-{
-    if (insertionIndicators.isEmpty()) {
-        return;
-    }
-
-    // Hide all indicators first
-    for (int i = 0; i < insertionIndicators.size(); ++i) {
-        insertionIndicators.at(i)->hide();
-    }
-
-    // Find which insertion point is closest to the mouse
-    int closestIndex = -1;
-    int minDistance = INT_MAX;
-
-    for (int i = 0; i < insertionIndicators.size(); ++i) {
-        QLabel *indicator = insertionIndicators.at(i);
-        QPoint indicatorPos = indicator->pos() + QPoint(indicator->width() / 2, indicator->height() / 2);
-        int distance = QPoint(mousePos - indicatorPos).manhattanLength();
-
-        if (distance < minDistance) {
-            minDistance = distance;
-            closestIndex = i;
-        }
-    }
-
-    // Show only the closest indicator if it's within a reasonable distance
-    if (closestIndex >= 0 && minDistance < 200) { // 200 pixels threshold
-        insertionIndicators.at(closestIndex)->show();
-        insertionIndicators.at(closestIndex)->raise();
-    }
 }
 
 void MainWindow::itemChanged()
@@ -529,7 +319,7 @@ void MainWindow::itemChanged()
     changed = true;
     updateAppList(index);
     checkDoneEditing();
-    displayIcon(ui->buttonSelectApp->text(), index);
+    renderIconAt(index);
 
     applyIconStyles(index);
 
@@ -556,166 +346,36 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         return;
     }
 
-    if (event->button() == Qt::LeftButton) {
-        // Clean up any existing drag state
-        if (dragIndicator) {
-            delete dragIndicator;
-            dragIndicator = nullptr;
-        }
-        if (dragging && dragStartIndex >= 0 && dragStartIndex < list_icons.size()) {
-            QLabel *sourceIcon = list_icons.at(dragStartIndex);
-            QString originalStyle = sourceIcon->property("original_style").toString();
-            if (!originalStyle.isEmpty()) {
-                sourceIcon->setStyleSheet(originalStyle);
-                sourceIcon->setProperty("original_style", QVariant());
-            }
-        }
-        // Clean up insertion indicators
-        for (QLabel *indicator : insertionIndicators) {
-            delete indicator;
-        }
-        insertionIndicators.clear();
-        dragging = false;
-        dragStartIndex = -1;
-
-        int i = ui->icons->layout()->indexOf(clickedWidget);
-        if (i >= 0) {
-            // Check if this is an icon label for drag and drop
-            bool isIconLabel = false;
-            for (int j = 0; j < list_icons.size(); ++j) {
-                if (list_icons.at(j) == clickedWidget) {
-                    isIconLabel = true;
-                    break;
-                }
-            }
-
-            if (isIconLabel) {
-                // Start potential drag operation
-                dragging = false;
-                dragStartIndex = i;
-                dragStartPos = event->pos();
-                int old_idx = index;
-                index = i;
-                showApp(index, old_idx); // Select the icon
-            } else {
-                // Regular click on non-icon widget
-                int old_idx = index;
-                showApp(index = i, old_idx);
-            }
+    if (event->button() == Qt::LeftButton && m_dragDropHandler) {
+        const int clickedIndex = m_dragDropHandler->handleMousePress(event, clickedWidget, listIcons);
+        if (clickedIndex >= 0) {
+            index = clickedIndex;
+            showApp(index);
+            return;
         }
     }
+
+    QDialog::mousePressEvent(event);
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    if (dragStartIndex >= 0 && !dragging) {
-        // Check if we've moved enough to start dragging
-        QPoint delta = event->pos() - dragStartPos;
-        if (delta.manhattanLength() > QApplication::startDragDistance()) {
-            dragging = true;
-            setCursor(Qt::ClosedHandCursor); // Visual feedback for dragging
-
-            // Create drag indicator
-            if (dragStartIndex < list_icons.size()) {
-                QLabel *sourceIcon = list_icons.at(dragStartIndex);
-                dragIndicator = new QLabel(this);
-                dragIndicator->setPixmap(sourceIcon->pixmap(Qt::ReturnByValue));
-                dragIndicator->setAlignment(Qt::AlignCenter);
-                dragIndicator->setFixedSize(sourceIcon->size());
-                dragIndicator->setStyleSheet(
-                    "background: rgba(255, 255, 255, 128); border: 2px dashed #0078d4; opacity: 0.8;");
-                dragIndicator->setAttribute(Qt::WA_TransparentForMouseEvents);
-                dragIndicator->raise(); // Make sure it's on top
-                dragIndicator->show();
-
-                // Make source icon semi-transparent
-                QString originalStyle = sourceIcon->styleSheet();
-                sourceIcon->setStyleSheet(originalStyle + "opacity: 0.5;");
-                sourceIcon->setProperty("original_style", originalStyle);
-
-                // Create insertion indicators
-                createInsertionIndicators();
-            }
-        }
+    if (m_dragDropHandler && m_dragDropHandler->handleMouseMove(event, this)) {
+        setCursor(Qt::ClosedHandCursor);
     }
-
-    // Update drag indicator position and insertion indicators
-    if (dragging && dragIndicator) {
-        dragIndicator->move(event->pos() - QPoint(dragIndicator->width() / 2, dragIndicator->height() / 2));
-
-        // Update insertion indicator visibility based on mouse position
-        updateInsertionIndicators(event->pos());
-    }
-
     QDialog::mouseMoveEvent(event);
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
-    bool movedIcon = false;
-
-    if (dragging && dragStartIndex >= 0) {
-        // Find the closest insertion indicator to the mouse position
-        int closestIndex = -1;
-        int minDistance = INT_MAX;
-        QPoint mousePos = event->pos();
-
-        for (int i = 0; i < insertionIndicators.size(); ++i) {
-            QLabel *indicator = insertionIndicators.at(i);
-            if (indicator->isVisible()) {
-                QRect indicatorRect = indicator->geometry();
-                QPoint center = indicatorRect.center();
-                int distance = QPoint(mousePos - center).manhattanLength();
-
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closestIndex = i;
-                }
-            }
-        }
-
-        if (closestIndex >= 0 && closestIndex != dragStartIndex) {
-            // Adjust insertion index for drag and drop reordering
-            int adjustedIndex = closestIndex;
-            if (adjustedIndex >= list_icons.size()) {
-                // Dropping after last item - move to last position (no adjustment needed)
-                adjustedIndex = list_icons.size() - 1;
-            } else if (adjustedIndex > dragStartIndex) {
-                adjustedIndex--; // Account for the removed item
-            }
-            // Ensure adjustedIndex is within bounds
-            if (adjustedIndex >= 0 && adjustedIndex < list_icons.size()) {
-                moveIconToPosition(dragStartIndex, adjustedIndex);
-                movedIcon = true;
-            }
+    if (m_dragDropHandler) {
+        const int startIndex = m_dragDropHandler->getDragStartIndex();
+        const int targetIndex = m_dragDropHandler->handleMouseRelease(event);
+        if (targetIndex >= 0 && startIndex >= 0) {
+            moveIconToPosition(startIndex, targetIndex);
         }
     }
 
-    // Clean up drag indicator and restore original style
-    if (dragIndicator) {
-        delete dragIndicator;
-        dragIndicator = nullptr;
-    }
-
-    if (dragStartIndex >= 0 && dragStartIndex < list_icons.size()) {
-        QLabel *sourceIcon = list_icons.at(dragStartIndex);
-        QString originalStyle = sourceIcon->property("original_style").toString();
-        if (!originalStyle.isEmpty() && !movedIcon) {
-            sourceIcon->setStyleSheet(originalStyle);
-        }
-        sourceIcon->setProperty("original_style", QVariant());
-    }
-
-    // Clean up insertion indicators
-    for (QLabel *indicator : insertionIndicators) {
-        delete indicator;
-    }
-    insertionIndicators.clear();
-
-    // Reset drag state
-    dragging = false;
-    dragStartIndex = -1;
-    dragStartPos = QPoint();
     setCursor(Qt::ArrowCursor); // Reset cursor
 
     applyIconStyles(index);
@@ -727,9 +387,8 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 {
     QDialog::resizeEvent(event);
 
-    // Reposition insertion indicators when window is resized
-    if (!insertionIndicators.isEmpty()) {
-        positionInsertionIndicators();
+    if (m_dragDropHandler) {
+        m_dragDropHandler->handleResizeEvent(event);
     }
 }
 
@@ -737,8 +396,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
     // Handle tooltips for icon labels with standard Qt styling
     if (event->type() == QEvent::ToolTip) {
-        QLabel *label = qobject_cast<QLabel *>(obj);
-        if (label && list_icons.contains(label)) {
+        auto *label = qobject_cast<QLabel *>(obj);
+        if (label && listIcons.contains(label)) {
             QString tooltip = label->property("icon_tooltip").toString();
             if (!tooltip.isEmpty()) {
                 QToolTip::showText(QCursor::pos(), tooltip);
@@ -751,33 +410,12 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    // Clean up any drag state
-    if (dragIndicator) {
-        delete dragIndicator;
-        dragIndicator = nullptr;
+    if (m_dragDropHandler) {
+        m_dragDropHandler->cleanup();
     }
-    if (dragging && dragStartIndex >= 0 && dragStartIndex < list_icons.size()) {
-        QLabel *sourceIcon = list_icons.at(dragStartIndex);
-        QString originalStyle = sourceIcon->property("original_style").toString();
-        if (!originalStyle.isEmpty()) {
-            sourceIcon->setStyleSheet(originalStyle);
-            sourceIcon->setProperty("original_style", QVariant());
-        }
-    }
-    // Clean up insertion indicators
-    for (QLabel *indicator : insertionIndicators) {
-        delete indicator;
-    }
-    insertionIndicators.clear();
 
-    // Clear apps and icons to prevent state corruption
-    apps.clear();
-    for (QLabel *icon : list_icons) {
-        if (icon) {
-            delete icon;
-        }
-    }
-    list_icons.clear();
+    m_configuration->clear();
+    renderIconsFromConfiguration();
 
     event->accept();
     this->hide();
@@ -786,22 +424,30 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::updateAppList(int idx)
 {
-    const QStringList app_info
-        = QStringList({ui->buttonSelectApp->text(), ui->lineEditCommand->text(), ui->lineEditTooltip->text(),
-                       ui->buttonSelectIcon->text(), ui->comboSize->currentText(),
-                       ui->widgetBackground->palette().color(QWidget::backgroundRole()).name(),
-                       ui->widgetHoverBackground->palette().color(QWidget::backgroundRole()).name(),
-                       ui->widgetBorder->palette().color(QWidget::backgroundRole()).name(),
-                       ui->widgetHoverBorder->palette().color(QWidget::backgroundRole()).name(),
-                       ui->buttonSelectApp->property("extra_options").toString()});
-    (idx < apps.size()) ? apps.replace(idx, app_info) : apps.push_back(app_info);
-}
+    // Create DockIconInfo from current UI state
+    DockIconInfo iconInfo;
+    iconInfo.appName = ui->buttonSelectApp->text();
+    iconInfo.command = ui->lineEditCommand->text();
+    iconInfo.tooltip = ui->lineEditTooltip->text();
+    iconInfo.customIcon = ui->buttonSelectIcon->text();
+    iconInfo.size = ui->comboSize->currentText();
+    iconInfo.backgroundColor = ui->widgetBackground->palette().color(QWidget::backgroundRole());
+    iconInfo.hoverBackground = ui->widgetHoverBackground->palette().color(QWidget::backgroundRole());
+    iconInfo.borderColor = ui->widgetBorder->palette().color(QWidget::backgroundRole());
+    iconInfo.hoverBorder = ui->widgetHoverBorder->palette().color(QWidget::backgroundRole());
+    iconInfo.extraOptions = ui->buttonSelectApp->property("extra_options").toString();
+    if (iconInfo.isDesktopFile() || iconInfo.customIcon == tr("Select icon...")) {
+        iconInfo.customIcon.clear();
+    }
+    if (!iconInfo.isDesktopFile() && iconInfo.customIcon.isEmpty()) {
+        iconInfo.customIcon = QStringLiteral("application-x-executable");
+    }
 
-void MainWindow::addDockToMenu(const QString &file_name)
-{
-    // Use file manager to add dock to menu
-    if (!m_fileManager->addToMenu(file_name, dock_name)) {
-        qDebug() << "Failed to add dock to menu:" << file_name;
+    // Update configuration
+    if (idx < m_configuration->getApplicationCount()) {
+        m_configuration->updateApplication(idx, iconInfo);
+    } else {
+        m_configuration->addApplication(iconInfo, false);
     }
 }
 
@@ -819,11 +465,9 @@ void MainWindow::deleteDock()
             QMessageBox::Yes | QMessageBox::Cancel);
 
         if (confirmation == QMessageBox::Yes) {
-            if (QFile::remove(selectedDock)) {
-                // Use file manager for menu operations
-    m_fileManager->addToMenu(selectedDock, dock_name);
-            } else {
-                QMessageBox::warning(this, tr("Error"), tr("Failed to delete the selected dock."));
+            if (!m_fileManager->deleteDockFile(selectedDock, true)) {
+                QMessageBox::warning(this, tr("Error"),
+                                     tr("Failed to delete the selected dock: %1").arg(m_fileManager->getLastError()));
             }
         }
     }
@@ -840,9 +484,6 @@ void MainWindow::blockComboSignals(bool block)
 void MainWindow::moveDock()
 {
     this->hide();
-    const QStringList possible_locations({"TopLeft", "TopCenter", "TopRight", "LeftTop", "RightTop", "LeftCenter",
-                                          "RightCenter", "LeftBottom", "RightBottom", "BottomLeft", "BottomCenter",
-                                          "BottomRight"});
 
     const QString selected_dock
         = QFileDialog::getOpenFileName(this, tr("Select dock to move"), QDir::homePath() + "/.fluxbox/scripts",
@@ -852,60 +493,10 @@ void MainWindow::moveDock()
         return;
     }
 
-    QFile file(selected_dock);
-
-    if (!file.open(QFile::Text | QFile::ReadOnly)) {
-        qDebug() << "Could not open file:" << file.fileName();
-        QMessageBox::warning(this, tr("Could not open file"), tr("Could not open file"));
-        setup();
-        return;
+    slitLocation = pickSlitLocation();
+    if (!m_fileManager->moveDockFile(selected_dock, slitLocation)) {
+        QMessageBox::warning(this, tr("Error"), tr("Failed to move dock: %1").arg(m_fileManager->getLastError()));
     }
-    QString text = file.readAll();
-    file.close();
-
-    // find location
-    QRegularExpression re(possible_locations.join(QStringLiteral("|")));
-    QRegularExpressionMatch match = re.match(text);
-    if (match.hasMatch()) {
-        slit_location = match.captured();
-    }
-
-    // select location
-    slit_location = pickSlitLocation();
-
-    // replace string
-    re.setPattern(QStringLiteral("^sed -i.*"));
-    re.setPatternOptions(QRegularExpression::MultilineOption);
-    const QString newLine = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: "
-                            + slit_location + "/' $HOME/.fluxbox/init";
-
-    if (!file.open(QFile::Text | QFile::ReadWrite | QFile::Truncate)) {
-        qDebug() << "Could not open file:" << file.fileName();
-        QMessageBox::warning(this, tr("Could not open file"), tr("Could not open file"));
-        setup();
-        return;
-    }
-    QTextStream out(&file);
-
-    // add shebang and pkill wmalauncher
-    out << "#!/bin/bash\n\n";
-    out << "pkill wmalauncher\n\n";
-
-    // remove if already existent
-    text.remove(QStringLiteral("#!/bin/bash\n\n"))
-        .remove(QStringLiteral("#!/bin/bash\n"))
-        .remove(QStringLiteral("pkill wmalauncher\n\n"))
-        .remove(QStringLiteral("pkill wmalauncher\n"));
-
-    // if location line not found add it at the beginning
-    if (!re.match(text).hasMatch()) {
-        out << "#set up slit location\n" + newLine + "\n";
-        out << text.remove(QStringLiteral("#set up slit location\n"));
-    } else {
-        out << text.replace(re, newLine);
-    }
-    file.close();
-    cmd.run("pkill wmalauncher;" + file.fileName() + "&disown", true);
     setup();
     this->show();
 }
@@ -914,7 +505,7 @@ void MainWindow::moveDock()
 void MainWindow::moveIcon(int pos)
 {
     int newIndex = index + pos;
-    if (newIndex < 0 || newIndex >= apps.size()) {
+    if (newIndex < 0 || newIndex >= m_configuration->getApplicationCount()) {
         return;
     }
 
@@ -922,12 +513,7 @@ void MainWindow::moveIcon(int pos)
     // Move application in the configuration
     m_configuration->moveApplication(index, newIndex);
 
-    auto refreshIconAt = [this](int pos) {
-        DockIconInfo iconInfo = m_configuration->getApplication(pos);
-        QString customIcon = iconInfo.isDesktopFile() ? QString() : iconInfo.customIcon;
-        displayIcon(iconInfo.appName, pos, customIcon);
-        list_icons.at(pos)->setProperty("icon_tooltip", iconInfo.tooltip);
-    };
+    auto refreshIconAt = [this](int pos) { renderIconAt(pos); };
 
     refreshIconAt(index);
     refreshIconAt(newIndex);
@@ -938,7 +524,7 @@ void MainWindow::moveIcon(int pos)
     applyIconStyles(index);
 
     // Refresh the displayed application
-    showApp(index, index - pos);
+    showApp(index);
 
     checkDoneEditing();
 }
@@ -946,7 +532,8 @@ void MainWindow::moveIcon(int pos)
 // Move icon from one position to another
 void MainWindow::moveIconToPosition(int fromIndex, int toIndex)
 {
-    if (fromIndex < 0 || fromIndex >= apps.size() || toIndex < 0 || toIndex >= apps.size() || fromIndex == toIndex) {
+    if (fromIndex < 0 || fromIndex >= m_configuration->getApplicationCount() || toIndex < 0
+        || toIndex >= m_configuration->getApplicationCount() || fromIndex == toIndex) {
         return;
     }
 
@@ -959,289 +546,66 @@ void MainWindow::moveIconToPosition(int fromIndex, int toIndex)
     }
 }
 
-void MainWindow::parseFile(QFile &file)
-{
-    blockComboSignals(true);
-    parsing = true;
-
-    const QStringList possible_locations({"TopLeft", "TopCenter", "TopRight", "LeftTop", "RightTop", "LeftCenter",
-                                          "RightCenter", "LeftBottom", "RightBottom", "BottomLeft", "BottomCenter",
-                                          "BottomRight"});
-
-    QString line;
-    const QSet<QString> knownOptions {QLatin1String("-d"),
-                                      QLatin1String("--desktop-file"),
-                                      QLatin1String("-c"),
-                                      QLatin1String("--command"),
-                                      QLatin1String("-i"),
-                                      QLatin1String("--icon"),
-                                      QLatin1String("-k"),
-                                      QLatin1String("--background-color"),
-                                      QLatin1String("-K"),
-                                      QLatin1String("--hover-background-color"),
-                                      QLatin1String("-b"),
-                                      QLatin1String("--border-color"),
-                                      QLatin1String("-B"),
-                                      QLatin1String("--hover-border-color"),
-                                      QLatin1String("-w"),
-                                      QLatin1String("--window-size"),
-                                      QLatin1String("--tooltip-text"),
-                                      QLatin1String("-x"),
-                                      QLatin1String("--exit-on-right-click")};
-
-    while (!file.atEnd()) {
-        line = file.readLine().trimmed();
-
-        if (line.startsWith(QLatin1String("sed -i"))) { // assume it's a slit relocation sed command
-            for (const QString &location : possible_locations) {
-                if (line.contains(location)) {
-                    slit_location = location;
-                    break;
-                }
-            }
-            continue;
-        }
-        if (line.startsWith(QLatin1String("wmalauncher"))) {
-            ui->buttonSelectApp->setProperty("extra_options", QString());
-            ui->lineEditTooltip->clear();
-            line.remove(QRegularExpression(QStringLiteral("^wmalauncher")));
-            line.remove(QRegularExpression(QStringLiteral("\\s*&(?:\\s*sleep.*)?$")));
-
-            auto stripQuotes = [](const QString &value) {
-                if (value.size() >= 2
-                    && ((value.startsWith(QLatin1Char('"')) && value.endsWith(QLatin1Char('"')))
-                        || (value.startsWith(QLatin1Char('\'')) && value.endsWith(QLatin1Char('\''))))) {
-                    return value.mid(1, value.size() - 2);
-                }
-                return value;
-            };
-
-            auto isKnownOption = [&](const QString &token) { return knownOptions.contains(stripQuotes(token)); };
-
-            auto appendExtraOption = [&](const QString &option, const QString &value) {
-                QString extra = ui->buttonSelectApp->property("extra_options").toString();
-                if (!extra.isEmpty()) {
-                    extra += QLatin1Char(' ');
-                }
-                extra += option;
-                if (!value.isEmpty()) {
-                    extra += QLatin1Char(' ') + value;
-                }
-                ui->buttonSelectApp->setProperty("extra_options", extra);
-            };
-
-            QRegularExpression tokenRe(QStringLiteral(R"((\"[^\"]*\"|'[^']*'|\S+))"));
-            QStringList tokens;
-            auto matchIt = tokenRe.globalMatch(line.trimmed());
-            while (matchIt.hasNext()) {
-                tokens << matchIt.next().captured(0);
-            }
-
-            for (int i = 0; i < tokens.size(); ++i) {
-                const QString token = tokens.at(i);
-                auto nextValue = [&](QString *out) {
-                    if (i + 1 < tokens.size()) {
-                        *out = stripQuotes(tokens.at(++i));
-                    }
-                };
-
-                if (token == QLatin1String("-d") || token == QLatin1String("--desktop-file")) {
-                    ui->radioDesktop->setChecked(true);
-                    QString value;
-                    nextValue(&value);
-                    if (!value.isEmpty()) {
-                        ui->buttonSelectApp->setText(value);
-                    }
-                    ui->buttonSelectIcon->setToolTip(QString());
-                    ui->buttonSelectIcon->setStyleSheet(QStringLiteral("text-align: center; padding: 3px;"));
-                } else if (token == QLatin1String("-c") || token == QLatin1String("--command")) {
-                    ui->radioCommand->setChecked(true);
-                    QString value;
-                    nextValue(&value);
-                    while (i + 1 < tokens.size() && !isKnownOption(tokens.at(i + 1))) {
-                        value += QLatin1Char(' ') + stripQuotes(tokens.at(++i));
-                    }
-                    if (!value.isEmpty()) {
-                        ui->lineEditCommand->setText(value);
-                    }
-                    ui->buttonSelectIcon->setStyleSheet(QStringLiteral("text-align: right; padding: 3px;"));
-                } else if (token == QLatin1String("-i") || token == QLatin1String("--icon")) {
-                    QString value;
-                    nextValue(&value);
-                    if (!value.isEmpty()) {
-                        ui->buttonSelectIcon->setText(value);
-                        ui->buttonSelectIcon->setToolTip(value);
-                    }
-                } else if (token == QLatin1String("-k") || token == QLatin1String("--background-color")) {
-                    QString color;
-                    nextValue(&color);
-                    if (!color.isEmpty()) {
-                        setColor(ui->widgetBackground, color);
-                    }
-                } else if (token == QLatin1String("-K") || token == QLatin1String("--hover-background-color")) {
-                    QString color;
-                    nextValue(&color);
-                    if (!color.isEmpty()) {
-                        setColor(ui->widgetHoverBackground, color);
-                    }
-                } else if (token == QLatin1String("-b") || token == QLatin1String("--border-color")) {
-                    QString color;
-                    nextValue(&color);
-                    if (!color.isEmpty()) {
-                        setColor(ui->widgetBorder, color);
-                    }
-                } else if (token == QLatin1String("-B") || token == QLatin1String("--hover-border-color")) {
-                    QString color;
-                    nextValue(&color);
-                    if (!color.isEmpty()) {
-                        setColor(ui->widgetHoverBorder, color);
-                    }
-                } else if (token == QLatin1String("-w") || token == QLatin1String("--window-size")) {
-                    QString size;
-                    nextValue(&size);
-                    if (!size.isEmpty()) {
-                        ui->comboSize->setCurrentIndex(ui->comboSize->findText(size + "x" + size));
-                    }
-                } else if (token == QLatin1String("--tooltip-text")) {
-                    QString tooltip;
-                    nextValue(&tooltip);
-                    // Sanitize by removing quotes
-                    tooltip.remove(QLatin1Char('\''));
-                    tooltip.remove(QLatin1Char('"'));
-                    ui->lineEditTooltip->setText(tooltip);
-                } else if (token == QLatin1String("-x") || token == QLatin1String("--exit-on-right-click")) {
-                    // not used right now
-                } else {
-                    QString value;
-                    if (i + 1 < tokens.size()) {
-                        const QString possibleValue = tokens.at(i + 1);
-                        if (!possibleValue.startsWith(QLatin1Char('-')) && !isKnownOption(possibleValue)) {
-                            value = possibleValue;
-                            ++i;
-                        }
-                    }
-                    appendExtraOption(token, value);
-                }
-            }
-            updateAppList(index);
-            displayIcon(ui->buttonSelectApp->text(), index);
-            index++;
-        } else {
-            file_content.append(line + "\n"); // add lines to the file_content, skipping wmalauncher lines
-        }
-    }
-    ui->buttonSave->setDisabled(true);
-    showApp(index = 0, -1);
-    parsing = false;
-    checkDoneEditing(); // Update button states after parsing
-}
-
 void MainWindow::buttonSave_clicked()
 {
-    slit_location = pickSlitLocation();
+    slitLocation = pickSlitLocation();
+    m_configuration->setSlitLocation(slitLocation);
 
-    // create "~/.fluxbox/scripts" if it doesn't exist
-    if (!QFileInfo::exists(QDir::homePath() + "/.fluxbox/scripts")) {
-        QDir().mkpath(QDir::homePath() + "/.fluxbox/scripts");
-    }
+    QString targetFile = m_configuration->getFileName();
+    bool newFile = false;
 
-    bool new_file = false;
-    if (!QFileInfo::exists(file_name)
-        || QMessageBox::No
-               == QMessageBox::question(this, tr("Overwrite?"), tr("Do you want to overwrite the dock file?"))) {
-        file_name = QFileDialog::getSaveFileName(this, tr("Save file"), QDir::homePath() + "/.fluxbox/scripts",
-                                                 tr("Dock Files (*.mxdk);;All Files (*.*)"));
-        if (file_name.isEmpty()) {
+    if (!targetFile.isEmpty() && QFileInfo::exists(targetFile)) {
+        const auto reply = QMessageBox::question(this, tr("Overwrite?"), tr("Do you want to overwrite the dock file?"),
+                                                 QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+        if (reply == QMessageBox::Cancel) {
             return;
         }
-        if (!file_name.endsWith(QLatin1String(".mxdk"))) {
-            file_name += QLatin1String(".mxdk");
+        if (reply == QMessageBox::No) {
+            targetFile.clear();
         }
-        new_file = true;
     }
-    QFile file(file_name);
-    // Create backup using file manager
-    if (!m_fileManager->createBackup(file_name)) {
-        qDebug() << "Failed to create backup of:" << file_name;
+
+    if (targetFile.isEmpty()) {
+        targetFile = QFileDialog::getSaveFileName(this, tr("Save file"), QDir::homePath() + "/.fluxbox/scripts",
+                                                  tr("Dock Files (*.mxdk);;All Files (*.*)"));
+        if (targetFile.isEmpty()) {
+            return;
+        }
+        if (!targetFile.endsWith(QLatin1String(".mxdk"))) {
+            targetFile += QLatin1String(".mxdk");
+        }
+        newFile = true;
     }
-    if (!file.open(QFile::Text | QFile::WriteOnly)) {
-        qDebug() << "Could not open file:" << file.fileName();
+
+    m_configuration->setFileName(targetFile);
+
+    QString dockName = m_configuration->getDockName();
+    if (dockName.isEmpty() || newFile) {
+        dockName = inputDockName();
+    }
+    if (dockName.isEmpty()) {
+        dockName = QFileInfo(targetFile).baseName();
+    }
+    m_configuration->setDockName(dockName);
+
+    if (!m_fileManager->saveConfiguration(*m_configuration, targetFile, true)) {
+        QMessageBox::warning(this, tr("Error"), tr("Failed to save the dock: %1").arg(m_fileManager->getLastError()));
         return;
     }
-    QTextStream out(&file);
-    if (file_content.isEmpty()) {
-        // build and write string
-        out << "#!/bin/bash\n\n";
-        out << "pkill wmalauncher\n\n";
-        out << "#set up slit location\n";
-        out << "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + slit_location
-                   + "/' $HOME/.fluxbox/init\n\n";
-        out << "fluxbox-remote restart; sleep 1\n\n";
-        out << "#commands for dock launchers\n";
-    } else {
-        // add shebang and pkill wmalauncher
-        out << "#!/bin/bash\n\n";
-        out << "pkill wmalauncher\n\n";
 
-        // remove if already existent
-        file_content.remove(QStringLiteral("#!/bin/bash\n\n"))
-            .remove(QStringLiteral("#!/bin/bash\n"))
-            .remove(QStringLiteral("pkill wmalauncher\n\n"))
-            .remove(QStringLiteral("pkill wmalauncher\n"));
-        QRegularExpression re(QStringLiteral("^sed -i.*"), QRegularExpression::MultilineOption);
-        QString newLine = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: "
-                          + slit_location + "/' $HOME/.fluxbox/init";
-
-        // if location line not found add it at the beginning
-        if (!re.match(file_content).hasMatch()) {
-            out << "#set up slit location\n" + newLine + "\n";
-            out << file_content.remove(QStringLiteral("#set up slit location\n"));
-        } else {
-            out << file_content.replace(re, newLine);
-        }
-    }
-    for (const auto &app : std::as_const(apps)) {
-        const QString command
-            = (app.at(Info::App).endsWith(QLatin1String(".desktop")))
-                  ? "--desktop-file " + quoteArgument(app.at(Info::App))
-                  : "--command " + app.at(Info::Command) + " --icon " + quoteArgument(app.at(Info::Icon));
-        QString extraOptions = app.at(Info::Extra);
-        if (!extraOptions.isEmpty() && !extraOptions.startsWith(QLatin1Char(' '))) {
-            extraOptions.prepend(QLatin1Char(' '));
-        }
-        QString tooltipOption;
-        if (!app.at(Info::Tooltip).isEmpty()) {
-            tooltipOption = QStringLiteral(" --tooltip-text ") + quoteDouble(app.at(Info::Tooltip));
-        }
-        out << "wmalauncher " + command + " --background-color \"" + app.at(Info::BgColor)
-                   + "\" --hover-background-color \"" + app.at(Info::BgHoverColor) + "\" --border-color \""
-                   + app.at(Info::BorderColor) + "\" --hover-border-color \"" + app.at(Info::BorderHoverColor)
-                   + "\" --window-size " + app.at(Info::Size).section(QStringLiteral("x"), 0, 0) + tooltipOption
-                   + extraOptions + "& sleep 0.1\n";
-    }
-    file.close();
-    QFile::setPermissions(file_name, QFlag(0x744));
-
-    if (dock_name.isEmpty() || new_file) {
-        dock_name = inputDockName();
+    if (!m_fileManager->isInMenu(targetFile)) {
+        m_fileManager->addToMenu(targetFile, dockName);
     }
 
-    if (dock_name.isEmpty()) {
-        dock_name = QFileInfo(file).baseName();
-    }
-
-    if (!isDockInMenu(file.fileName())) {
-        addDockToMenu(file.fileName());
-    }
+    m_configuration->markAsSaved();
+    changed = false;
 
     QMessageBox::information(this, tr("Dock saved"),
                              tr("The dock has been saved.\n\n"
                                 "To edit the newly created dock please select 'Edit an existing dock'."));
     QProcess::execute(QStringLiteral("pkill"), {"wmalauncher"});
-    QProcess::startDetached(file.fileName(), {});
+    QProcess::startDetached(targetFile, {});
     index = 0;
-    apps.clear();
-    list_icons.clear();
     resetAdd();
     ui->buttonSave->setEnabled(false);
     ui->buttonDelete->setEnabled(false);
@@ -1291,32 +655,44 @@ void MainWindow::buttonNext_clicked()
     blockComboSignals(true);
     updateAppList(index);
     index++;
-    showApp(index, index - 1);
+    showApp(index);
     blockComboSignals(false);
 }
 
 void MainWindow::buttonDelete_clicked()
 {
-    if (!apps.isEmpty()) {
-        blockComboSignals(true);
-        delete ui->icons->layout()->itemAt(index)->widget();
-        list_icons.removeAt(index);
-        apps.removeAt(index);
-        blockComboSignals(false);
+    if (m_configuration->isEmpty()) {
+        ui->buttonDelete->setEnabled(false);
+        return;
     }
-    if (apps.isEmpty()) {
+
+    blockComboSignals(true);
+    if (index >= 0 && index < m_configuration->getApplicationCount()) {
+        m_configuration->removeApplication(index);
+    }
+    blockComboSignals(false);
+
+    // Rebuild icon labels to keep indices aligned and avoid stale pointers
+    renderIconsFromConfiguration();
+
+    const int count = m_configuration->getApplicationCount();
+    if (count == 0) {
         index = 0;
         ui->buttonDelete->setEnabled(false);
         resetAdd();
-    } else if (index == 0) {
-        ui->buttonPrev->setEnabled(false);
-        showApp(index, -1);
-    } else {
-        ui->buttonSave->setEnabled(true);
-        showApp(--index, -1);
+        syncDragHandler();
+        checkDoneEditing();
+        return;
     }
-    updateAppList(index);
+
+    index = std::min(index, count - 1);
+    changed = true;
     ui->buttonSave->setEnabled(true);
+    ui->buttonDelete->setEnabled(true);
+    showApp(index);
+
+    syncDragHandler();
+    checkDoneEditing();
 }
 
 void MainWindow::resetAdd()
@@ -1325,11 +701,12 @@ void MainWindow::resetAdd()
     ui->buttonSelectApp->setProperty("extra_options", QString());
     ui->radioDesktop->click();
     emit ui->radioDesktop->toggled(true);
-    ui->buttonAdd->setDisabled(true);
+    ui->buttonAdd->setEnabled(true);
     ui->lineEditTooltip->clear();
 
     QString size;
-    if (ui->checkApplyStyleToAll->isChecked() && index != 0 && m_configuration->getApplicationCount() > 0) { // set style according to the first item
+    if (ui->checkApplyStyleToAll->isChecked() && index != 0
+        && m_configuration->getApplicationCount() > 0) { // set style according to the first item
         DockIconInfo firstIcon = m_configuration->getApplication(0);
         size = firstIcon.size;
     } else {
@@ -1373,12 +750,17 @@ void MainWindow::setConnections()
     connect(ui->toolHoverBorder, &QToolButton::clicked, this, [this] { pickColor(ui->widgetHoverBorder); });
 }
 
-void MainWindow::showApp(int idx, int old_idx)
+void MainWindow::showApp(int idx)
 {
+    const int count = m_configuration->getApplicationCount();
+    if (idx < 0 || idx >= count) {
+        return;
+    }
+
     ui->radioCommand->blockSignals(true);
     ui->radioDesktop->blockSignals(true);
 
-    DockIconInfo iconInfo = m_configuration->getApplication(idx);
+    const DockIconInfo iconInfo = m_configuration->getApplication(idx);
     ui->buttonSelectApp->setText(iconInfo.appName);
     if (iconInfo.isDesktopFile() || iconInfo.command.isEmpty()) {
         ui->radioDesktop->setChecked(true);
@@ -1450,6 +832,10 @@ void MainWindow::buttonSelectApp_clicked()
 
 void MainWindow::editDock(const QString &file_arg)
 {
+    m_configuration->clear();
+    renderIconsFromConfiguration();
+    index = 0;
+
     QString selected_dock;
     if (!file_arg.isEmpty() && QFile::exists(file_arg)) {
         selected_dock = file_arg;
@@ -1464,30 +850,50 @@ void MainWindow::editDock(const QString &file_arg)
                              tr("You haven't selected any dock file to edit.\nCreating a new dock instead."));
         return;
     }
-    QFile file(selected_dock);
-    if (!file.open(QFile::Text | QFile::ReadOnly)) {
-        qDebug() << "Could not open file:" << file.fileName();
+    parsing = true;
+
+    if (!m_fileManager->loadConfiguration(selected_dock, *m_configuration)) {
+        qDebug() << "Could not load configuration:" << selected_dock << m_fileManager->getLastError();
         QMessageBox::warning(this, tr("Could not open file"),
                              tr("Could not open selected file.\nCreating a new dock instead."));
+        parsing = false;
         return;
     }
-    currentFilePath = file.fileName();
-    QString dockName = getDockName(currentFilePath);
-    m_configuration->setDockName(dockName);
 
-    parseFile(file);
-    file.close();
+    m_configuration->setFileName(selected_dock);
+
+    const QString dockName = m_fileParser->extractDockName(selected_dock);
+    if (!dockName.isEmpty()) {
+        m_configuration->setDockName(dockName);
+    }
+
+    slitLocation = m_configuration->getSlitLocation();
+
+    renderIconsFromConfiguration();
+    if (!m_configuration->isEmpty()) {
+        index = 0;
+        showApp(index);
+        ui->buttonDelete->setEnabled(true);
+    } else {
+        resetAdd();
+        ui->buttonDelete->setEnabled(false);
+    }
+
     ui->labelUsage->setText(tr("1. Edit applications one at a time using the Back and Next buttons\n"
                                "2. Add or delete applications as you like\n"
                                "3. When finished click Save"));
+    parsing = false;
+    changed = false;
+    checkDoneEditing();
     this->show();
 }
 
 void MainWindow::newDock()
 {
     this->show();
-    m_configuration->clearApplications();
-    list_icons.clear();
+    m_configuration->clear();
+    renderIconsFromConfiguration();
+    index = 0;
 
     resetAdd();
     checkDoneEditing(); // Re-evaluate button states after reset
@@ -1499,8 +905,8 @@ void MainWindow::buttonPrev_clicked()
 {
     blockComboSignals(true);
     updateAppList(index);
-    int old_idx = index;
-    showApp(--index, old_idx);
+    int oldIndex = index;
+    showApp(--index);
     blockComboSignals(false);
 }
 
@@ -1563,8 +969,9 @@ void MainWindow::buttonSelectIcon_clicked()
         ui->buttonSelectIcon->setToolTip(selected);
         ui->buttonSelectIcon->setStyleSheet(QStringLiteral("text-align: right; padding: 3px;"));
         updateAppList(index);
-        displayIcon(ui->buttonSelectIcon->text(), index);
+        renderIconAt(index);
         applyIconStyles(index);
+        changed = true;
     }
     if (!parsing) {
         checkDoneEditing();
@@ -1573,14 +980,8 @@ void MainWindow::buttonSelectIcon_clicked()
 
 void MainWindow::lineEditCommand_textEdited()
 {
-    ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
-    if (ui->buttonSelectIcon->text() != tr("Select icon...")) {
-        ui->buttonNext->setEnabled(true);
-        changed = true;
-    } else {
-        ui->buttonNext->setEnabled(false);
-        return;
-    }
+    changed = true;
+    ui->buttonNext->setEnabled(ui->buttonSelectIcon->text() != tr("Select icon..."));
     updateAppList(index);
     if (!parsing) {
         checkDoneEditing();
@@ -1606,27 +1007,45 @@ void MainWindow::lineEditTooltip_textEdited()
 
 void MainWindow::buttonAdd_clicked()
 {
-    index++;
-    resetAdd();
-    list_icons.insert(index, new QLabel());
+    // Calculate insertion position: after current item (or at 0 if empty)
+    int insertPos = m_configuration->isEmpty() ? 0 : index + 1;
 
-    // Create DockIconInfo from UI data
+    // Create a new empty DockIconInfo with default settings
     DockIconInfo iconInfo;
-    iconInfo.appName = ui->buttonSelectApp->text();
-    iconInfo.command = ui->lineEditCommand->text();
-    iconInfo.tooltip = ui->lineEditTooltip->text();
-    iconInfo.customIcon = ui->buttonSelectIcon->text();
-    iconInfo.size = ui->comboSize->currentText();
-    iconInfo.backgroundColor = ui->widgetBackground->palette().color(QWidget::backgroundRole());
-    iconInfo.hoverBackground = ui->widgetHoverBackground->palette().color(QWidget::backgroundRole());
-    iconInfo.borderColor = ui->widgetBorder->palette().color(QWidget::backgroundRole());
-    iconInfo.hoverBorder = ui->widgetHoverBorder->palette().color(QWidget::backgroundRole());
-    iconInfo.extraOptions = ui->buttonSelectApp->property("extra_options").toString();
+    iconInfo.appName.clear();
+    iconInfo.command.clear();
+    iconInfo.tooltip.clear();
+    iconInfo.customIcon.clear();
+    iconInfo.extraOptions.clear();
 
-    m_configuration->addApplication(iconInfo);
-    ui->icons->insertWidget(index, list_icons.at(index));
-    showApp(index, index - 1);
-    itemChanged();
+    // Use default size and colors from settings or first item if "apply style to all" is checked
+    if (ui->checkApplyStyleToAll->isChecked() && !m_configuration->isEmpty()) {
+        DockIconInfo firstIcon = m_configuration->getApplication(0);
+        iconInfo.size = firstIcon.size;
+        iconInfo.backgroundColor = firstIcon.backgroundColor;
+        iconInfo.hoverBackground = firstIcon.hoverBackground;
+        iconInfo.borderColor = firstIcon.borderColor;
+        iconInfo.hoverBorder = firstIcon.hoverBorder;
+    } else {
+        iconInfo.size = settings.value(QStringLiteral("Size"), "48x48").toString();
+        iconInfo.backgroundColor = QColor(settings.value(QStringLiteral("BackgroundColor"), "black").toString());
+        iconInfo.hoverBackground = QColor(settings.value(QStringLiteral("BackgroundHoverColor"), "black").toString());
+        iconInfo.borderColor = QColor(settings.value(QStringLiteral("FrameColor"), "white").toString());
+        iconInfo.hoverBorder = QColor(settings.value(QStringLiteral("FrameHoverColor"), "white").toString());
+    }
+
+    // Insert at the calculated position
+    m_configuration->insertApplication(insertPos, iconInfo, false);
+
+    // Update index to point to the newly inserted item
+    index = insertPos;
+
+    resetAdd();
+    renderIconsFromConfiguration();
+    showApp(index);
+
+    // Ensure the newly added icon has focus/selection
+    applyIconStyles(index);
 }
 
 void MainWindow::buttonMoveLeft_clicked()

@@ -32,126 +32,33 @@
 
 #include "dockconfiguration.h"
 
-/**
- * @brief Handles parsing of dock configuration files
- * 
- * This class is responsible for reading and parsing .mxdk dock files,
- * extracting application configurations and slit location information.
- */
 class DockFileParser : public QObject
 {
     Q_OBJECT
-
 public:
-    /**
-     * @brief Constructor
-     * @param parent Parent QObject
-     */
+    QString extractSlitLocation(const QString &content);
+    QString getLastError() const;
+    bool parseContent(const QString &content, DockConfiguration &configuration);
+    bool parseFile(const QString &filePath, DockConfiguration &configuration);
+    bool validateFile(const QString &filePath);
     explicit DockFileParser(QObject *parent = nullptr);
-
-    /**
-     * @brief Destructor
-     */
+    static QString extractDockName(const QString &fileName);
     ~DockFileParser() = default;
 
-    /**
-     * @brief Parse a dock file and populate configuration
-     * @param filePath Path to the dock file to parse
-     * @param configuration Configuration object to populate
-     * @return true if parsing was successful, false on error
-     */
-    bool parseFile(const QString &filePath, DockConfiguration &configuration);
-
-    /**
-     * @brief Parse dock file content from string
-     * @param content File content as string
-     * @param configuration Configuration object to populate
-     * @return true if parsing was successful, false on error
-     */
-    bool parseContent(const QString &content, DockConfiguration &configuration);
-
-    /**
-     * @brief Extract slit location from file content
-     * @param content File content to search
-     * @return Slit location string, empty if not found
-     */
-    QString extractSlitLocation(const QString &content);
-
-    /**
-     * @brief Extract dock name from file name
-     * @param fileName File name to extract dock name from
-     * @return Dock name, empty if not found
-     */
-    static QString extractDockName(const QString &fileName);
-
-    /**
-     * @brief Validate dock file format
-     * @param filePath Path to the dock file
-     * @return true if file format is valid, false otherwise
-     */
-    bool validateFile(const QString &filePath);
-
-    /**
-     * @brief Get last error message
-     * @return Error description from last parsing operation
-     */
-    QString getLastError() const;
-
 signals:
-    /**
-     * @brief Emitted when parsing starts
-     */
+    void parsingCompleted(bool success);
+    void parsingError(const QString &error);
     void parsingStarted();
 
-    /**
-     * @brief Emitted when parsing completes
-     * @param success true if parsing was successful
-     */
-    void parsingCompleted(bool success);
-
-    /**
-     * @brief Emitted when an error occurs during parsing
-     * @param error Error description
-     */
-    void parsingError(const QString &error);
-
 private:
-    QString m_lastError;  ///< Last error message
+    QString m_lastError; ///< Last error message
 
     // Parsing constants
-    static const QStringList POSSIBLE_LOCATIONS;
-    static const QSet<QString> KNOWN_OPTIONS;
-
-    /**
-     * @brief Parse a single wmalauncher command line
-     * @param line Command line to parse
-     * @return DockIconInfo parsed from the line
-     */
     DockIconInfo parseWmalauncherLine(const QString &line);
-
-    /**
-     * @brief Strip quotes from a string value
-     * @param value String to strip quotes from
-     * @return String without surrounding quotes
-     */
-    static QString stripQuotes(const QString &value);
-
-    /**
-     * @brief Check if a token is a known option
-     * @param token Token to check
-     * @return true if token is a known option
-     */
     static bool isKnownOption(const QString &token);
-
-    /**
-     * @brief Set last error message
-     * @param error Error message to set
-     */
-    void setLastError(const QString &error);
-
-    /**
-     * @brief Clear last error message
-     */
+    static const QSet<QString> KNOWN_OPTIONS;
+    static const QStringList POSSIBLE_LOCATIONS;
+    static QString stripQuotes(const QString &value);
     void clearLastError();
+    void setLastError(const QString &error);
 };
-

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  picklocation.ui
+  Copyright (C) 2020-2025 MX Authors
+
+  This file is part of mx-dockmaker and is licensed under the GPL v3 or later.
+-->
 <ui version="4.0">
  <class>PickLocation</class>
  <widget class="QDialog" name="PickLocation">

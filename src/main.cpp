@@ -1,7 +1,7 @@
 /**********************************************************************
  *  main.cpp
  **********************************************************************
- * Copyright (C) 2020 MX Authors
+ * Copyright (C) 2020-2025 MX Authors
  *
  * Authors: Adrian
  *          MX Linux <http://mxlinux.org>
@@ -21,6 +21,7 @@
  **********************************************************************/
 
 #include <QApplication>
+#include <QCommandLineParser>
 #include <QFile>
 #include <QIcon>
 #include <QLibraryInfo>
@@ -49,6 +50,7 @@ int main(int argc, char *argv[])
     QApplication::setWindowIcon(QIcon("/usr/share/icons/hicolor/192x192/apps/mx-dockmaker.png"));
     QApplication::setApplicationName(QStringLiteral("mx-dockmaker"));
     QApplication::setOrganizationName(QStringLiteral("MX-Linux"));
+    QApplication::setApplicationVersion(VERSION);
 
     QTranslator qtTran;
     if (qtTran.load("qt_" + QLocale().name(), QLibraryInfo::path(QLibraryInfo::TranslationsPath))) {
@@ -66,6 +68,14 @@ int main(int argc, char *argv[])
         QApplication::installTranslator(&appTran);
     }
 
+    // Command line parser
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QObject::tr("MX Dockmaker - Create and manage docks for FluxBox"));
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.addPositionalArgument("file", QObject::tr("Dock file to edit (optional)"), "[file]");
+    parser.process(a);
+
     // root guard
     if (QProcess::execute("/bin/bash", {"-c", "logname |grep -q ^root$"}) == 0) {
         QMessageBox::critical(
@@ -77,8 +87,9 @@ int main(int argc, char *argv[])
 
     if (getuid() != 0) {
         QString file;
-        if (QApplication::arguments().length() >= 2 && QFile::exists(QApplication::arguments().at(1))) {
-            file = QApplication::arguments().at(1);
+        const QStringList positionalArgs = parser.positionalArguments();
+        if (!positionalArgs.isEmpty() && QFile::exists(positionalArgs.first())) {
+            file = positionalArgs.first();
         }
         MainWindow w(nullptr, file);
         w.show();

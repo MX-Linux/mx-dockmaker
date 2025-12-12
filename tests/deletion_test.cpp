@@ -1,5 +1,5 @@
 /**********************************************************************
- *  about.h
+ *  deletion_test.cpp
  **********************************************************************
  * Copyright (C) 2020-2025 MX Authors
  *
@@ -20,10 +20,30 @@
  * along with this package. If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
 
-#pragma once
+#include <QtTest/QtTest>
 
-class QString;
+#include "dockconfiguration.h"
 
-void displayDoc(const QString &url, const QString &title);
-void displayAboutMsgBox(const QString &title, const QString &message, const QString &licence_url,
-                        const QString &license_title);
+class DeletionTest : public QObject
+{
+    Q_OBJECT
+
+private slots:
+    void removeSingleApplicationDoesNotCrash();
+};
+
+void DeletionTest::removeSingleApplicationDoesNotCrash()
+{
+    DockConfiguration config;
+    DockIconInfo info;
+    info.appName = QStringLiteral("app.desktop");
+    QVERIFY(config.addApplication(info) >= 0);
+    QCOMPARE(config.getApplicationCount(), 1);
+
+    QVERIFY(config.removeApplication(0));
+    QCOMPARE(config.getApplicationCount(), 0);
+    QVERIFY(config.isEmpty());
+}
+
+QTEST_MAIN(DeletionTest)
+#include "deletion_test.moc"

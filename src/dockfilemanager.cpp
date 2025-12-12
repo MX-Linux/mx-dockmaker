@@ -39,9 +39,8 @@ DockFileManager::DockFileManager(QObject *parent)
 {
 }
 
-bool DockFileManager::saveConfiguration(const DockConfiguration &configuration, 
-                                      const QString &filePath, 
-                                      bool createBackup)
+bool DockFileManager::saveConfiguration(const DockConfiguration &configuration, const QString &filePath,
+                                        bool createBackup)
 {
     clearLastError();
     const QString operation = tr("Saving configuration to %1").arg(filePath);
@@ -164,12 +163,12 @@ bool DockFileManager::moveDockFile(const QString &oldFilePath, const QString &ne
     file.close();
 
     // Update slit location in content
-    QString newLine = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: "
-                    + newSlitLocation + "/' $HOME/.fluxbox/init";
+    QString newLine = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + newSlitLocation
+                      + "/' $HOME/.fluxbox/init";
 
     QRegularExpression re(QStringLiteral("^sed -i.*"), QRegularExpression::MultilineOption);
     QString updatedContent;
-    
+
     if (re.match(content).hasMatch()) {
         updatedContent = content.replace(re, newLine);
     } else {
@@ -190,7 +189,7 @@ bool DockFileManager::moveDockFile(const QString &oldFilePath, const QString &ne
     file.close();
 
     // Restart wmalauncher
-    m_cmd.run(QStringLiteral("pkill wmalauncher"), true);
+    QProcess::execute(QStringLiteral("pkill"), QStringList() << QStringLiteral("wmalauncher"));
     QProcess::startDetached(oldFilePath, {});
 
     emit operationCompleted(operation, true);
@@ -203,12 +202,13 @@ bool DockFileManager::addToMenu(const QString &filePath, const QString &dockName
     const QString operation = tr("Adding dock to menu");
     emit operationStarted(operation);
 
-    // Use secure command construction
-    QString cmd = QStringLiteral("sed -i '/\\[submenu\\] (Docks)/a \\\\t\\t\\t[exec] (%1) {%2}'")
-                  .arg(dockName, filePath);
-    cmd += " " + QDir::homePath() + "/.fluxbox/submenus/appearance";
+    const QString command = QStringLiteral("sed");
+    const QStringList args
+        = {QStringLiteral("-i"),
+           QStringLiteral("/\\[submenu\\] (Docks)/a \\t\\t\\t[exec] (%1) {%2}").arg(dockName, filePath),
+           QDir::homePath() + QStringLiteral("/.fluxbox/submenus/appearance")};
 
-    if (!m_cmd.run(cmd, true)) {
+    if (!runCommandQuiet(command, args)) {
         setLastError(tr("Failed to add dock to Fluxbox menu"));
         emit operationError(operation, m_lastError);
         emit operationCompleted(operation, false);
@@ -225,11 +225,11 @@ bool DockFileManager::removeFromMenu(const QString &filePath)
     const QString operation = tr("Removing dock from menu");
     emit operationStarted(operation);
 
-    // Use secure command construction
-    QString cmd = QStringLiteral("sed -ni '\\|%1|!p' %2/.fluxbox/submenus/appearance")
-                  .arg(filePath, QDir::homePath());
+    const QString command = QStringLiteral("sed");
+    const QStringList args = {QStringLiteral("-ni"), QStringLiteral("\\|%1|!p").arg(filePath),
+                              QDir::homePath() + QStringLiteral("/.fluxbox/submenus/appearance")};
 
-    if (!m_cmd.run(cmd, true)) {
+    if (!runCommandQuiet(command, args)) {
         setLastError(tr("Failed to remove dock from Fluxbox menu"));
         emit operationError(operation, m_lastError);
         emit operationCompleted(operation, false);
@@ -237,7 +237,7 @@ bool DockFileManager::removeFromMenu(const QString &filePath)
     }
 
     // Restart wmalauncher
-    m_cmd.run(QStringLiteral("pkill wmalauncher"), true);
+    QProcess::execute(QStringLiteral("pkill"), QStringList() << QStringLiteral("wmalauncher"));
 
     emit operationCompleted(operation, true);
     return true;
@@ -285,9 +285,8 @@ bool DockFileManager::setExecutable(const QString &filePath)
     emit operationStarted(operation);
 
     QFile file(filePath);
-    if (!file.setPermissions(QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner |
-                           QFile::ReadGroup | QFile::ExeGroup |
-                           QFile::ReadOther | QFile::ExeOther)) {
+    if (!file.setPermissions(QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner | QFile::ReadGroup | QFile::ExeGroup
+                             | QFile::ReadOther | QFile::ExeOther)) {
         setLastError(tr("Failed to set executable permissions"));
         emit operationError(operation, m_lastError);
         emit operationCompleted(operation, false);
@@ -302,14 +301,14 @@ bool DockFileManager::ensureScriptsDirectory()
 {
     QString scriptsDir = QDir::homePath() + "/.fluxbox/scripts";
     QDir dir;
-    
+
     if (!dir.exists(scriptsDir)) {
         if (!dir.mkpath(scriptsDir)) {
             setLastError(tr("Failed to create scripts directory: %1").arg(scriptsDir));
             return false;
         }
     }
-    
+
     return true;
 }
 
@@ -336,8 +335,8 @@ QString DockFileManager::generateDockContent(const DockConfiguration &configurat
     QString slitLocation = configuration.getSlitLocation();
     if (!slitLocation.isEmpty()) {
         out << "#set up slit location\n";
-        out << "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: "
-            << slitLocation << "/' $HOME/.fluxbox/init\n\n";
+        out << "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " << slitLocation
+            << "/' $HOME/.fluxbox/init\n\n";
         out << "fluxbox-remote restart; sleep 1\n\n";
     }
 
@@ -345,11 +344,16 @@ QString DockFileManager::generateDockContent(const DockConfiguration &configurat
 
     // Add applications
     for (const auto &app : configuration.getApplications()) {
+        if (!app.isValid()) {
+            continue; // Skip incomplete entries
+        }
         QString command;
         if (app.isDesktopFile()) {
             command = "--desktop-file " + escapeShellArg(app.appName);
         } else {
-            command = "--command " + escapeShellArg(app.command) + " --icon " + escapeShellArg(app.customIcon);
+            const QString iconPath
+                = app.customIcon.isEmpty() ? QStringLiteral("application-x-executable") : app.customIcon;
+            command = "--command " + app.command + " --icon " + escapeShellArg(iconPath);
         }
 
         QString extraOptions = app.extraOptions;
@@ -362,13 +366,12 @@ QString DockFileManager::generateDockContent(const DockConfiguration &configurat
             tooltipOption = QStringLiteral(" --tooltip-text ") + escapeShellArg(app.tooltip);
         }
 
-        out << "wmalauncher " << command
-            << " --background-color \"" << app.backgroundColor.name() << "\""
+        out << "wmalauncher " << command << " --background-color \"" << app.backgroundColor.name() << "\""
             << " --hover-background-color \"" << app.hoverBackground.name() << "\""
             << " --border-color \"" << app.borderColor.name() << "\""
             << " --hover-border-color \"" << app.hoverBorder.name() << "\""
-            << " --window-size " << app.size.section(QStringLiteral("x"), 0, 0)
-            << tooltipOption << extraOptions << "& sleep 0.1\n";
+            << " --window-size " << app.size.section(QStringLiteral("x"), 0, 0) << tooltipOption << extraOptions
+            << "& sleep 0.1\n";
     }
 
     return content;
@@ -379,7 +382,7 @@ QString DockFileManager::escapeShellArg(const QString &arg)
     if (arg.isEmpty()) {
         return QStringLiteral("''");
     }
-    
+
     // POSIX-safe single-quote escaping
     QString escaped = arg;
     escaped.replace(QLatin1Char('\''), QStringLiteral("'\"'\"'"));
@@ -395,4 +398,12 @@ void DockFileManager::setLastError(const QString &error)
 void DockFileManager::clearLastError()
 {
     m_lastError.clear();
+}
+
+bool DockFileManager::runCommandQuiet(const QString &command, const QStringList &args)
+{
+    QProcess proc;
+    proc.start(command, args);
+    proc.waitForFinished();
+    return proc.exitStatus() == QProcess::NormalExit && proc.exitCode() == 0;
 }
