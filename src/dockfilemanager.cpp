@@ -38,6 +38,7 @@
 // Fluxbox directory constants
 static const QString FLUXBOX_SCRIPTS_DIR = QStringLiteral("/.fluxbox/scripts");
 static const QString FLUXBOX_SUBMENUS_DIR = QStringLiteral("/.fluxbox/submenus/appearance");
+static const QString FLUXBOX_INIT_FILE = QStringLiteral("$HOME/.fluxbox/init");
 
 DockFileManager::DockFileManager(QObject *parent)
     : QObject(parent)
@@ -167,7 +168,7 @@ bool DockFileManager::moveDockFile(const QString &oldFilePath, const QString &ne
 
     // Update slit location in content
     QString newLine = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + newSlitLocation
-                      + "/' $HOME/.fluxbox/init";
+                      + "/' " + FLUXBOX_INIT_FILE;
 
     QRegularExpression re(QStringLiteral("^sed -i.*"), QRegularExpression::MultilineOption);
     QString updatedContent;
@@ -348,7 +349,7 @@ QString DockFileManager::generateDockContent(const DockConfiguration &configurat
     if (!slitLocation.isEmpty()) {
         out << "#set up slit location\n";
         out << "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " << slitLocation
-            << "/' $HOME/.fluxbox/init\n\n";
+            << "/' " << FLUXBOX_INIT_FILE << "\n\n";
         out << "fluxbox-remote restart; sleep 1\n\n";
     }
 
