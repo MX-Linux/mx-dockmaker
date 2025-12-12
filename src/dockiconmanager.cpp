@@ -207,13 +207,6 @@ QPixmap DockIconManager::findThemeIcon(const QString &iconName, QSize size)
 QPixmap DockIconManager::findFilesystemIcon(const QString &iconName, QSize size)
 {
     QStringList searchPaths = getIconSearchPaths();
-    QString searchTerm = iconName;
-
-    // Add extension if not present
-    if (!iconName.endsWith(QLatin1String(".png")) && !iconName.endsWith(QLatin1String(".svg"))
-        && !iconName.endsWith(QLatin1String(".xpm"))) {
-        searchTerm = iconName + ".*";
-    }
 
     // Remove extensions for exact matching
     QString cleanName = iconName;
@@ -234,17 +227,31 @@ QPixmap DockIconManager::findFilesystemIcon(const QString &iconName, QSize size)
     }
 
     // Use recursive search as last resort (more expensive)
-    const QStringList recursivePaths
-        = {QStringLiteral("/usr/share/icons/hicolor/48x48/"), QStringLiteral("/usr/share/icons/hicolor/"),
-           QStringLiteral("/usr/share/icons/")};
-    for (const QString &root : recursivePaths) {
-        QProcess proc;
-        proc.start(QStringLiteral("find"),
-                   {root, QStringLiteral("-iname"), searchTerm, QStringLiteral("-print"), QStringLiteral("-quit")});
-        proc.waitForFinished();
-        const QString result = QString::fromLocal8Bit(proc.readAllStandardOutput()).trimmed();
-        if (!result.isEmpty()) {
-            return QIcon(result).pixmap(size);
+    // Helper function to search for icon in all paths
+    const auto searchInPaths = [&](const QString &name) -> QIcon {
+        for (const auto &path : searchPaths) {
+            const QString fullPath = QDir(path).filePath(name);
+            if (QFile::exists(fullPath)) {
+                QIcon icon(fullPath);
+                if (!icon.isNull()) {
+                    return icon;
+                }
+            }
+        }
+        return QIcon();
+    };
+
+    // First, try with the plain icon name (no extension)
+    QIcon foundIcon = searchInPaths(cleanName);
+    if (!foundIcon.isNull()) {
+        return foundIcon.pixmap(size);
+    }
+
+    // Then, try with common icon extensions
+    for (const QString &ext : {".png", ".svg", ".xpm"}) {
+        QIcon iconWithExt = searchInPaths(cleanName + ext);
+        if (!iconWithExt.isNull()) {
+            return iconWithExt.pixmap(size);
         }
     }
 
@@ -253,8 +260,13 @@ QPixmap DockIconManager::findFilesystemIcon(const QString &iconName, QSize size)
 
 QStringList DockIconManager::getIconSearchPaths()
 {
-    return {QDir::homePath() + "/.local/share/icons/", "/usr/share/pixmaps/", "/usr/local/share/icons/",
-            "/usr/share/icons/hicolor/48x48/apps/"};
+    return {QDir::homePath() + "/.local/share/icons/",
+            "/usr/share/pixmaps/",
+            "/usr/local/share/icons/",
+            "/usr/share/icons/",
+            "/usr/share/icons/hicolor/scalable/apps/",
+            "/usr/share/icons/hicolor/48x48/apps/",
+            "/usr/share/icons/Adwaita/48x48/legacy/"};
 }
 
 QString DockIconManager::generateIconStyle(const DockIconInfo &iconInfo, bool isSelected)
