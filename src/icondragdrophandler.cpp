@@ -350,7 +350,8 @@ int IconDragDropHandler::getIconLabelIndex(QLabel *label)
 void IconDragDropHandler::cleanupDragIndicator()
 {
     if (m_dragIndicator) {
-        delete m_dragIndicator;
+        // Use deleteLater() to avoid double-deletion if parent widget was already destroyed
+        m_dragIndicator->deleteLater();
         m_dragIndicator = nullptr;
     }
 
@@ -367,8 +368,12 @@ void IconDragDropHandler::cleanupDragIndicator()
 
 void IconDragDropHandler::cleanupInsertionIndicators()
 {
+    // Use deleteLater() to safely schedule deletion and avoid double-deletion
+    // if parent widget was already destroyed
     for (QLabel *indicator : m_insertionIndicators) {
-        delete indicator;
+        if (indicator) {
+            indicator->deleteLater();
+        }
     }
     m_insertionIndicators.clear();
 }
