@@ -66,7 +66,6 @@ public:
 
 public slots:
 private slots:
-    bool eventFilter(QObject *obj, QEvent *event) override;
     void allItemsChanged();
     void buttonAbout_clicked();
     void buttonAdd_clicked();
@@ -96,6 +95,7 @@ private slots:
     QString validateSizeString(const QString &sizeString, const QString &fallbackSize) const;
 
 private:
+    bool eventFilter(QObject *obj, QEvent *event) override;
     Ui::MainWindow *ui;
     void applyIconStyles(int selectedIndex);
     void renderIconAt(int index);
