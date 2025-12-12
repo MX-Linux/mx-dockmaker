@@ -33,31 +33,40 @@
 #include "about.h"
 #include "picklocation.h"
 
-#ifndef VERSION
-#define VERSION "?.?.?.?"
-#endif
+// String constants (translated - keep as char* for tr() usage)
+static constexpr const char* SELECT_TEXT = "Select...";
+static constexpr const char* SELECT_ICON_TEXT = "Select icon...";
+static constexpr const char* APP_NAME_TR = "MX Dockmaker";
 
-namespace
-{
-[[nodiscard]] QString quoteArgument(const QString &arg)
-{
-    if (arg.isEmpty()) {
-        return QStringLiteral("''");
-    }
-    auto escaped = arg;
-    escaped.replace(QLatin1Char('\''), QStringLiteral("'\"'\"'")); // POSIX-safe single-quote escaping
-    return QLatin1Char('\'') + escaped + QLatin1Char('\'');
-}
+// Default values
+static const QString DEFAULT_SIZE = QStringLiteral("48x48");
+static const QString DEFAULT_BACKGROUND_COLOR = QStringLiteral("black");
+static const QString DEFAULT_FRAME_COLOR = QStringLiteral("white");
 
-constexpr int kIconBorderWidth = 4;
-constexpr int kIconPadding = 4; // Space reserved around the icon so borders stay outside the artwork
+// Settings keys
+static const QString SETTING_BACKGROUND_COLOR = QStringLiteral("BackgroundColor");
+static const QString SETTING_BACKGROUND_HOVER_COLOR = QStringLiteral("BackgroundHoverColor");
+static const QString SETTING_FRAME_COLOR = QStringLiteral("FrameColor");
+static const QString SETTING_FRAME_HOVER_COLOR = QStringLiteral("FrameHoverColor");
+static const QString SETTING_SIZE = QStringLiteral("Size");
 
-[[nodiscard]] QSize iconContainerSize(QSize iconSize)
-{
-    return iconSize
-           + QSize(2 * (kIconBorderWidth + kIconPadding), 2 * (kIconBorderWidth + kIconPadding)); // padding + border
-}
-} // namespace
+// File paths
+static const QString FLUXBOX_SCRIPTS_PATH = QStringLiteral("/.fluxbox/scripts");
+static const QString APPLICATIONS_PATH = QStringLiteral("/usr/share/applications");
+static const QString ICONS_PATH = QStringLiteral("/usr/share/icons/");
+
+// File filters (translatable)
+static constexpr const char* DOCK_FILES_FILTER_TR = "Dock Files (*.mxdk);;All Files (*.*)";
+static constexpr const char* DESKTOP_FILES_FILTER_TR = "Desktop Files (*.desktop)";
+static constexpr const char* ICON_FILES_FILTER_TR = "Icons (*.png *.jpg *.bmp *.xpm *.svg)";
+
+// URLs
+static const QString HELP_URL = QStringLiteral("https://mxlinux.org/wiki/help-files/help-mx-dockmaker/");
+static const QString LICENSE_URL = QStringLiteral("/usr/share/doc/mx-dockmaker/license.html");
+
+// Application info
+static const QString APP_NAME = QStringLiteral("MX Dockmaker");
+static const QString DEFAULT_COMMAND_ICON = QStringLiteral("application-x-executable");
 
 MainWindow::MainWindow(QWidget *parent, const QString &file)
     : QDialog(parent),
@@ -155,7 +164,7 @@ void MainWindow::applyIconStyles(int selectedIndex)
 
 bool MainWindow::checkDoneEditing()
 {
-    const bool hasSelection = ui->buttonSelectApp->text() != tr("Select...") || !ui->lineEditCommand->text().isEmpty();
+    const bool hasSelection = ui->buttonSelectApp->text() != tr(SELECT_TEXT) || !ui->lineEditCommand->text().isEmpty();
 
     // Save only becomes active after a user change
     ui->buttonSave->setEnabled(changed && hasSelection);
@@ -196,7 +205,7 @@ void MainWindow::setup(const QString &file)
     changed = false;
 
     ui->buttonSave->setEnabled(false);
-    this->setWindowTitle(QStringLiteral("MX Dockmaker"));
+    this->setWindowTitle(APP_NAME);
     ui->labelUsage->setText(tr("1. Add applications to the dock one at a time\n"
                                "2. Select a .desktop file or enter a command for the application you want\n"
                                "3. Select icon attributes for size, background (black is standard) and border\n"
@@ -205,24 +214,24 @@ void MainWindow::setup(const QString &file)
 
     blockComboSignals(true);
 
-    ui->comboSize->setCurrentIndex(ui->comboSize->findText(QStringLiteral("48x48")));
+    ui->comboSize->setCurrentIndex(ui->comboSize->findText(DEFAULT_SIZE));
 
     // Write configs if not there
-    settings.setValue(QStringLiteral("BackgroundColor"),
-                      settings.value(QStringLiteral("BackgroundColor"), "black").toString());
-    settings.setValue(QStringLiteral("BackgroundHoverColor"),
-                      settings.value(QStringLiteral("BackgroundHoverColor"), "black").toString());
-    settings.setValue(QStringLiteral("FrameColor"), settings.value(QStringLiteral("FrameColor"), "white").toString());
-    settings.setValue(QStringLiteral("FrameHoverColor"),
-                      settings.value(QStringLiteral("FrameHoverColor"), "white").toString());
-    QString sizeValue = validateSizeString(settings.value(QStringLiteral("Size"), "48x48").toString(), "48x48");
-    settings.setValue(QStringLiteral("Size"), sizeValue);
+    settings.setValue(SETTING_BACKGROUND_COLOR,
+                      settings.value(SETTING_BACKGROUND_COLOR, DEFAULT_BACKGROUND_COLOR).toString());
+    settings.setValue(SETTING_BACKGROUND_HOVER_COLOR,
+                      settings.value(SETTING_BACKGROUND_HOVER_COLOR, DEFAULT_BACKGROUND_COLOR).toString());
+    settings.setValue(SETTING_FRAME_COLOR, settings.value(SETTING_FRAME_COLOR, DEFAULT_FRAME_COLOR).toString());
+    settings.setValue(SETTING_FRAME_HOVER_COLOR,
+                      settings.value(SETTING_FRAME_HOVER_COLOR, DEFAULT_FRAME_COLOR).toString());
+    QString sizeValue = validateSizeString(settings.value(SETTING_SIZE, DEFAULT_SIZE).toString(), DEFAULT_SIZE);
+    settings.setValue(SETTING_SIZE, sizeValue);
 
     // Set default values with validation
-    setColorFromString(ui->widgetBackground, settings.value("BackgroundColor").toString(), QColor(Qt::black));
-    setColorFromString(ui->widgetHoverBackground, settings.value("BackgroundHoverColor").toString(), QColor(Qt::black));
-    setColorFromString(ui->widgetBorder, settings.value("FrameColor").toString(), QColor(Qt::white));
-    setColorFromString(ui->widgetHoverBorder, settings.value("FrameHoverColor").toString(), QColor(Qt::white));
+    setColorFromString(ui->widgetBackground, settings.value(SETTING_BACKGROUND_COLOR).toString(), QColor(Qt::black));
+    setColorFromString(ui->widgetHoverBackground, settings.value(SETTING_BACKGROUND_HOVER_COLOR).toString(), QColor(Qt::black));
+    setColorFromString(ui->widgetBorder, settings.value(SETTING_FRAME_COLOR).toString(), QColor(Qt::white));
+    setColorFromString(ui->widgetHoverBorder, settings.value(SETTING_FRAME_HOVER_COLOR).toString(), QColor(Qt::white));
 
     blockComboSignals(false);
     ui->buttonSave->setEnabled(false);
@@ -289,7 +298,7 @@ void MainWindow::allItemsChanged()
         m_configuration->updateApplication(i, iconInfo);
         const quint8 width = ui->comboSize->currentText().section(QStringLiteral("x"), 0, 0).toUShort();
         const QSize size(width, width);
-        const QSize containerSize = iconContainerSize(size);
+        const QSize containerSize = DockIconManager::getIconContainerSize(size);
         listIcons.at(i)->setPixmap(listIcons.at(i)->pixmap(Qt::ReturnByValue).scaled(size));
         listIcons.at(i)->setAlignment(Qt::AlignCenter);
         listIcons.at(i)->setFixedSize(containerSize);
@@ -431,7 +440,7 @@ void MainWindow::updateAppList(int idx)
         iconInfo.customIcon.clear();
     }
     if (!iconInfo.isDesktopFile() && iconInfo.customIcon.isEmpty()) {
-        iconInfo.customIcon = QStringLiteral("application-x-executable");
+        iconInfo.customIcon = DEFAULT_COMMAND_ICON;
     }
 
     // Update configuration
@@ -447,8 +456,8 @@ void MainWindow::deleteDock()
     hide();
 
     const QString selectedDock
-        = QFileDialog::getOpenFileName(this, tr("Select dock to delete"), QDir::homePath() + "/.fluxbox/scripts",
-                                       tr("Dock Files (*.mxdk);;All Files (*.*)"));
+        = QFileDialog::getOpenFileName(this, tr("Select dock to delete"), QDir::homePath() + FLUXBOX_SCRIPTS_PATH,
+                                       tr(DOCK_FILES_FILTER_TR));
 
     if (!selectedDock.isEmpty()) {
         const QMessageBox::StandardButton confirmation = QMessageBox::question(
@@ -477,8 +486,8 @@ void MainWindow::moveDock()
     this->hide();
 
     const QString selected_dock
-        = QFileDialog::getOpenFileName(this, tr("Select dock to move"), QDir::homePath() + "/.fluxbox/scripts",
-                                       tr("Dock Files (*.mxdk);;All Files (*.*)"));
+        = QFileDialog::getOpenFileName(this, tr("Select dock to move"), QDir::homePath() + FLUXBOX_SCRIPTS_PATH,
+                                       tr(DOCK_FILES_FILTER_TR));
     if (selected_dock.isEmpty()) {
         setup();
         return;
@@ -557,8 +566,8 @@ void MainWindow::buttonSave_clicked()
     }
 
     if (targetFile.isEmpty()) {
-        targetFile = QFileDialog::getSaveFileName(this, tr("Save file"), QDir::homePath() + "/.fluxbox/scripts",
-                                                  tr("Dock Files (*.mxdk);;All Files (*.*)"));
+        targetFile = QFileDialog::getSaveFileName(this, tr("Save file"), QDir::homePath() + FLUXBOX_SCRIPTS_PATH,
+                                                  tr(DOCK_FILES_FILTER_TR));
         if (targetFile.isEmpty()) {
             return;
         }
@@ -608,13 +617,13 @@ void MainWindow::buttonAbout_clicked()
 {
     this->hide();
     displayAboutMsgBox(
-        tr("About %1").arg(tr("MX Dockmaker")),
+        tr("About %1").arg(tr(APP_NAME_TR)),
         R"(<p align="center"><b><h2>MX Dockmaker</h2></b></p><p align="center">)" + tr("Version: ") + VERSION
             + "</p><p align=\"center\"><h3>" + tr("Description goes here")
             + "</h3></p><p align=\"center\"><a href=\"http://mxlinux.org\">http://mxlinux.org</a><br /></p>"
               "<p align=\"center\">"
             + tr("Copyright (c) MX Linux") + "<br /><br /></p>",
-        QStringLiteral("/usr/share/doc/mx-dockmaker/license.html"), tr("%1 License").arg(this->windowTitle()));
+        LICENSE_URL.toLatin1().constData(), tr("%1 License").arg(this->windowTitle()));
 
     this->show();
 }
@@ -622,7 +631,7 @@ void MainWindow::buttonAbout_clicked()
 // Help button clicked
 void MainWindow::buttonHelp_clicked()
 {
-    const QString url = QStringLiteral("https://mxlinux.org/wiki/help-files/help-mx-dockmaker/");
+    const QString url = HELP_URL;
     displayDoc(url, tr("%1 Help").arg(this->windowTitle()));
 }
 
@@ -691,7 +700,7 @@ void MainWindow::resetAdd()
         DockIconInfo firstIcon = m_configuration->getApplication(0);
         size = firstIcon.size;
     } else {
-        size = validateSizeString(settings.value(QStringLiteral("Size"), "48x48").toString(), "48x48");
+        size = validateSizeString(settings.value(SETTING_SIZE, DEFAULT_SIZE).toString(), DEFAULT_SIZE);
     }
 
     blockComboSignals(true);
@@ -793,7 +802,7 @@ void MainWindow::showApp(int idx)
 void MainWindow::buttonSelectApp_clicked()
 {
     const QString selected = QFileDialog::getOpenFileName(
-        this, tr("Select .desktop file"), QStringLiteral("/usr/share/applications"), tr("Desktop Files (*.desktop)"));
+        this, tr("Select .desktop file"), APPLICATIONS_PATH, tr(DESKTOP_FILES_FILTER_TR));
     const QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
         ui->buttonSelectApp->setText(file);
@@ -815,8 +824,8 @@ void MainWindow::editDock(const QString &file_arg)
         selected_dock = file_arg;
     } else {
         selected_dock
-            = QFileDialog::getOpenFileName(this, tr("Select a dock file"), QDir::homePath() + "/.fluxbox/scripts",
-                                           tr("Dock Files (*.mxdk);;All Files (*.*)"));
+            = QFileDialog::getOpenFileName(this, tr("Select a dock file"), QDir::homePath() + FLUXBOX_SCRIPTS_PATH,
+                                           tr(DOCK_FILES_FILTER_TR));
     }
 
     if (!QFileInfo::exists(selected_dock)) {
@@ -960,10 +969,10 @@ void MainWindow::buttonSelectIcon_clicked()
         QFileInfo f_info(ui->buttonSelectIcon->text());
         default_folder = f_info.canonicalPath();
     } else {
-        default_folder = QStringLiteral("/usr/share/icons/");
+        default_folder = ICONS_PATH;
     }
     QString selected = QFileDialog::getOpenFileName(this, tr("Select icon"), default_folder,
-                                                    tr("Icons (*.png *.jpg *.bmp *.xpm *.svg)"));
+                                                    tr(ICON_FILES_FILTER_TR));
     QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
         ui->buttonSelectIcon->setText(selected);
@@ -1028,11 +1037,11 @@ void MainWindow::buttonAdd_clicked()
         iconInfo.borderColor = firstIcon.borderColor;
         iconInfo.hoverBorder = firstIcon.hoverBorder;
     } else {
-        iconInfo.size = validateSizeString(settings.value(QStringLiteral("Size"), "48x48").toString(), "48x48");
-        iconInfo.backgroundColor = QColor(settings.value(QStringLiteral("BackgroundColor"), "black").toString());
-        iconInfo.hoverBackground = QColor(settings.value(QStringLiteral("BackgroundHoverColor"), "black").toString());
-        iconInfo.borderColor = QColor(settings.value(QStringLiteral("FrameColor"), "white").toString());
-        iconInfo.hoverBorder = QColor(settings.value(QStringLiteral("FrameHoverColor"), "white").toString());
+        iconInfo.size = validateSizeString(settings.value(SETTING_SIZE, DEFAULT_SIZE).toString(), DEFAULT_SIZE);
+        iconInfo.backgroundColor = QColor(settings.value(SETTING_BACKGROUND_COLOR, DEFAULT_BACKGROUND_COLOR).toString());
+        iconInfo.hoverBackground = QColor(settings.value(SETTING_BACKGROUND_HOVER_COLOR, DEFAULT_BACKGROUND_COLOR).toString());
+        iconInfo.borderColor = QColor(settings.value(SETTING_FRAME_COLOR, DEFAULT_FRAME_COLOR).toString());
+        iconInfo.hoverBorder = QColor(settings.value(SETTING_FRAME_HOVER_COLOR, DEFAULT_FRAME_COLOR).toString());
     }
 
     // Insert at the calculated position
