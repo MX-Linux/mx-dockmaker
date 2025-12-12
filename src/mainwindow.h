@@ -92,6 +92,7 @@ private slots:
     void radioDesktop_toggled(bool checked);
     void resizeEvent(QResizeEvent *event) override;
     void setColor(QWidget *widget, const QColor &color);
+    void setColorFromString(QWidget *widget, const QString &colorString, const QColor &fallbackColor);
 
 private:
     Ui::MainWindow *ui;

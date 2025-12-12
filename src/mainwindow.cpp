@@ -216,11 +216,12 @@ void MainWindow::setup(const QString &file)
     settings.setValue(QStringLiteral("FrameHoverColor"),
                       settings.value(QStringLiteral("FrameHoverColor"), "white").toString());
     settings.setValue(QStringLiteral("Size"), settings.value(QStringLiteral("Size"), "48x48").toString());
-    // Set default values
-    setColor(ui->widgetBackground, settings.value("BackgroundColor").toString());
-    setColor(ui->widgetHoverBackground, settings.value("BackgroundHoverColor").toString());
-    setColor(ui->widgetBorder, settings.value("FrameColor").toString());
-    setColor(ui->widgetHoverBorder, settings.value("FrameHoverColor").toString());
+
+    // Set default values with validation
+    setColorFromString(ui->widgetBackground, settings.value("BackgroundColor").toString(), QColor(Qt::black));
+    setColorFromString(ui->widgetHoverBackground, settings.value("BackgroundHoverColor").toString(), QColor(Qt::black));
+    setColorFromString(ui->widgetBorder, settings.value("FrameColor").toString(), QColor(Qt::white));
+    setColorFromString(ui->widgetHoverBorder, settings.value("FrameHoverColor").toString(), QColor(Qt::white));
 
     blockComboSignals(false);
     ui->buttonSave->setEnabled(false);
@@ -919,6 +920,18 @@ void MainWindow::setColor(QWidget *widget, const QColor &color)
         pal.setColor(QPalette::Window, color);
         widget->setAutoFillBackground(true);
         widget->setPalette(pal);
+    }
+}
+
+void MainWindow::setColorFromString(QWidget *widget, const QString &colorString, const QColor &fallbackColor)
+{
+    QColor color(colorString);
+    if (color.isValid()) {
+        setColor(widget, color);
+    } else {
+        // Log warning about invalid color and use fallback
+        qWarning() << tr("Invalid color string '%1' in settings, using fallback color").arg(colorString);
+        setColor(widget, fallbackColor);
     }
 }
 
