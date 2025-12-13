@@ -57,7 +57,7 @@ signals:
 private:
     QString m_lastError; ///< Last error message
 
-    QString generateDockContent(const DockConfiguration &configuration);
+    QString generateDockContent(const DockConfiguration &configuration) const;
     static QString escapeShellArg(const QString &arg);
     static QString escapeSedArg(const QString &arg);
     static bool runCommandQuiet(const QString &command, const QStringList &args = {});

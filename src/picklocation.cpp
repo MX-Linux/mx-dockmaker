@@ -65,4 +65,5 @@ PickLocation::~PickLocation()
 void PickLocation::onGroupButton(int buttonId)
 {
     button = buttonGroup->button(buttonId)->property("location").toString();
+    accept(); // Auto-accept dialog when location is selected
 }

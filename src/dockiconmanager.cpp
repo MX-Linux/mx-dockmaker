@@ -182,7 +182,7 @@ QString DockIconManager::getLastError() const
     return m_lastError;
 }
 
-QPixmap DockIconManager::searchIconInPaths(const QString &iconName, QSize size)
+QPixmap DockIconManager::searchIconInPaths(const QString &iconName, QSize size) const
 {
     // Try theme icon first
     QPixmap pixmap = findThemeIcon(iconName, size);
@@ -194,7 +194,7 @@ QPixmap DockIconManager::searchIconInPaths(const QString &iconName, QSize size)
     return findFilesystemIcon(iconName, size);
 }
 
-QPixmap DockIconManager::findThemeIcon(const QString &iconName, QSize size)
+QPixmap DockIconManager::findThemeIcon(const QString &iconName, QSize size) const
 {
     // Remove file extensions for theme lookup
     QString cleanName = iconName;
@@ -209,7 +209,7 @@ QPixmap DockIconManager::findThemeIcon(const QString &iconName, QSize size)
     return QPixmap();
 }
 
-QPixmap DockIconManager::findFilesystemIcon(const QString &iconName, QSize size)
+QPixmap DockIconManager::findFilesystemIcon(const QString &iconName, QSize size) const
 {
     QStringList searchPaths = getIconSearchPaths();
 

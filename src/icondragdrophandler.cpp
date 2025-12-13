@@ -323,7 +323,7 @@ void IconDragDropHandler::createDragIndicator(QLabel *sourceIcon, QWidget *paren
     sourceIcon->setStyleSheet(originalStyle + "opacity: 0.5;");
 }
 
-int IconDragDropHandler::findClosestInsertionPoint(QPoint mousePos)
+int IconDragDropHandler::findClosestInsertionPoint(QPoint mousePos) const
 {
     if (m_insertionIndicators.isEmpty()) {
         return -1;

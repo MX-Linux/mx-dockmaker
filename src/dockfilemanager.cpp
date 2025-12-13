@@ -332,7 +332,7 @@ QString DockFileManager::getLastError() const
     return m_lastError;
 }
 
-QString DockFileManager::generateDockContent(const DockConfiguration &configuration)
+QString DockFileManager::generateDockContent(const DockConfiguration &configuration) const
 {
     QString content;
     QTextStream out(&content);

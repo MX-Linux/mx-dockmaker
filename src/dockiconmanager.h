@@ -54,9 +54,9 @@ private:
     QString m_lastError; ///< Last error message
 
     // Icon styling constants
-    QPixmap findFilesystemIcon(const QString &iconName, QSize size);
-    QPixmap findThemeIcon(const QString &iconName, QSize size);
-    QPixmap searchIconInPaths(const QString &iconName, QSize size);
+    QPixmap findFilesystemIcon(const QString &iconName, QSize size) const;
+    QPixmap findThemeIcon(const QString &iconName, QSize size) const;
+    QPixmap searchIconInPaths(const QString &iconName, QSize size) const;
     QString generateIconStyle(const DockIconInfo &iconInfo, bool isSelected) const;
     QStringList getIconSearchPaths() const;
     static constexpr int ICON_BORDER_WIDTH = 4;
