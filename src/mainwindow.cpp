@@ -32,6 +32,7 @@
 #include <QTimer>
 
 #include "about.h"
+#include "pathconstants.h"
 #include "picklocation.h"
 
 // String constants (translated - keep as char* for tr() usage)
@@ -50,11 +51,6 @@ static const QString SETTING_BACKGROUND_HOVER_COLOR = QStringLiteral("Background
 static const QString SETTING_FRAME_COLOR = QStringLiteral("FrameColor");
 static const QString SETTING_FRAME_HOVER_COLOR = QStringLiteral("FrameHoverColor");
 static const QString SETTING_SIZE = QStringLiteral("Size");
-
-// File paths
-static const QString FLUXBOX_SCRIPTS_PATH = QStringLiteral("/.fluxbox/scripts");
-static const QString APPLICATIONS_PATH = QStringLiteral("/usr/share/applications");
-static const QString ICONS_PATH = QStringLiteral("/usr/share/icons/");
 
 // File filters (translatable)
 static constexpr const char *DOCK_FILES_FILTER_TR = "Dock Files (*.mxdk);;All Files (*.*)";
@@ -305,7 +301,7 @@ void MainWindow::allItemsChanged()
 
 QString MainWindow::pickSlitLocation()
 {
-    auto *const pick = new PickLocation(slitLocation, this);
+    auto *const pick = new PickLocation(m_configuration->getSlitLocation(), this);
     if (pick->exec() == QDialog::Accepted) {
         return pick->button;
     }
@@ -454,7 +450,7 @@ void MainWindow::deleteDock()
     hide();
 
     const QString selectedDock = QFileDialog::getOpenFileName(
-        this, tr("Select dock to delete"), QDir::homePath() + FLUXBOX_SCRIPTS_PATH, tr(DOCK_FILES_FILTER_TR));
+        this, tr("Select dock to delete"), QDir::homePath() + PathConstants::FLUXBOX_SCRIPTS_DIR, tr(DOCK_FILES_FILTER_TR));
 
     if (!selectedDock.isEmpty()) {
         const QMessageBox::StandardButton confirmation = QMessageBox::question(
@@ -483,20 +479,20 @@ void MainWindow::moveDock()
     this->hide();
 
     const QString selected_dock = QFileDialog::getOpenFileName(
-        this, tr("Select dock to move"), QDir::homePath() + FLUXBOX_SCRIPTS_PATH, tr(DOCK_FILES_FILTER_TR));
+        this, tr("Select dock to move"), QDir::homePath() + PathConstants::FLUXBOX_SCRIPTS_DIR, tr(DOCK_FILES_FILTER_TR));
     if (selected_dock.isEmpty()) {
         setup();
         return;
     }
 
-    slitLocation = pickSlitLocation();
-    if (slitLocation.isEmpty()) {
+    const QString newSlitLocation = pickSlitLocation();
+    if (newSlitLocation.isEmpty()) {
         // User cancelled location selection
         setup();
         return;
     }
 
-    if (!m_fileManager->moveDockFile(selected_dock, slitLocation)) {
+    if (!m_fileManager->moveDockFile(selected_dock, newSlitLocation)) {
         QMessageBox::warning(this, tr("Error"), tr("Failed to move dock: %1").arg(m_fileManager->getLastError()));
     }
     setup();
@@ -550,12 +546,12 @@ void MainWindow::moveIconToPosition(int fromIndex, int toIndex)
 
 void MainWindow::buttonSave_clicked()
 {
-    slitLocation = pickSlitLocation();
-    if (slitLocation.isEmpty()) {
+    const QString newSlitLocation = pickSlitLocation();
+    if (newSlitLocation.isEmpty()) {
         // User cancelled location selection
         return;
     }
-    m_configuration->setSlitLocation(slitLocation);
+    m_configuration->setSlitLocation(newSlitLocation);
 
     QString targetFile = m_configuration->getFileName();
     bool newFile = false;
@@ -572,7 +568,7 @@ void MainWindow::buttonSave_clicked()
     }
 
     if (targetFile.isEmpty()) {
-        targetFile = QFileDialog::getSaveFileName(this, tr("Save file"), QDir::homePath() + FLUXBOX_SCRIPTS_PATH,
+        targetFile = QFileDialog::getSaveFileName(this, tr("Save file"), QDir::homePath() + PathConstants::FLUXBOX_SCRIPTS_DIR,
                                                   tr(DOCK_FILES_FILTER_TR));
         if (targetFile.isEmpty()) {
             return;
@@ -802,7 +798,7 @@ void MainWindow::showApp(int idx)
 
 void MainWindow::buttonSelectApp_clicked()
 {
-    const QString selected = QFileDialog::getOpenFileName(this, tr("Select .desktop file"), APPLICATIONS_PATH,
+    const QString selected = QFileDialog::getOpenFileName(this, tr("Select .desktop file"), PathConstants::APPLICATIONS_DIR,
                                                           tr(DESKTOP_FILES_FILTER_TR));
     const QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
@@ -826,7 +822,7 @@ void MainWindow::editDock(const QString &file_arg)
         selected_dock = file_arg;
     } else {
         selected_dock = QFileDialog::getOpenFileName(this, tr("Select a dock file"),
-                                                     QDir::homePath() + FLUXBOX_SCRIPTS_PATH, tr(DOCK_FILES_FILTER_TR));
+                                                     QDir::homePath() + PathConstants::FLUXBOX_SCRIPTS_DIR, tr(DOCK_FILES_FILTER_TR));
     }
 
     if (!QFileInfo::exists(selected_dock)) {
@@ -848,8 +844,6 @@ void MainWindow::editDock(const QString &file_arg)
     if (!dockName.isEmpty()) {
         m_configuration->setDockName(dockName);
     }
-
-    slitLocation = m_configuration->getSlitLocation();
 
     renderIconsFromConfiguration();
     if (!m_configuration->isEmpty()) {
@@ -965,7 +959,7 @@ void MainWindow::buttonSelectIcon_clicked()
         QFileInfo f_info(ui->buttonSelectIcon->text());
         default_folder = f_info.canonicalPath();
     } else {
-        default_folder = ICONS_PATH;
+        default_folder = QStringLiteral("/usr/share/icons/");
     }
     QString selected = QFileDialog::getOpenFileName(this, tr("Select icon"), default_folder, tr(ICON_FILES_FILTER_TR));
     QString file = QFileInfo(selected).fileName();

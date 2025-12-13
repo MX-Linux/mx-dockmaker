@@ -112,7 +112,6 @@ private:
     bool changed = false;
     int index = 0;
     QList<QLabel *> listIcons;
-    QString slitLocation;
 
     // Icon styling constants
     static constexpr int kIconBorderWidth = 4;

@@ -23,6 +23,7 @@
  **********************************************************************/
 
 #include "dockfileparser.h"
+#include "pathconstants.h"
 
 #include <QColor>
 #include <QDebug>
@@ -145,7 +146,7 @@ QString DockFileParser::extractDockName(const QString &fileName)
     QString baseName = fileInfo.baseName();
 
     // Try to extract name from submenus file
-    QFile submenusFile(QDir::homePath() + "/.fluxbox/submenus/appearance");
+    QFile submenusFile(QDir::homePath() + PathConstants::FLUXBOX_SUBMENUS_FILE);
     if (submenusFile.open(QFile::Text | QFile::ReadOnly)) {
         QString content = submenusFile.readAll();
         submenusFile.close();

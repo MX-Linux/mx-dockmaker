@@ -24,6 +24,7 @@
 
 #include "dockfilemanager.h"
 #include "dockfileparser.h"
+#include "pathconstants.h"
 
 #include <QDir>
 #include <QFile>
@@ -34,11 +35,6 @@
 #include <QTextStream>
 #include <QThread>
 #include <QTimer>
-
-// Fluxbox directory constants
-static const QString FLUXBOX_SCRIPTS_DIR = QStringLiteral("/.fluxbox/scripts");
-static const QString FLUXBOX_SUBMENUS_DIR = QStringLiteral("/.fluxbox/submenus/appearance");
-static const QString FLUXBOX_INIT_FILE = QStringLiteral("$HOME/.fluxbox/init");
 
 DockFileManager::DockFileManager(QObject *parent)
     : QObject(parent)
@@ -165,7 +161,7 @@ bool DockFileManager::moveDockFile(const QString &oldFilePath, const QString &ne
 
     // Update slit location in content
     QString newLine = "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " + newSlitLocation
-                      + "/' " + FLUXBOX_INIT_FILE;
+                      + "/' " + PathConstants::FLUXBOX_INIT_FILE;
 
     QRegularExpression re(QStringLiteral("^sed -i.*"), QRegularExpression::MultilineOption);
     QString updatedContent;
@@ -209,7 +205,7 @@ bool DockFileManager::addToMenu(const QString &filePath, const QString &dockName
     const QStringList args
         = {QStringLiteral("-i"),
            QStringLiteral("/\\[submenu\\] (Docks)/a \\t\\t\\t[exec] (%1) {%2}").arg(escapedDockName, escapedFilePath),
-           QDir::homePath() + FLUXBOX_SUBMENUS_DIR};
+           QDir::homePath() + PathConstants::FLUXBOX_SUBMENUS_FILE};
 
     if (!runCommandQuiet(command, args)) {
         setLastError(tr("Failed to add dock to Fluxbox menu"));
@@ -231,7 +227,7 @@ bool DockFileManager::removeFromMenu(const QString &filePath)
     const QString command = QStringLiteral("sed");
     const QString escapedFilePath = escapeSedArg(filePath);
     const QStringList args = {QStringLiteral("-ni"), QStringLiteral("\\|%1|!p").arg(escapedFilePath),
-                              QDir::homePath() + FLUXBOX_SUBMENUS_DIR};
+                              QDir::homePath() + PathConstants::FLUXBOX_SUBMENUS_FILE};
 
     if (!runCommandQuiet(command, args)) {
         setLastError(tr("Failed to remove dock from Fluxbox menu"));
@@ -249,7 +245,7 @@ bool DockFileManager::removeFromMenu(const QString &filePath)
 
 bool DockFileManager::isInMenu(const QString &filePath) const
 {
-    QFile menuFile(QDir::homePath() + FLUXBOX_SUBMENUS_DIR);
+    QFile menuFile(QDir::homePath() + PathConstants::FLUXBOX_SUBMENUS_FILE);
     if (!menuFile.open(QFile::Text | QFile::ReadOnly)) {
         return false;
     }
@@ -309,7 +305,7 @@ bool DockFileManager::setExecutable(const QString &filePath)
 
 bool DockFileManager::ensureScriptsDirectory()
 {
-    QString scriptsDir = QDir::homePath() + FLUXBOX_SCRIPTS_DIR;
+    QString scriptsDir = QDir::homePath() + PathConstants::FLUXBOX_SCRIPTS_DIR;
     QDir dir;
 
     if (!dir.exists(scriptsDir)) {
@@ -324,7 +320,7 @@ bool DockFileManager::ensureScriptsDirectory()
 
 QString DockFileManager::getDefaultDockDirectory()
 {
-    return QDir::homePath() + FLUXBOX_SCRIPTS_DIR;
+    return QDir::homePath() + PathConstants::FLUXBOX_SCRIPTS_DIR;
 }
 
 QString DockFileManager::getLastError() const
@@ -346,7 +342,7 @@ QString DockFileManager::generateDockContent(const DockConfiguration &configurat
     if (!slitLocation.isEmpty()) {
         out << "#set up slit location\n";
         out << "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " << slitLocation << "/' "
-            << FLUXBOX_INIT_FILE << "\n\n";
+            << PathConstants::FLUXBOX_INIT_FILE << "\n\n";
         out << "fluxbox-remote restart; sleep 1\n\n";
     }
 

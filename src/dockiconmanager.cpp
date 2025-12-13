@@ -23,6 +23,7 @@
  **********************************************************************/
 
 #include "dockiconmanager.h"
+#include "pathconstants.h"
 
 #include <QDebug>
 #include <QDir>
@@ -94,7 +95,7 @@ void DockIconManager::displayIcon(const DockIconInfo &iconInfo, QLabel *label, i
         iconPath = iconInfo.customIcon;
     } else if (iconInfo.isDesktopFile()) {
         // Extract icon from .desktop file
-        QFile desktopFile("/usr/share/applications/" + iconInfo.appName);
+        QFile desktopFile(PathConstants::APPLICATIONS_DIR + "/" + iconInfo.appName);
         if (desktopFile.open(QFile::ReadOnly)) {
             QString content = desktopFile.readAll();
             desktopFile.close();
@@ -265,13 +266,9 @@ QPixmap DockIconManager::findFilesystemIcon(const QString &iconName, QSize size)
 
 QStringList DockIconManager::getIconSearchPaths() const
 {
-    return {QDir::homePath() + "/.local/share/icons/",
-            "/usr/share/pixmaps/",
-            "/usr/local/share/icons/",
-            "/usr/share/icons/",
-            "/usr/share/icons/hicolor/scalable/apps/",
-            "/usr/share/icons/hicolor/48x48/apps/",
-            "/usr/share/icons/Adwaita/48x48/legacy/"};
+    QStringList paths = {QDir::homePath() + "/.local/share/icons/"};
+    paths.append(PathConstants::ICON_SEARCH_PATHS);
+    return paths;
 }
 
 QString DockIconManager::generateIconStyle(const DockIconInfo &iconInfo, bool isSelected) const

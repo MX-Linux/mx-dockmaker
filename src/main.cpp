@@ -31,6 +31,7 @@
 #include <QTranslator>
 
 #include "mainwindow.h"
+#include "pathconstants.h"
 #include <unistd.h>
 
 #ifndef VERSION
@@ -47,7 +48,7 @@ int main(int argc, char *argv[])
     }
 
     QApplication a(argc, argv);
-    QApplication::setWindowIcon(QIcon("/usr/share/icons/hicolor/192x192/apps/mx-dockmaker.png"));
+    QApplication::setWindowIcon(QIcon(PathConstants::APP_ICON_PATH));
     QApplication::setApplicationName(QStringLiteral("mx-dockmaker"));
     QApplication::setOrganizationName(QStringLiteral("MX-Linux"));
     QApplication::setApplicationVersion(VERSION);
