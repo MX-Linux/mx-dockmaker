@@ -335,7 +335,7 @@ QString DockFileManager::generateDockContent(const DockConfiguration &configurat
 
     // Add shebang and pkill wmalauncher
     out << "#!/bin/bash\n\n";
-    out << "pkill wmalauncher\n\n";
+    out << "pkill -x wmalauncher\n\n";
 
     // Add slit location setup
     QString slitLocation = configuration.getSlitLocation();
@@ -429,7 +429,7 @@ void DockFileManager::killAndWaitForProcess(const QString &processName)
 {
     // Use pkill to terminate the process
     QProcess pkill;
-    pkill.start(QStringLiteral("pkill"), {processName});
+    pkill.start(QStringLiteral("pkill"), {QStringLiteral("-x"), processName});
     pkill.waitForFinished(1000); // Wait up to 1 second for pkill to complete
 
     // Give the process time to actually terminate
@@ -451,6 +451,6 @@ void DockFileManager::killAndWaitForProcess(const QString &processName)
     }
 
     // If we get here, process is still running - try forceful kill
-    QProcess::execute(QStringLiteral("pkill"), {QStringLiteral("-9"), processName});
+    QProcess::execute(QStringLiteral("pkill"), {QStringLiteral("-9"), QStringLiteral("-x"), processName});
     QThread::msleep(200); // Give it time to die
 }
