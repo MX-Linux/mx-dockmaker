@@ -345,8 +345,8 @@ QString DockFileManager::generateDockContent(const DockConfiguration &configurat
     QString slitLocation = configuration.getSlitLocation();
     if (!slitLocation.isEmpty()) {
         out << "#set up slit location\n";
-        out << "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " << slitLocation
-            << "/' " << FLUXBOX_INIT_FILE << "\n\n";
+        out << "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: " << slitLocation << "/' "
+            << FLUXBOX_INIT_FILE << "\n\n";
         out << "fluxbox-remote restart; sleep 1\n\n";
     }
 

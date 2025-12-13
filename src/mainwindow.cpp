@@ -35,9 +35,9 @@
 #include "picklocation.h"
 
 // String constants (translated - keep as char* for tr() usage)
-static constexpr const char* SELECT_TEXT = "Select...";
-static constexpr const char* SELECT_ICON_TEXT = "Select icon...";
-static constexpr const char* APP_NAME_TR = "MX Dockmaker";
+static constexpr const char *SELECT_TEXT = "Select...";
+static constexpr const char *SELECT_ICON_TEXT = "Select icon...";
+static constexpr const char *APP_NAME_TR = "MX Dockmaker";
 
 // Default values
 static const QString DEFAULT_SIZE = QStringLiteral("48x48");
@@ -57,9 +57,9 @@ static const QString APPLICATIONS_PATH = QStringLiteral("/usr/share/applications
 static const QString ICONS_PATH = QStringLiteral("/usr/share/icons/");
 
 // File filters (translatable)
-static constexpr const char* DOCK_FILES_FILTER_TR = "Dock Files (*.mxdk);;All Files (*.*)";
-static constexpr const char* DESKTOP_FILES_FILTER_TR = "Desktop Files (*.desktop)";
-static constexpr const char* ICON_FILES_FILTER_TR = "Icons (*.png *.jpg *.bmp *.xpm *.svg)";
+static constexpr const char *DOCK_FILES_FILTER_TR = "Dock Files (*.mxdk);;All Files (*.*)";
+static constexpr const char *DESKTOP_FILES_FILTER_TR = "Desktop Files (*.desktop)";
+static constexpr const char *ICON_FILES_FILTER_TR = "Icons (*.png *.jpg *.bmp *.xpm *.svg)";
 
 // URLs
 static const QString HELP_URL = QStringLiteral("https://mxlinux.org/wiki/help-files/help-mx-dockmaker/");
@@ -118,12 +118,10 @@ void MainWindow::renderIconAt(int location)
 
 void MainWindow::renderIconsFromConfiguration()
 {
-    // Clear existing icons
-    for (QLabel *icon : listIcons) {
-        delete icon;
-    }
+    // Clear listIcons reference list without deleting (widgets owned by layout)
     listIcons.clear();
 
+    // Delete widgets from layout (this deletes the actual QLabel objects)
     if (ui->icons->layout()) {
         QLayoutItem *item;
         while ((item = ui->icons->layout()->takeAt(0)) != nullptr) {
@@ -176,7 +174,7 @@ bool MainWindow::checkDoneEditing()
         if (index != 0) {
             ui->buttonPrev->setEnabled(true);
         }
-        if (index < m_configuration->getApplicationCount() - 1 && m_configuration->getApplicationCount() > 1) {
+        if ((index < m_configuration->getApplicationCount() - 1) && m_configuration->getApplicationCount() > 1) {
             ui->buttonNext->setEnabled(true);
         }
         return true;
@@ -226,7 +224,8 @@ void MainWindow::setup(const QString &file)
 
     // Set default values with validation
     setColorFromString(ui->widgetBackground, settings.value(SETTING_BACKGROUND_COLOR).toString(), QColor(Qt::black));
-    setColorFromString(ui->widgetHoverBackground, settings.value(SETTING_BACKGROUND_HOVER_COLOR).toString(), QColor(Qt::black));
+    setColorFromString(ui->widgetHoverBackground, settings.value(SETTING_BACKGROUND_HOVER_COLOR).toString(),
+                       QColor(Qt::black));
     setColorFromString(ui->widgetBorder, settings.value(SETTING_FRAME_COLOR).toString(), QColor(Qt::white));
     setColorFromString(ui->widgetHoverBorder, settings.value(SETTING_FRAME_HOVER_COLOR).toString(), QColor(Qt::white));
 
@@ -452,9 +451,8 @@ void MainWindow::deleteDock()
 {
     hide();
 
-    const QString selectedDock
-        = QFileDialog::getOpenFileName(this, tr("Select dock to delete"), QDir::homePath() + FLUXBOX_SCRIPTS_PATH,
-                                       tr(DOCK_FILES_FILTER_TR));
+    const QString selectedDock = QFileDialog::getOpenFileName(
+        this, tr("Select dock to delete"), QDir::homePath() + FLUXBOX_SCRIPTS_PATH, tr(DOCK_FILES_FILTER_TR));
 
     if (!selectedDock.isEmpty()) {
         const QMessageBox::StandardButton confirmation = QMessageBox::question(
@@ -482,9 +480,8 @@ void MainWindow::moveDock()
 {
     this->hide();
 
-    const QString selected_dock
-        = QFileDialog::getOpenFileName(this, tr("Select dock to move"), QDir::homePath() + FLUXBOX_SCRIPTS_PATH,
-                                       tr(DOCK_FILES_FILTER_TR));
+    const QString selected_dock = QFileDialog::getOpenFileName(
+        this, tr("Select dock to move"), QDir::homePath() + FLUXBOX_SCRIPTS_PATH, tr(DOCK_FILES_FILTER_TR));
     if (selected_dock.isEmpty()) {
         setup();
         return;
@@ -793,8 +790,8 @@ void MainWindow::showApp(int idx)
 
 void MainWindow::buttonSelectApp_clicked()
 {
-    const QString selected = QFileDialog::getOpenFileName(
-        this, tr("Select .desktop file"), APPLICATIONS_PATH, tr(DESKTOP_FILES_FILTER_TR));
+    const QString selected = QFileDialog::getOpenFileName(this, tr("Select .desktop file"), APPLICATIONS_PATH,
+                                                          tr(DESKTOP_FILES_FILTER_TR));
     const QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
         ui->buttonSelectApp->setText(file);
@@ -816,9 +813,8 @@ void MainWindow::editDock(const QString &file_arg)
     if (!file_arg.isEmpty() && QFile::exists(file_arg)) {
         selected_dock = file_arg;
     } else {
-        selected_dock
-            = QFileDialog::getOpenFileName(this, tr("Select a dock file"), QDir::homePath() + FLUXBOX_SCRIPTS_PATH,
-                                           tr(DOCK_FILES_FILTER_TR));
+        selected_dock = QFileDialog::getOpenFileName(this, tr("Select a dock file"),
+                                                     QDir::homePath() + FLUXBOX_SCRIPTS_PATH, tr(DOCK_FILES_FILTER_TR));
     }
 
     if (!QFileInfo::exists(selected_dock)) {
@@ -830,7 +826,7 @@ void MainWindow::editDock(const QString &file_arg)
     if (!m_fileManager->loadConfiguration(selected_dock, *m_configuration)) {
         qDebug() << "Could not load configuration:" << selected_dock << m_fileManager->getLastError();
         QMessageBox::warning(this, tr("Could not open file"),
-                              tr("Could not open selected file.\nCreating a new dock instead."));
+                             tr("Could not open selected file.\nCreating a new dock instead."));
         return;
     }
 
@@ -945,7 +941,7 @@ QString MainWindow::validateSizeString(const QString &sizeString, const QString 
 
     // If not valid, log warning and return fallback
     qWarning() << tr("Invalid size '%1' in settings, must be one of: %2, using fallback '%3'")
-                  .arg(sizeString, validSizes.join(", "), fallbackSize);
+                      .arg(sizeString, validSizes.join(", "), fallbackSize);
     return fallbackSize;
 }
 
@@ -959,8 +955,7 @@ void MainWindow::buttonSelectIcon_clicked()
     } else {
         default_folder = ICONS_PATH;
     }
-    QString selected = QFileDialog::getOpenFileName(this, tr("Select icon"), default_folder,
-                                                    tr(ICON_FILES_FILTER_TR));
+    QString selected = QFileDialog::getOpenFileName(this, tr("Select icon"), default_folder, tr(ICON_FILES_FILTER_TR));
     QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
         ui->buttonSelectIcon->setText(selected);
@@ -1021,8 +1016,10 @@ void MainWindow::buttonAdd_clicked()
         iconInfo.hoverBorder = firstIcon.hoverBorder;
     } else {
         iconInfo.size = validateSizeString(settings.value(SETTING_SIZE, DEFAULT_SIZE).toString(), DEFAULT_SIZE);
-        iconInfo.backgroundColor = QColor(settings.value(SETTING_BACKGROUND_COLOR, DEFAULT_BACKGROUND_COLOR).toString());
-        iconInfo.hoverBackground = QColor(settings.value(SETTING_BACKGROUND_HOVER_COLOR, DEFAULT_BACKGROUND_COLOR).toString());
+        iconInfo.backgroundColor
+            = QColor(settings.value(SETTING_BACKGROUND_COLOR, DEFAULT_BACKGROUND_COLOR).toString());
+        iconInfo.hoverBackground
+            = QColor(settings.value(SETTING_BACKGROUND_HOVER_COLOR, DEFAULT_BACKGROUND_COLOR).toString());
         iconInfo.borderColor = QColor(settings.value(SETTING_FRAME_COLOR, DEFAULT_FRAME_COLOR).toString());
         iconInfo.hoverBorder = QColor(settings.value(SETTING_FRAME_HOVER_COLOR, DEFAULT_FRAME_COLOR).toString());
     }

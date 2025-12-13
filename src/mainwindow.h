@@ -92,11 +92,11 @@ private slots:
     void resizeEvent(QResizeEvent *event) override;
     void setColor(QWidget *widget, const QColor &color);
     void setColorFromString(QWidget *widget, const QString &colorString, const QColor &fallbackColor);
-    QString validateSizeString(const QString &sizeString, const QString &fallbackSize) const;
 
 private:
     bool eventFilter(QObject *obj, QEvent *event) override;
     Ui::MainWindow *ui;
+    QString validateSizeString(const QString &sizeString, const QString &fallbackSize) const;
     void applyIconStyles(int selectedIndex);
     void renderIconAt(int index);
     void renderIconsFromConfiguration();

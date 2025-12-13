@@ -36,10 +36,25 @@ const QStringList DockFileParser::POSSIBLE_LOCATIONS({"TopLeft", "TopCenter", "T
                                                       "LeftCenter", "RightCenter", "LeftBottom", "RightBottom",
                                                       "BottomLeft", "BottomCenter", "BottomRight"});
 
-const QSet<QString> DockFileParser::KNOWN_OPTIONS = {"-d", "--desktop-file", "-c", "--command", "-i", "--icon", "-k",
-                                                   "--background-color", "-K", "--hover-background-color", "-b",
-                                                   "--border-color", "-B", "--hover-border-color", "-w",
-                                                   "--window-size", "--tooltip-text", "-x", "--exit-on-right-click"};
+const QSet<QString> DockFileParser::KNOWN_OPTIONS = {"-d",
+                                                     "--desktop-file",
+                                                     "-c",
+                                                     "--command",
+                                                     "-i",
+                                                     "--icon",
+                                                     "-k",
+                                                     "--background-color",
+                                                     "-K",
+                                                     "--hover-background-color",
+                                                     "-b",
+                                                     "--border-color",
+                                                     "-B",
+                                                     "--hover-border-color",
+                                                     "-w",
+                                                     "--window-size",
+                                                     "--tooltip-text",
+                                                     "-x",
+                                                     "--exit-on-right-click"};
 
 // Static regex patterns to avoid recompilation
 static const QRegularExpression wmalauncherPrefixRe(QStringLiteral("^wmalauncher"));

@@ -36,7 +36,7 @@
 #define VERSION "?.?.?.?"
 #endif
 
-// display doc as nomal user when run as root
+// Display doc as nomal user when run as root
 void displayDoc(const QString &url, const QString &title)
 {
     // prefer mx-viewer otherwise use xdg-open (use runuser to run that as logname user)
