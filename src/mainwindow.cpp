@@ -306,8 +306,10 @@ void MainWindow::allItemsChanged()
 QString MainWindow::pickSlitLocation()
 {
     auto *const pick = new PickLocation(slitLocation, this);
-    pick->exec();
-    return pick->button;
+    if (pick->exec() == QDialog::Accepted) {
+        return pick->button;
+    }
+    return QString(); // Return empty string if dialog was cancelled
 }
 
 void MainWindow::itemChanged()
@@ -488,6 +490,12 @@ void MainWindow::moveDock()
     }
 
     slitLocation = pickSlitLocation();
+    if (slitLocation.isEmpty()) {
+        // User cancelled location selection
+        setup();
+        return;
+    }
+
     if (!m_fileManager->moveDockFile(selected_dock, slitLocation)) {
         QMessageBox::warning(this, tr("Error"), tr("Failed to move dock: %1").arg(m_fileManager->getLastError()));
     }
@@ -543,6 +551,10 @@ void MainWindow::moveIconToPosition(int fromIndex, int toIndex)
 void MainWindow::buttonSave_clicked()
 {
     slitLocation = pickSlitLocation();
+    if (slitLocation.isEmpty()) {
+        // User cancelled location selection
+        return;
+    }
     m_configuration->setSlitLocation(slitLocation);
 
     QString targetFile = m_configuration->getFileName();
