@@ -1,3 +1,11 @@
+mx-dockmaker (25.12.3) mx; urgency=medium
+
+  * Remove buttons to move icons in the preview bar, rely in drag and
+    drop
+  * Extensive code refactoring and optimization
+
+ -- Adrian <adrian@mxlinux.org>  Sat, 13 Dec 2025 21:27:29 -0500
+
 mx-dockmaker (25.12.2) mx; urgency=medium
 
   * Sanitize tooltip entry
