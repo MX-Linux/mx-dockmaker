@@ -71,10 +71,6 @@ private slots:
     void buttonAdd_clicked();
     void buttonDelete_clicked();
     void buttonHelp_clicked();
-    void buttonMoveLeft_clicked();
-    void buttonMoveRight_clicked();
-    void buttonNext_clicked();
-    void buttonPrev_clicked();
     void buttonSave_clicked();
     void buttonSelectApp_clicked();
     void buttonSelectIcon_clicked();

@@ -167,18 +167,10 @@ bool MainWindow::checkDoneEditing()
     ui->buttonAdd->setEnabled(true); // Always allow adding a new entry, even when empty
 
     if (hasSelection) {
-        if (index != 0) {
-            ui->buttonPrev->setEnabled(true);
-        }
-        if ((index < m_configuration->getApplicationCount() - 1) && m_configuration->getApplicationCount() > 1) {
-            ui->buttonNext->setEnabled(true);
-        }
         return true;
     }
 
     ui->buttonSave->setEnabled(false);
-    ui->buttonPrev->setEnabled(false);
-    ui->buttonNext->setEnabled(false);
     return false;
 }
 
@@ -642,15 +634,6 @@ void MainWindow::comboSize_currentTextChanged()
     itemChanged();
 }
 
-void MainWindow::buttonNext_clicked()
-{
-    blockComboSignals(true);
-    updateAppList(index);
-    index++;
-    showApp(index);
-    blockComboSignals(false);
-}
-
 void MainWindow::buttonDelete_clicked()
 {
     if (m_configuration->isEmpty()) {
@@ -718,10 +701,6 @@ void MainWindow::setConnections()
     connect(ui->buttonAdd, &QPushButton::clicked, this, &MainWindow::buttonAdd_clicked);
     connect(ui->buttonDelete, &QPushButton::clicked, this, &MainWindow::buttonDelete_clicked);
     connect(ui->buttonHelp, &QPushButton::clicked, this, &MainWindow::buttonHelp_clicked);
-    connect(ui->buttonMoveLeft, &QPushButton::clicked, this, &MainWindow::buttonMoveLeft_clicked);
-    connect(ui->buttonMoveRight, &QPushButton::clicked, this, &MainWindow::buttonMoveRight_clicked);
-    connect(ui->buttonNext, &QPushButton::clicked, this, &MainWindow::buttonNext_clicked);
-    connect(ui->buttonPrev, &QPushButton::clicked, this, &MainWindow::buttonPrev_clicked);
     connect(ui->buttonSave, &QPushButton::clicked, this, &MainWindow::buttonSave_clicked);
     connect(ui->buttonSelectApp, &QPushButton::clicked, this, &MainWindow::buttonSelectApp_clicked);
     connect(ui->buttonSelectIcon, &QPushButton::clicked, this, &MainWindow::buttonSelectIcon_clicked);
@@ -786,13 +765,8 @@ void MainWindow::showApp(int idx)
     ui->buttonSelectApp->setProperty("extra_options", iconInfo.extraOptions);
 
     // set buttons
-    ui->buttonNext->setDisabled(idx == m_configuration->getApplicationCount() - 1
-                                || m_configuration->getApplicationCount() == 1);
-    ui->buttonPrev->setDisabled(idx == 0);
     ui->buttonAdd->setDisabled(m_configuration->isEmpty());
     ui->buttonDelete->setEnabled(true);
-    ui->buttonMoveLeft->setDisabled(idx == 0);
-    ui->buttonMoveRight->setDisabled(idx == m_configuration->getApplicationCount() - 1);
     checkDoneEditing(); // Update button states based on current UI
 }
 
@@ -855,9 +829,10 @@ void MainWindow::editDock(const QString &file_arg)
         ui->buttonDelete->setEnabled(false);
     }
 
-    ui->labelUsage->setText(tr("1. Edit applications one at a time using the Back and Next buttons\n"
+    ui->labelUsage->setText(tr("1. Edit applications by clicking on their icons in the dock preview\n"
                                "2. Add or delete applications as you like\n"
-                               "3. When finished click Save"));
+                               "3. Drag and drop icons to rearrange them\n"
+                               "4. When finished click Save"));
     changed = false;
     checkDoneEditing();
     this->show();
@@ -874,14 +849,6 @@ void MainWindow::newDock()
     checkDoneEditing(); // Re-evaluate button states after reset
     ui->buttonSave->setEnabled(false);
     ui->buttonDelete->setEnabled(false);
-}
-
-void MainWindow::buttonPrev_clicked()
-{
-    blockComboSignals(true);
-    updateAppList(index);
-    showApp(--index);
-    blockComboSignals(false);
 }
 
 void MainWindow::radioDesktop_toggled(bool checked)
@@ -953,7 +920,6 @@ QString MainWindow::validateSizeString(const QString &sizeString, const QString 
 
 void MainWindow::buttonSelectIcon_clicked()
 {
-    ui->buttonSave->setDisabled(ui->buttonNext->isEnabled());
     QString default_folder;
     if (ui->buttonSelectIcon->text() != tr("Select icon...") && QFileInfo::exists(ui->buttonSelectIcon->text())) {
         QFileInfo f_info(ui->buttonSelectIcon->text());
@@ -978,7 +944,6 @@ void MainWindow::buttonSelectIcon_clicked()
 void MainWindow::lineEditCommand_textEdited()
 {
     changed = true;
-    ui->buttonNext->setEnabled(ui->buttonSelectIcon->text() != tr("Select icon..."));
     updateAppList(index);
     checkDoneEditing();
 }
@@ -1042,22 +1007,6 @@ void MainWindow::buttonAdd_clicked()
 
     // Ensure the newly added icon has focus/selection
     applyIconStyles(index);
-}
-
-void MainWindow::buttonMoveLeft_clicked()
-{
-    if (index == 0) {
-        return;
-    }
-    moveIcon(-1);
-}
-
-void MainWindow::buttonMoveRight_clicked()
-{
-    if (index == m_configuration->getApplicationCount() - 1) {
-        return;
-    }
-    moveIcon(1);
 }
 
 void MainWindow::checkApplyStyleToAll_stateChanged(int arg1)
