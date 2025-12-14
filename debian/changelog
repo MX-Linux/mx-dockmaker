@@ -1,3 +1,9 @@
+mx-dockmaker (25.12.4) mx; urgency=medium
+
+  * Fix .desktop
+
+ -- Adrian <adrian@mxlinux.org>  Sun, 14 Dec 2025 10:24:32 -0500
+
 mx-dockmaker (25.12.3) mx; urgency=medium
 
   * Remove buttons to move icons in the preview bar, rely in drag and
