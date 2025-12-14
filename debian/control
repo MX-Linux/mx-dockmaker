@@ -15,7 +15,7 @@ Homepage: https://github.com/MX-Linux/mx-dockmaker
 
 Package: mx-dockmaker
 Architecture: any
-Depends: xdg-utils | mx-viewer,
+Depends: xdg-utils | mx-viewer, wmalauncher
          ${misc:Depends},
          ${shlibs:Depends}
 Description: Dock configuration tool for MX Linux
