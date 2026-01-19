@@ -245,7 +245,7 @@ DockIconInfo DockFileParser::parseWmalauncherLine(const QString &line)
             QString value;
             nextValue(&value);
             // Collect remaining non-option tokens as part of command
-            while (i + 1 < tokens.size() && !isKnownOption(tokens.at(i + 1))) {
+            while (i + 1 < tokens.size() && !isKnownOption(tokens.at(i + 1), false)) {
                 value += QLatin1Char(' ') + stripQuotes(tokens.at(++i));
             }
             if (!value.isEmpty()) {
@@ -331,9 +331,14 @@ QString DockFileParser::stripQuotes(const QString &value)
     return value;
 }
 
-bool DockFileParser::isKnownOption(const QString &token)
+bool DockFileParser::isKnownOption(const QString &token, bool allowExitOnRightClick)
 {
-    return KNOWN_OPTIONS.contains(stripQuotes(token));
+    const QString cleanToken = stripQuotes(token);
+    if (!allowExitOnRightClick
+        && (cleanToken == QLatin1String("-x") || cleanToken == QLatin1String("--exit-on-right-click"))) {
+        return false;
+    }
+    return KNOWN_OPTIONS.contains(cleanToken);
 }
 
 void DockFileParser::setLastError(const QString &error)

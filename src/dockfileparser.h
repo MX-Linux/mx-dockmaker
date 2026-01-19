@@ -54,7 +54,7 @@ private:
 
     // Parsing constants
     DockIconInfo parseWmalauncherLine(const QString &line);
-    static bool isKnownOption(const QString &token);
+    static bool isKnownOption(const QString &token, bool allowExitOnRightClick = true);
     static const QSet<QString> KNOWN_OPTIONS;
     static const QStringList POSSIBLE_LOCATIONS;
     static QString stripQuotes(const QString &value);

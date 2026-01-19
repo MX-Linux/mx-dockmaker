@@ -33,6 +33,9 @@ private slots:
     void parsesMultipleEntriesAndDefaults();
     void parsesCommandsWithQuotedArguments();
     void parsesQuotedDesktopAndIconValues();
+    void parsesCommandsWithDashXFlag();
+    void roundTripCommandWithDashX();
+    void parsesWmalauncherDashXBeforeCommand();
 };
 
 void DockFileParserTest::parsesMultipleEntriesAndDefaults()
@@ -99,3 +102,62 @@ void DockFileParserTest::parsesQuotedDesktopAndIconValues()
 
 QTEST_GUILESS_MAIN(DockFileParserTest)
 #include "dockfileparser_test.moc"
+
+void DockFileParserTest::parsesCommandsWithDashXFlag()
+{
+    // Bug test: Commands with -x flags should be fully preserved
+    // Testing unquoted command (wmalauncher does not handle quoted commands)
+    const QString content = QStringLiteral(
+        "wmalauncher --command xfce4-terminal --hold -x bc --icon terminal.png "
+        "--background-color black --hover-background-color black --border-color white --hover-border-color white\n");
+
+    DockConfiguration configuration;
+    DockFileParser parser;
+
+    QVERIFY(parser.parseContent(content, configuration));
+    QCOMPARE(configuration.getApplicationCount(), 1);
+
+    const DockIconInfo app = configuration.getApplication(0);
+    QCOMPARE(app.command, QStringLiteral("xfce4-terminal --hold -x bc"));
+}
+
+void DockFileParserTest::roundTripCommandWithDashX()
+{
+    // End-to-end test: Simulates what DockFileManager would generate
+    // for a command with -x flag, then parses it back
+    const QString generatedContent = QStringLiteral(
+        "#!/bin/bash\n\n"
+        "pkill -x wmalauncher\n\n"
+        "#commands for dock launchers\n"
+        "wmalauncher --command xfce4-terminal --hold -x bc --icon 'terminal.png' "
+        "--background-color \"#000000\" --hover-background-color \"#000000\" "
+        "--border-color \"#ffffff\" --hover-border-color \"#ffffff\" "
+        "--window-size 48& sleep 0.1\n");
+
+    DockConfiguration configuration;
+    DockFileParser parser;
+
+    QVERIFY(parser.parseContent(generatedContent, configuration));
+    QCOMPARE(configuration.getApplicationCount(), 1);
+
+    const DockIconInfo app = configuration.getApplication(0);
+    QCOMPARE(app.command, QStringLiteral("xfce4-terminal --hold -x bc"));
+    QCOMPARE(app.customIcon, QStringLiteral("terminal.png"));
+}
+
+void DockFileParserTest::parsesWmalauncherDashXBeforeCommand()
+{
+    const QString content = QStringLiteral(
+        "wmalauncher -x --command xfce4-terminal --hold -x bc --icon terminal.png "
+        "--background-color black --hover-background-color black --border-color white --hover-border-color white\n");
+
+    DockConfiguration configuration;
+    DockFileParser parser;
+
+    QVERIFY(parser.parseContent(content, configuration));
+    QCOMPARE(configuration.getApplicationCount(), 1);
+
+    const DockIconInfo app = configuration.getApplication(0);
+    QCOMPARE(app.command, QStringLiteral("xfce4-terminal --hold -x bc"));
+    QCOMPARE(app.customIcon, QStringLiteral("terminal.png"));
+}
