@@ -1,3 +1,10 @@
+mx-dockmaker (26.01) mx; urgency=medium
+
+  * Fix parsing for -x, if after a --command is not interpreted as wmalauncher
+    option anymore
+
+ -- Adrian <adrian@mxlinux.org>  Mon, 19 Jan 2026 18:25:27 -0500
+
 mx-dockmaker (25.12.5) mx; urgency=medium
 
   * Fix .desktop
