@@ -22,6 +22,10 @@
 
 #include <QtTest/QtTest>
 
+#include <QDir>
+#include <QFile>
+#include <QTemporaryDir>
+
 #include "dockconfiguration.h"
 #include "dockfileparser.h"
 
@@ -36,6 +40,7 @@ private slots:
     void parsesCommandsWithDashXFlag();
     void roundTripCommandWithDashX();
     void parsesWmalauncherDashXBeforeCommand();
+    void extractsDockNameWithoutTruncation();
 };
 
 void DockFileParserTest::parsesMultipleEntriesAndDefaults()
@@ -160,4 +165,29 @@ void DockFileParserTest::parsesWmalauncherDashXBeforeCommand()
     const DockIconInfo app = configuration.getApplication(0);
     QCOMPARE(app.command, QStringLiteral("xfce4-terminal --hold -x bc"));
     QCOMPARE(app.customIcon, QStringLiteral("terminal.png"));
+}
+
+void DockFileParserTest::extractsDockNameWithoutTruncation()
+{
+    QTemporaryDir tempHome;
+    QVERIFY(tempHome.isValid());
+
+    const QString submenuDir = tempHome.path() + QStringLiteral("/.fluxbox/submenus");
+    QVERIFY(QDir().mkpath(submenuDir));
+
+    QFile submenuFile(submenuDir + QStringLiteral("/appearance"));
+    QVERIFY(submenuFile.open(QFile::WriteOnly | QFile::Text));
+    submenuFile.write("[submenu] (Docks)\n\t\t\t[exec] (My Dock) {/tmp/mydock.mxdk}\n");
+    submenuFile.close();
+
+    const QByteArray originalHome = qgetenv("HOME");
+    qputenv("HOME", tempHome.path().toUtf8());
+
+    QCOMPARE(DockFileParser::extractDockName(QStringLiteral("/tmp/mydock.mxdk")), QStringLiteral("My Dock"));
+
+    if (originalHome.isEmpty()) {
+        qunsetenv("HOME");
+    } else {
+        qputenv("HOME", originalHome);
+    }
 }

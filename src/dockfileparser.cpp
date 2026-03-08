@@ -164,8 +164,8 @@ QString DockFileParser::extractDockName(const QString &fileName)
             }
 
             QString name = line.mid(openParen + 1, closeParen - openParen - 1);
-            if (name.length() >= 2) {
-                return name.mid(1, name.length() - 2); // Remove outer quotes if present
+            if (!name.isEmpty()) {
+                return stripQuotes(name);
             }
         }
     }
