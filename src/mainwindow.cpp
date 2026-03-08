@@ -972,6 +972,8 @@ void MainWindow::lineEditTooltip_textEdited()
 
     changed = true;
     updateAppList(index);
+    renderIconAt(index);
+    applyIconStyles(index);
     checkDoneEditing();
 }
 
