@@ -41,6 +41,8 @@ private slots:
     void roundTripCommandWithDashX();
     void parsesWmalauncherDashXBeforeCommand();
     void extractsDockNameWithoutTruncation();
+    void extractsSlitLocationFromPlacementCommand();
+    void ignoresUnrelatedLocationTokensInContent();
 };
 
 void DockFileParserTest::parsesMultipleEntriesAndDefaults()
@@ -190,4 +192,29 @@ void DockFileParserTest::extractsDockNameWithoutTruncation()
     } else {
         qputenv("HOME", originalHome);
     }
+}
+
+void DockFileParserTest::extractsSlitLocationFromPlacementCommand()
+{
+    DockFileParser parser;
+
+    const QString content = QStringLiteral(
+        "#set up slit location\n"
+        "sed -i 's/^session.screen0.slit.placement:.*/session.screen0.slit.placement: BottomRight/' $HOME/.fluxbox/init\n"
+        "wmalauncher --command echo test --icon terminal.png --background-color black "
+        "--hover-background-color black --border-color white --hover-border-color white\n");
+
+    QCOMPARE(parser.extractSlitLocation(content), QStringLiteral("BottomRight"));
+}
+
+void DockFileParserTest::ignoresUnrelatedLocationTokensInContent()
+{
+    DockFileParser parser;
+
+    const QString content = QStringLiteral(
+        "wmalauncher --command echo BottomRight --icon terminal.png "
+        "--tooltip-text 'TopLeft marker' --background-color black "
+        "--hover-background-color black --border-color white --hover-border-color white\n");
+
+    QVERIFY(parser.extractSlitLocation(content).isEmpty());
 }

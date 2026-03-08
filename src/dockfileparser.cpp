@@ -132,12 +132,11 @@ bool DockFileParser::parseContent(const QString &content, DockConfiguration &con
 
 QString DockFileParser::extractSlitLocation(const QString &content) const
 {
-    for (const QString &location : POSSIBLE_LOCATIONS) {
-        if (content.contains(location)) {
-            return location;
-        }
-    }
-    return QString();
+    const QString locationsPattern = POSSIBLE_LOCATIONS.join(QLatin1Char('|'));
+    const QRegularExpression placementPattern(
+        QStringLiteral(R"(session\.screen0\.slit\.placement:\s*(%1)\b)").arg(locationsPattern));
+    const QRegularExpressionMatch match = placementPattern.match(content);
+    return match.hasMatch() ? match.captured(1) : QString();
 }
 
 QString DockFileParser::extractDockName(const QString &fileName)
