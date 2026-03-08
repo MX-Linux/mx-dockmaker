@@ -146,10 +146,8 @@ void DockIconManager::displayIcon(const DockIconInfo &iconInfo, QLabel *label, i
     bool isSelected = (selectedIndex >= 0 && currentIndex == selectedIndex);
     applyIconStyle(iconInfo, label, isSelected);
 
-    // Store tooltip
-    if (!iconInfo.tooltip.isEmpty()) {
-        label->setProperty("icon_tooltip", iconInfo.tooltip);
-    }
+    // Keep the preview tooltip property in sync when tooltips are added or cleared.
+    label->setProperty("icon_tooltip", iconInfo.tooltip);
 }
 
 void DockIconManager::applyIconStyle(const DockIconInfo &iconInfo, QLabel *label, bool isSelected)
