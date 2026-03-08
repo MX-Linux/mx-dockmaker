@@ -802,6 +802,7 @@ void MainWindow::editDock(const QString &file_arg)
     if (!QFileInfo::exists(selected_dock)) {
         QMessageBox::warning(this, tr("No file selected"),
                              tr("You haven't selected any dock file to edit.\nCreating a new dock instead."));
+        newDock();
         return;
     }
 
@@ -809,6 +810,7 @@ void MainWindow::editDock(const QString &file_arg)
         qDebug() << "Could not load configuration:" << selected_dock << m_fileManager->getLastError();
         QMessageBox::warning(this, tr("Could not open file"),
                              tr("Could not open selected file.\nCreating a new dock instead."));
+        newDock();
         return;
     }
 
