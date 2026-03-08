@@ -1,3 +1,14 @@
+mx-dockmaker (26.03) mx; urgency=medium
+
+  * Fix returning to the editor after cancelling dock selection
+  * Fix dock name reloading from menu entries
+  * Improve save warnings when menu integration fails
+  * Fix empty entries being treated as valid selections
+  * Fix preview tooltip updates while editing
+  * Fix slit placement parsing and add regression tests
+
+ -- Adrian <adrian@mxlinux.org>  Sun, 08 Mar 2026 00:00:00 -0500
+
 mx-dockmaker (26.01) mx; urgency=medium
 
   * Fix parsing for -x, if after a --command is not interpreted as wmalauncher
@@ -256,4 +267,3 @@ mx-dockmaker (0.20.2) mx; urgency=medium
   * initial release
 
  -- Adrian <adrian@mxlinux.org>  Thu, 06 Feb 2020 12:50:39 -0500
-
