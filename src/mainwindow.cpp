@@ -156,7 +156,9 @@ void MainWindow::applyIconStyles(int selectedIndex)
 
 bool MainWindow::checkDoneEditing()
 {
-    const bool hasSelection = ui->buttonSelectApp->text() != tr(SELECT_TEXT) || !ui->lineEditCommand->text().isEmpty();
+    const QString selectedAppText = ui->buttonSelectApp->text().trimmed();
+    const bool hasDesktopSelection = !selectedAppText.isEmpty() && selectedAppText != tr(SELECT_TEXT);
+    const bool hasSelection = hasDesktopSelection || !ui->lineEditCommand->text().isEmpty();
 
     // Save only becomes active after a user change
     ui->buttonSave->setEnabled(changed && hasSelection);
@@ -587,16 +589,23 @@ void MainWindow::buttonSave_clicked()
         return;
     }
 
+    bool addedToMenu = true;
     if (!m_fileManager->isInMenu(targetFile)) {
-        m_fileManager->addToMenu(targetFile, dockName);
+        addedToMenu = m_fileManager->addToMenu(targetFile, dockName);
     }
 
     m_configuration->markAsSaved();
     changed = false;
 
-    QMessageBox::information(this, tr("Dock saved"),
-                             tr("The dock has been saved.\n\n"
-                                "To edit the newly created dock please select 'Edit an existing dock'."));
+    if (addedToMenu) {
+        QMessageBox::information(this, tr("Dock saved"),
+                                 tr("The dock has been saved.\n\n"
+                                    "To edit the newly created dock please select 'Edit an existing dock'."));
+    } else {
+        QMessageBox::warning(this, tr("Dock saved with warning"),
+                             tr("The dock file was saved, but it could not be added to the menu.\n\n%1")
+                                 .arg(m_fileManager->getLastError()));
+    }
     DockFileManager::killAndWaitForProcess(QStringLiteral("wmalauncher"));
     QProcess::startDetached(targetFile, {});
     index = 0;
@@ -732,9 +741,9 @@ void MainWindow::showApp(int idx)
     QSignalBlocker blockSizeCombo(ui->comboSize);
 
     const DockIconInfo iconInfo = m_configuration->getApplication(idx);
-    ui->buttonSelectApp->setText(iconInfo.appName);
     if (iconInfo.isDesktopFile() || iconInfo.command.isEmpty()) {
         ui->radioDesktop->setChecked(true);
+        ui->buttonSelectApp->setText(iconInfo.appName.isEmpty() ? tr(SELECT_TEXT) : iconInfo.appName);
         ui->lineEditCommand->clear();
         ui->buttonSelectApp->setEnabled(true);
         ui->lineEditCommand->setEnabled(false);
