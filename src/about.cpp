@@ -23,46 +23,97 @@
 #include "about.h"
 
 #include <QApplication>
+#include <QCoreApplication>
+#include <QDir>
 #include <QFileInfo>
+#include <QFile>
 #include <QMessageBox>
 #include <QProcess>
 #include <QPushButton>
+#include <QTextBrowser>
 #include <QTextEdit>
+#include <QTimer>
 #include <QVBoxLayout>
-
-#include <unistd.h>
 
 #ifndef VERSION
 #define VERSION "?.?.?.?"
 #endif
 
-// Display doc as nomal user when run as root
-void displayDoc(const QString &url, const QString &title)
+QString docPath(const QString &packageName, const QString &fileName)
 {
-    // prefer mx-viewer otherwise use xdg-open (use runuser to run that as logname user)
-    if (QFile::exists(QStringLiteral("/usr/bin/mx-viewer"))) {
-        QProcess::startDetached(QStringLiteral("mx-viewer"), {url, title});
-    } else {
-        if (getuid() != 0) {
-            QProcess::startDetached(QStringLiteral("xdg-open"), {url});
-            return;
-        } else {
-            QProcess proc;
-            proc.start(QStringLiteral("logname"), {}, QIODevice::ReadOnly);
-            proc.waitForFinished();
-            QString user = QString::fromUtf8(proc.readAllStandardOutput()).trimmed();
-            QProcess::startDetached(QStringLiteral("runuser"), {QStringLiteral("-u"), user, QStringLiteral("--"),
-                                                                QStringLiteral("xdg-open"), url});
+    const QString installedPath = QStringLiteral("/usr/share/doc/") + packageName + QStringLiteral("/") + fileName;
+    const QString appDirPath = QCoreApplication::applicationDirPath();
+    const QStringList candidates {
+        QDir(appDirPath).filePath(QStringLiteral("../help/") + fileName),
+        QDir(appDirPath).filePath(QStringLiteral("../../help/") + fileName),
+        QDir::current().filePath(QStringLiteral("help/") + fileName),
+        installedPath,
+    };
+
+    for (const QString &candidate : candidates) {
+        const QString normalized = QFileInfo(candidate).canonicalFilePath();
+        if (!normalized.isEmpty() && QFileInfo::exists(normalized)) {
+            return normalized;
         }
+        if (QFileInfo::exists(candidate)) {
+            return QFileInfo(candidate).absoluteFilePath();
+        }
+    }
+
+    return installedPath;
+}
+
+void displayDoc(QWidget *parent, const QString &path, const QString &title, bool largeWindow)
+{
+    auto *dialog = new QDialog(parent);
+    auto *browser = new QTextBrowser(dialog);
+    auto *btnClose = new QPushButton(QObject::tr("&Close"), dialog);
+    auto *layout = new QVBoxLayout(dialog);
+    const QFileInfo fileInfo(path);
+    const QUrl sourceUrl = QUrl::fromLocalFile(path);
+
+    dialog->setWindowTitle(title);
+    if (largeWindow) {
+        dialog->setWindowFlags(Qt::Window);
+        dialog->resize(1000, 800);
+    } else {
+        dialog->resize(700, 600);
+    }
+
+    browser->setOpenExternalLinks(true);
+    browser->setSearchPaths({fileInfo.absolutePath()});
+
+    btnClose->setIcon(QIcon::fromTheme(QStringLiteral("window-close")));
+    QObject::connect(btnClose, &QPushButton::clicked, dialog, &QDialog::close);
+
+    layout->addWidget(browser);
+    layout->addWidget(btnClose);
+
+    auto loadDocument = [browser, path, sourceUrl]() {
+        if (QFileInfo::exists(path)) {
+            browser->setSource(sourceUrl);
+        } else {
+            browser->setText(QObject::tr("Could not load %1").arg(path));
+        }
+    };
+
+    if (largeWindow) {
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->show();
+        QTimer::singleShot(0, dialog, loadDocument);
+    } else {
+        QTimer::singleShot(0, dialog, loadDocument);
+        dialog->exec();
+        dialog->deleteLater();
     }
 }
 
-void displayAboutMsgBox(const QString &title, const QString &message, const QString &licence_url,
-                        const QString &license_title)
+void displayAboutMsgBox(QWidget *parent, const QString &title, const QString &message, const QString &licensePath,
+                        const QString &licenseTitle)
 {
     const auto width = 600;
     const auto height = 500;
-    QMessageBox msgBox(QMessageBox::NoIcon, title, message);
+    QMessageBox msgBox(QMessageBox::NoIcon, title, message, QMessageBox::NoButton, parent);
     auto *btnLicense = msgBox.addButton(QObject::tr("License"), QMessageBox::HelpRole);
     auto *btnChangelog = msgBox.addButton(QObject::tr("Changelog"), QMessageBox::HelpRole);
     auto *btnCancel = msgBox.addButton(QObject::tr("Cancel"), QMessageBox::NoRole);
@@ -70,9 +121,9 @@ void displayAboutMsgBox(const QString &title, const QString &message, const QStr
 
     msgBox.exec();
     if (msgBox.clickedButton() == btnLicense) {
-        displayDoc(licence_url, license_title);
+        displayDoc(parent, licensePath, licenseTitle);
     } else if (msgBox.clickedButton() == btnChangelog) {
-        auto *changelog = new QDialog;
+        auto *changelog = new QDialog(parent);
         changelog->setWindowTitle(QObject::tr("Changelog"));
         changelog->resize(width, height);
 

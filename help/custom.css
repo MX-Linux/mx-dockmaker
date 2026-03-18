@@ -1,0 +1,14 @@
+body {
+    margin: 16px;
+    line-height: 1.5;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+pre {
+    white-space: pre-wrap;
+}

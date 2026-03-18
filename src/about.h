@@ -23,7 +23,9 @@
 #pragma once
 
 class QString;
+class QWidget;
 
-void displayDoc(const QString &url, const QString &title);
-void displayAboutMsgBox(const QString &title, const QString &message, const QString &licence_url,
-                        const QString &license_title);
+[[nodiscard]] QString docPath(const QString &packageName, const QString &fileName);
+void displayDoc(QWidget *parent, const QString &path, const QString &title, bool largeWindow = false);
+void displayAboutMsgBox(QWidget *parent, const QString &title, const QString &message, const QString &licensePath,
+                        const QString &licenseTitle);

@@ -57,12 +57,9 @@ static constexpr const char *DOCK_FILES_FILTER_TR = "Dock Files (*.mxdk);;All Fi
 static constexpr const char *DESKTOP_FILES_FILTER_TR = "Desktop Files (*.desktop)";
 static constexpr const char *ICON_FILES_FILTER_TR = "Icons (*.png *.jpg *.bmp *.xpm *.svg)";
 
-// URLs
-static const QString HELP_URL = QStringLiteral("https://mxlinux.org/wiki/help-files/help-mx-dockmaker/");
-static const QString LICENSE_URL = QStringLiteral("/usr/share/doc/mx-dockmaker/license.html");
-
 // Application info
 static const QString APP_NAME = QStringLiteral("MX Dockmaker");
+static const QString PACKAGE_NAME = QStringLiteral("mx-dockmaker");
 static const QString DEFAULT_COMMAND_ICON = QStringLiteral("application-x-executable");
 
 MainWindow::MainWindow(QWidget *parent, const QString &file)
@@ -619,14 +616,16 @@ void MainWindow::buttonSave_clicked()
 void MainWindow::buttonAbout_clicked()
 {
     this->hide();
+    const QString licensePath = docPath(PACKAGE_NAME, QStringLiteral("license.html"));
     displayAboutMsgBox(
+        this,
         tr("About %1").arg(tr(APP_NAME_TR)),
         R"(<p align="center"><b><h2>MX Dockmaker</h2></b></p><p align="center">)" + tr("Version: ") + VERSION
-            + "</p><p align=\"center\"><h3>" + tr("Description goes here")
+            + "</p><p align=\"center\"><h3>" + tr("GUI program for creating Fluxbox docks in MX Linux")
             + "</h3></p><p align=\"center\"><a href=\"http://mxlinux.org\">http://mxlinux.org</a><br /></p>"
               "<p align=\"center\">"
             + tr("Copyright (c) MX Linux") + "<br /><br /></p>",
-        LICENSE_URL.toLatin1().constData(), tr("%1 License").arg(this->windowTitle()));
+        licensePath, tr("%1 License").arg(this->windowTitle()));
 
     this->show();
 }
@@ -634,8 +633,8 @@ void MainWindow::buttonAbout_clicked()
 // Help button clicked
 void MainWindow::buttonHelp_clicked()
 {
-    const QString url = HELP_URL;
-    displayDoc(url, tr("%1 Help").arg(this->windowTitle()));
+    const QString helpPath = docPath(PACKAGE_NAME, QStringLiteral("mx-dockmaker.html"));
+    displayDoc(this, helpPath, tr("%1 Help").arg(this->windowTitle()), true);
 }
 
 void MainWindow::comboSize_currentTextChanged()
