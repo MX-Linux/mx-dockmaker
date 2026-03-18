@@ -1,3 +1,9 @@
+mx-dockmaker (26.03.1) mx; urgency=medium
+
+  * Show help and license in Qt windows
+
+ -- Adrian <adrian@mxlinux.org>  Wed, 18 Mar 2026 19:06:39 -0400
+
 mx-dockmaker (26.03) mx; urgency=medium
 
   * Fix returning to the editor after cancelling dock selection
