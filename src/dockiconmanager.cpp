@@ -264,8 +264,11 @@ QPixmap DockIconManager::findFilesystemIcon(const QString &iconName, QSize size)
 
 QStringList DockIconManager::getIconSearchPaths() const
 {
-    QStringList paths = {QDir::homePath() + "/.local/share/icons/"};
-    paths.append(PathConstants::ICON_SEARCH_PATHS);
+    static const QStringList paths = []() {
+        QStringList p = {QDir::homePath() + "/.local/share/icons/"};
+        p.append(PathConstants::ICON_SEARCH_PATHS);
+        return p;
+    }();
     return paths;
 }
 

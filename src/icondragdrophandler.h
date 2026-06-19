@@ -66,7 +66,6 @@ private:
     bool isIconLabel(QWidget *widget, const QList<QLabel *> &iconLabels) const;
     int findClosestInsertionPoint(QPoint mousePos) const;
     int getIconLabelIndex(QLabel *label) const;
-    static constexpr int DRAG_THRESHOLD = 10;  ///< Minimum pixels to start drag
     static constexpr int DROP_THRESHOLD = 200; ///< Maximum pixels for valid drop
     void cleanupDragIndicator();
     void cleanupInsertionIndicators();

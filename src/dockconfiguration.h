@@ -42,28 +42,28 @@ public:
 
     // Application management
     DockIconInfo getApplication(int index) const;
-    QList<DockIconInfo> getApplications() const;
+    [[nodiscard]] QList<DockIconInfo> getApplications() const;
     bool insertApplication(int index, const DockIconInfo &iconInfo, bool validate = true);
-    bool isEmpty() const;
+    [[nodiscard]] bool isEmpty() const;
     bool moveApplication(int fromIndex, int toIndex);
     bool removeApplication(int index);
     bool swapApplications(int index1, int index2);
     bool updateApplication(int index, const DockIconInfo &iconInfo);
     int addApplication(const DockIconInfo &iconInfo, bool validate = true);
-    int getApplicationCount() const;
+    [[nodiscard]] int getApplicationCount() const;
     void clearApplications();
 
     // Dock metadata
-    QString getDockName() const;
-    QString getFileName() const;
-    QString getSlitLocation() const;
+    [[nodiscard]] QString getDockName() const;
+    [[nodiscard]] QString getFileName() const;
+    [[nodiscard]] QString getSlitLocation() const;
     void setDockName(const QString &name);
     void setFileName(const QString &fileName);
     void setSlitLocation(const QString &location);
 
     // State management
-    bool isModified() const;
-    bool isValid() const;
+    [[nodiscard]] bool isModified() const;
+    [[nodiscard]] bool isValid() const;
     void clear();
     void markAsSaved();
 
@@ -80,6 +80,6 @@ private:
     QString m_dockName;                 ///< Name of the dock
     QString m_fileName;                 ///< File name for the dock
     QString m_slitLocation;             ///< Location of the slit
-    bool isValidIndex(int index) const;
+    [[nodiscard]] bool isValidIndex(int index) const;
     bool m_modified; ///< Track if configuration has been modified
 };

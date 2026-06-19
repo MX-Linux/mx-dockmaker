@@ -34,12 +34,12 @@ class DockFileManager : public QObject
 {
     Q_OBJECT
 public:
-    QString getLastError() const;
+    [[nodiscard]] QString getLastError() const;
     bool addToMenu(const QString &filePath, const QString &dockName);
     bool createBackup(const QString &filePath);
     bool deleteDockFile(const QString &filePath, bool removeFromMenu = true);
     bool ensureScriptsDirectory();
-    bool isInMenu(const QString &filePath) const;
+    [[nodiscard]] bool isInMenu(const QString &filePath) const;
     bool loadConfiguration(const QString &filePath, DockConfiguration &configuration);
     bool moveDockFile(const QString &oldFilePath, const QString &newSlitLocation);
     bool removeFromMenu(const QString &filePath);

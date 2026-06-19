@@ -22,14 +22,6 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-# Option to use clang for testing builds - needs to be early so project() picks it up
-option(USE_CLANG "Use clang compiler" OFF)
-if(USE_CLANG)
-    set(CMAKE_C_COMPILER clang CACHE STRING "C compiler" FORCE)
-    set(CMAKE_CXX_COMPILER clang++ CACHE STRING "C++ compiler" FORCE)
-    message(STATUS "Using clang compiler")
-endif()
-
 # Get version from debian/changelog
 execute_process(
     COMMAND dpkg-parsechangelog -SVersion
@@ -146,7 +138,6 @@ target_link_libraries(mx-dockmaker
 # Set compiler flags
 target_compile_options(mx-dockmaker PRIVATE
     -Wpedantic
-    -pedantic
     -Werror=return-type
     -Werror=switch
     -Werror=uninitialized

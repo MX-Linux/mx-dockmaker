@@ -294,7 +294,7 @@ QString MainWindow::pickSlitLocation()
 {
     auto *const pick = new PickLocation(m_configuration->getSlitLocation(), this);
     if (pick->exec() == QDialog::Accepted) {
-        return pick->button;
+        return pick->getSelectedLocation();
     }
     return QString(); // Return empty string if dialog was cancelled
 }
@@ -469,9 +469,9 @@ void MainWindow::moveDock()
 {
     this->hide();
 
-    const QString selected_dock = QFileDialog::getOpenFileName(
+    const QString selectedDock = QFileDialog::getOpenFileName(
         this, tr("Select dock to move"), QDir::homePath() + PathConstants::FLUXBOX_SCRIPTS_DIR, tr(DOCK_FILES_FILTER_TR));
-    if (selected_dock.isEmpty()) {
+    if (selectedDock.isEmpty()) {
         setup();
         return;
     }
@@ -483,7 +483,7 @@ void MainWindow::moveDock()
         return;
     }
 
-    if (!m_fileManager->moveDockFile(selected_dock, newSlitLocation)) {
+    if (!m_fileManager->moveDockFile(selectedDock, newSlitLocation)) {
         QMessageBox::warning(this, tr("Error"), tr("Failed to move dock: %1").arg(m_fileManager->getLastError()));
     }
     setup();
@@ -799,32 +799,32 @@ void MainWindow::editDock(const QString &file_arg)
     renderIconsFromConfiguration();
     index = 0;
 
-    QString selected_dock;
+    QString selectedDock;
     if (!file_arg.isEmpty() && QFile::exists(file_arg)) {
-        selected_dock = file_arg;
+        selectedDock = file_arg;
     } else {
-        selected_dock = QFileDialog::getOpenFileName(this, tr("Select a dock file"),
+        selectedDock = QFileDialog::getOpenFileName(this, tr("Select a dock file"),
                                                      QDir::homePath() + PathConstants::FLUXBOX_SCRIPTS_DIR, tr(DOCK_FILES_FILTER_TR));
     }
 
-    if (!QFileInfo::exists(selected_dock)) {
+    if (!QFileInfo::exists(selectedDock)) {
         QMessageBox::warning(this, tr("No file selected"),
                              tr("You haven't selected any dock file to edit.\nCreating a new dock instead."));
         newDock();
         return;
     }
 
-    if (!m_fileManager->loadConfiguration(selected_dock, *m_configuration)) {
-        qDebug() << "Could not load configuration:" << selected_dock << m_fileManager->getLastError();
+    if (!m_fileManager->loadConfiguration(selectedDock, *m_configuration)) {
+        qDebug() << "Could not load configuration:" << selectedDock << m_fileManager->getLastError();
         QMessageBox::warning(this, tr("Could not open file"),
                              tr("Could not open selected file.\nCreating a new dock instead."));
         newDock();
         return;
     }
 
-    m_configuration->setFileName(selected_dock);
+    m_configuration->setFileName(selectedDock);
 
-    const QString dockName = m_fileParser->extractDockName(selected_dock);
+    const QString dockName = m_fileParser->extractDockName(selectedDock);
     if (!dockName.isEmpty()) {
         m_configuration->setDockName(dockName);
     }
@@ -930,14 +930,14 @@ QString MainWindow::validateSizeString(const QString &sizeString, const QString 
 
 void MainWindow::buttonSelectIcon_clicked()
 {
-    QString default_folder;
+    QString defaultFolder;
     if (ui->buttonSelectIcon->text() != tr("Select icon...") && QFileInfo::exists(ui->buttonSelectIcon->text())) {
-        QFileInfo f_info(ui->buttonSelectIcon->text());
-        default_folder = f_info.canonicalPath();
+        QFileInfo fileInfo(ui->buttonSelectIcon->text());
+        defaultFolder = fileInfo.canonicalPath();
     } else {
-        default_folder = QStringLiteral("/usr/share/icons/");
+        defaultFolder = QStringLiteral("/usr/share/icons/");
     }
-    QString selected = QFileDialog::getOpenFileName(this, tr("Select icon"), default_folder, tr(ICON_FILES_FILTER_TR));
+    QString selected = QFileDialog::getOpenFileName(this, tr("Select icon"), defaultFolder, tr(ICON_FILES_FILTER_TR));
     QString file = QFileInfo(selected).fileName();
     if (!file.isEmpty()) {
         ui->buttonSelectIcon->setText(selected);

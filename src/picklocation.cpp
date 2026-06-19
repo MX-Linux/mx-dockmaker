@@ -62,6 +62,11 @@ PickLocation::~PickLocation()
     delete ui;
 }
 
+QString PickLocation::getSelectedLocation() const
+{
+    return button;
+}
+
 void PickLocation::onGroupButton(int buttonId)
 {
     button = buttonGroup->button(buttonId)->property("location").toString();

@@ -51,11 +51,11 @@ struct DockIconInfo {
           command(cmd)
     {
     }
-    bool isDesktopFile() const
+    [[nodiscard]] bool isDesktopFile() const
     {
         return appName.endsWith(QLatin1String(".desktop"));
     }
-    bool isValid() const
+    [[nodiscard]] bool isValid() const
     {
         if (isDesktopFile()) {
             return !appName.isEmpty();
@@ -67,7 +67,7 @@ struct DockIconInfo {
         const quint8 width = size.section(QLatin1Char('x'), 0, 0).toUShort();
         return QSize(width, width);
     }
-    QStringList toStringList() const
+    [[nodiscard]] QStringList toStringList() const
     {
         return {appName,
                 command,

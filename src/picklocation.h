@@ -37,7 +37,7 @@ class PickLocation : public QDialog
 public:
     explicit PickLocation(const QString &location, QWidget *parent = nullptr);
     ~PickLocation() override;
-    QString button;
+    QString getSelectedLocation() const;
 
 private slots:
     void onGroupButton(int buttonId);
@@ -45,4 +45,5 @@ private slots:
 private:
     Ui::PickLocation *ui;
     QButtonGroup *buttonGroup;
+    QString button;
 };
