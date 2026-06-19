@@ -215,7 +215,7 @@
     <message>
         <location filename="mainwindow.cpp" line="295"/>
         <source>Are you sure you want to delete %1?</source>
-        <translation type="unfinished"/>
+        <translation>למחוק את %1?</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="295"/>
@@ -230,7 +230,7 @@
     <message>
         <location filename="mainwindow.cpp" line="320"/>
         <source>Select dock to move</source>
-        <translation type="unfinished"/>
+        <translation>בחירת מעגן להעברה</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="293"/>
@@ -238,34 +238,34 @@
         <location filename="mainwindow.cpp" line="454"/>
         <location filename="mainwindow.cpp" line="657"/>
         <source>Dock Files (*.mxdk);;All Files (*.*)</source>
-        <translation type="unfinished"/>
+        <translation>קובצי מעגן (‎*.mxdk);;כל הקבצים (*.*)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="330"/>
         <location filename="mainwindow.cpp" line="351"/>
         <location filename="mainwindow.cpp" line="666"/>
         <source>Could not open file</source>
-        <translation type="unfinished"/>
+        <translation>לא ניתן לפתוח קובץ</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="453"/>
         <source>Overwrite?</source>
-        <translation type="unfinished"/>
+        <translation>לשכתב?</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="453"/>
         <source>Do you want to overwrite the dock file?</source>
-        <translation type="unfinished"/>
+        <translation>לשכתב על קובץ המעגן?</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="454"/>
         <source>Save file</source>
-        <translation type="unfinished"/>
+        <translation>שמירת קובץ</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="492"/>
         <source>Dock saved</source>
-        <translation type="unfinished"/>
+        <translation>המעגן נשמר</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="492"/>
@@ -277,17 +277,17 @@ To edit the newly created dock please select &apos;Edit an existing dock&apos;.<
     <message>
         <location filename="mainwindow.cpp" line="511"/>
         <source>About %1</source>
-        <translation>על אודות %1</translation>
+        <translation>על %1</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="513"/>
         <source>Version: </source>
-        <translation>גירסה:</translation>
+        <translation>גרסה:</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="514"/>
         <source>Description goes here</source>
-        <translation type="unfinished"/>
+        <translation>כאן יבוא התיאור</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="516"/>
@@ -307,17 +307,17 @@ To edit the newly created dock please select &apos;Edit an existing dock&apos;.<
     <message>
         <location filename="mainwindow.cpp" line="638"/>
         <source>Select .desktop file</source>
-        <translation type="unfinished"/>
+        <translation>בחירת קובץ ‎.desktop</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="638"/>
         <source>Desktop Files (*.desktop)</source>
-        <translation type="unfinished"/>
+        <translation>קובצי שולחן עבודה (‎*.desktop)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="657"/>
         <source>Select a dock file</source>
-        <translation type="unfinished"/>
+        <translation>בחירת קובץ מעגן</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="660"/>
@@ -346,12 +346,12 @@ Creating a new dock instead.</source>
     <message>
         <location filename="mainwindow.cpp" line="719"/>
         <source>Select icon</source>
-        <translation type="unfinished"/>
+        <translation>בחירת סמל</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="719"/>
         <source>Icons (*.png *.jpg *.bmp *.xpm *.svg)</source>
-        <translation type="unfinished"/>
+        <translation>סמלים (‎*.png‏ ‎*.jpg‏ ‎*.bmp‏ ‎*.xpm‏ ‎*.svg)</translation>
     </message>
 </context>
 <context>
@@ -359,12 +359,12 @@ Creating a new dock instead.</source>
     <message>
         <location filename="picklocation.ui" line="14"/>
         <source>Dialog</source>
-        <translation>תיבת דו־שיח</translation>
+        <translation>חלונית</translation>
     </message>
     <message>
         <location filename="picklocation.ui" line="23"/>
         <source>Dock Location</source>
-        <translation type="unfinished"/>
+        <translation>מקום עיגון</translation>
     </message>
     <message>
         <location filename="picklocation.ui" line="29"/>
