@@ -537,10 +537,13 @@ void MainWindow::moveIconToPosition(int fromIndex, int toIndex)
 
 void MainWindow::buttonSave_clicked()
 {
-    const QString newSlitLocation = pickSlitLocation();
+    QString newSlitLocation = pickSlitLocation();
     if (newSlitLocation.isEmpty()) {
-        // User cancelled location selection
-        return;
+        // Dialog closed without an explicit pick: keep the current (pre-selected) location
+        newSlitLocation = m_configuration->getSlitLocation();
+        if (newSlitLocation.isEmpty()) {
+            newSlitLocation = QStringLiteral("BottomCenter");
+        }
     }
     m_configuration->setSlitLocation(newSlitLocation);
 
