@@ -1,3 +1,10 @@
+mx-dockmaker (26.06) mx; urgency=medium
+
+  * Keep the dock in its current location and save it when the placement
+    window is closed without picking a spot
+
+ -- Adrian <adrian@mxlinux.org>  Fri, 19 Jun 2026 14:28:35 -0400
+
 mx-dockmaker (26.03.1) mx; urgency=medium
 
   * Show help and license in Qt windows
