@@ -63,9 +63,8 @@ endif()
 # Option to use clang for testing builds
 option(USE_CLANG "Use clang compiler" OFF)
 if(USE_CLANG)
-    set(CMAKE_C_COMPILER clang)
-    set(CMAKE_CXX_COMPILER clang++)
-    set(CMAKE_CXX_COMPILER_ID "Clang")
+    set(CMAKE_C_COMPILER clang CACHE STRING "C compiler" FORCE)
+    set(CMAKE_CXX_COMPILER clang++ CACHE STRING "C++ compiler" FORCE)
     message(STATUS "Using clang compiler")
 endif()
 
