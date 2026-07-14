@@ -56,5 +56,5 @@ Terminal=false
 Type=Application
 Icon=mx-dockmaker
 OnlyShowIn=fluxbox;X-MXFB-Tools;
-Categories=System;MX-Utilities;
+Categories=System;X-MX-Utilities;
 NoDisplay=false
