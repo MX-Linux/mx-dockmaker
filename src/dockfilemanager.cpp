@@ -39,6 +39,7 @@
 DockFileManager::DockFileManager(QObject *parent)
     : QObject(parent)
 {
+    m_processPool.setMaxThreadCount(1);
 }
 
 bool DockFileManager::saveConfiguration(const DockConfiguration &configuration, const QString &filePath,
@@ -185,9 +186,8 @@ bool DockFileManager::moveDockFile(const QString &oldFilePath, const QString &ne
     out << updatedContent;
     file.close();
 
-    // Restart wmalauncher - kill and wait for process to terminate before starting new instance
-    killAndWaitForProcess(QStringLiteral("wmalauncher"));
-    QProcess::startDetached(oldFilePath, {});
+    // Restart wmalauncher without blocking the GUI while waiting for it to terminate
+    restartDockAsync(QStringLiteral("wmalauncher"), oldFilePath);
 
     emit operationCompleted(operation, true);
     return true;
@@ -236,8 +236,8 @@ bool DockFileManager::removeFromMenu(const QString &filePath)
         return false;
     }
 
-    // Kill wmalauncher to reload menu - wait for process to terminate
-    killAndWaitForProcess(QStringLiteral("wmalauncher"));
+    // Kill wmalauncher without blocking the GUI while waiting for it to terminate
+    killProcessAsync(QStringLiteral("wmalauncher"));
 
     emit operationCompleted(operation, true);
     return true;
@@ -423,6 +423,19 @@ bool DockFileManager::runCommandQuiet(const QString &command, const QStringList 
     proc.start(command, args);
     proc.waitForFinished();
     return proc.exitStatus() == QProcess::NormalExit && proc.exitCode() == 0;
+}
+
+void DockFileManager::killProcessAsync(const QString &processName)
+{
+    m_processPool.start([processName]() { killAndWaitForProcess(processName); });
+}
+
+void DockFileManager::restartDockAsync(const QString &processName, const QString &dockFile)
+{
+    m_processPool.start([processName, dockFile]() {
+        killAndWaitForProcess(processName);
+        QProcess::startDetached(dockFile, {});
+    });
 }
 
 void DockFileManager::killAndWaitForProcess(const QString &processName)

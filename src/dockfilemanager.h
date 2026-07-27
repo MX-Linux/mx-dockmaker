@@ -29,6 +29,7 @@
 #include <QObject>
 #include <QProcess>
 #include <QString>
+#include <QThreadPool>
 
 class DockFileManager : public QObject
 {
@@ -47,7 +48,8 @@ public:
     bool setExecutable(const QString &filePath);
     explicit DockFileManager(QObject *parent = nullptr);
     static QString getDefaultDockDirectory();
-    static void killAndWaitForProcess(const QString &processName);
+    void killProcessAsync(const QString &processName);
+    void restartDockAsync(const QString &processName, const QString &dockFile);
 
 signals:
     void operationCompleted(const QString &operation, bool success);
@@ -56,10 +58,12 @@ signals:
 
 private:
     QString m_lastError; ///< Last error message
+    QThreadPool m_processPool;
 
     QString generateDockContent(const DockConfiguration &configuration) const;
     static QString escapeShellArg(const QString &arg);
     static QString escapeSedArg(const QString &arg);
+    static void killAndWaitForProcess(const QString &processName);
     static bool runCommandQuiet(const QString &command, const QStringList &args = {});
     void clearLastError();
     void setLastError(const QString &error);

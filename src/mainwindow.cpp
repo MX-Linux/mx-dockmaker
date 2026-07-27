@@ -26,7 +26,6 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QInputDialog>
-#include <QProcess>
 #include <QRegularExpression>
 #include <QSignalBlocker>
 #include <QTimer>
@@ -606,8 +605,7 @@ void MainWindow::buttonSave_clicked()
                              tr("The dock file was saved, but it could not be added to the menu.\n\n%1")
                                  .arg(m_fileManager->getLastError()));
     }
-    DockFileManager::killAndWaitForProcess(QStringLiteral("wmalauncher"));
-    QProcess::startDetached(targetFile, {});
+    m_fileManager->restartDockAsync(QStringLiteral("wmalauncher"), targetFile);
     index = 0;
     resetAdd();
     ui->buttonSave->setEnabled(false);
