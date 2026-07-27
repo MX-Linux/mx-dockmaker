@@ -35,6 +35,7 @@ class DockFileParserTest : public QObject
 
 private slots:
     void parsesMultipleEntriesAndDefaults();
+    void preservesIconSizesAbove255();
     void parsesCommandsWithQuotedArguments();
     void parsesQuotedDesktopAndIconValues();
     void parsesCommandsWithDashXFlag();
@@ -67,6 +68,17 @@ void DockFileParserTest::parsesMultipleEntriesAndDefaults()
     QCOMPARE(second.iconSize(), QSize(48, 48)); // falls back to default size when not provided
     QCOMPARE(second.size, QStringLiteral("48x48"));
     QVERIFY(second.isValid());
+}
+
+void DockFileParserTest::preservesIconSizesAbove255()
+{
+    const QString content = QStringLiteral("wmalauncher --command echo test --window-size 999\n");
+
+    DockConfiguration configuration;
+    DockFileParser parser;
+
+    QVERIFY(parser.parseContent(content, configuration));
+    QCOMPARE(configuration.getApplication(0).iconSize(), QSize(999, 999));
 }
 
 void DockFileParserTest::parsesCommandsWithQuotedArguments()

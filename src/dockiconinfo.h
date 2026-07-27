@@ -64,7 +64,7 @@ struct DockIconInfo {
     }
     QSize iconSize() const
     {
-        const quint8 width = size.section(QLatin1Char('x'), 0, 0).toUShort();
+        const int width = size.section(QLatin1Char('x'), 0, 0).toInt();
         return QSize(width, width);
     }
     [[nodiscard]] QStringList toStringList() const
