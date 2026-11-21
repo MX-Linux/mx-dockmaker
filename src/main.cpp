@@ -30,6 +30,8 @@
 #include <QProcess>
 #include <QTranslator>
 
+#include <memory>
+
 #include "mainwindow.h"
 #include "pathconstants.h"
 #include <unistd.h>
@@ -40,22 +42,29 @@
 
 int main(int argc, char *argv[])
 {
-    if (qEnvironmentVariableIsEmpty("DISPLAY") && qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY")
-        && qEnvironmentVariableIsEmpty("QT_QPA_PLATFORM")) {
-        qWarning("mx-dockmaker: no display available (DISPLAY and WAYLAND_DISPLAY are both unset); "
-                "a graphical session is required to run this program.");
-        return EXIT_FAILURE;
-    }
+    const QByteArray option = argc == 2 ? QByteArray(argv[1]) : QByteArray();
+    const bool informational = option == "-h" || option == "--help" || option == "--help-all"
+                               || option == "-v" || option == "--version";
+    std::unique_ptr<QCoreApplication> app;
+    if (informational) {
+        app = std::make_unique<QCoreApplication>(argc, argv);
+    } else {
+        if (qEnvironmentVariableIsEmpty("DISPLAY") && qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY")
+            && qEnvironmentVariableIsEmpty("QT_QPA_PLATFORM")) {
+            qWarning("mx-dockmaker: no display available (DISPLAY and WAYLAND_DISPLAY are both unset); "
+                    "a graphical session is required to run this program.");
+            return EXIT_FAILURE;
+        }
 
-    // Set Qt platform to XCB (X11) if not already set and we're in X11 environment
-    if (qEnvironmentVariableIsEmpty("QT_QPA_PLATFORM")) {
-        if (!qEnvironmentVariableIsEmpty("DISPLAY") && qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY")) {
+        // Set Qt platform to XCB (X11) if not already set and we're in X11 environment
+        if (qEnvironmentVariableIsEmpty("QT_QPA_PLATFORM") && !qEnvironmentVariableIsEmpty("DISPLAY")
+            && qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY")) {
             qputenv("QT_QPA_PLATFORM", "xcb");
         }
+
+        app = std::make_unique<QApplication>(argc, argv);
     }
 
-    QApplication a(argc, argv);
-    QApplication::setWindowIcon(QIcon(PathConstants::APP_ICON_PATH));
     QApplication::setApplicationName(QStringLiteral("mx-dockmaker"));
     QApplication::setOrganizationName(QStringLiteral("MX-Linux"));
     QApplication::setApplicationVersion(VERSION);
@@ -82,7 +91,9 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument("file", QObject::tr("Dock file to edit (optional)"), "[file]");
-    parser.process(a);
+    parser.process(*app);
+
+    QApplication::setWindowIcon(QIcon(PathConstants::APP_ICON_PATH));
 
     // Root guard - prevent running as root
     if (getuid() == 0) {
