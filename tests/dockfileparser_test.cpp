@@ -48,6 +48,7 @@ private slots:
     void extractsDockNameWithoutTruncation();
     void matchesStockMenuEntryByPath();
     void writesQuotedMenuEntry();
+    void deletesDockWithMissingMenu();
     void extractsSlitLocationFromPlacementCommand();
     void ignoresUnrelatedLocationTokensInContent();
 };
@@ -319,4 +320,27 @@ void DockFileParserTest::writesQuotedMenuEntry()
     QVERIFY(files.removeFromMenu(path));
     QVERIFY(menu.open(QIODevice::ReadOnly));
     QCOMPARE(menu.readAll(), header);
+}
+
+void DockFileParserTest::deletesDockWithMissingMenu()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QByteArray oldHome = qgetenv("HOME");
+    const auto restoreHome = qScopeGuard([&] { oldHome.isNull() ? qunsetenv("HOME") : qputenv("HOME", oldHome); });
+    qputenv("HOME", dir.path().toUtf8());
+
+    QFile dock(dir.filePath("dock.mxdk"));
+    QVERIFY(dock.open(QIODevice::WriteOnly));
+    dock.close();
+    DockFileManager files;
+    QVERIFY(files.deleteDockFile(dock.fileName()));
+    QVERIFY(!dock.exists());
+
+    // A real error reading an existing menu must still leave the dock alone.
+    QVERIFY(QDir().mkpath(dir.filePath(".fluxbox/submenus/appearance")));
+    QVERIFY(dock.open(QIODevice::WriteOnly));
+    dock.close();
+    QVERIFY(!files.deleteDockFile(dock.fileName()));
+    QVERIFY(dock.exists());
 }

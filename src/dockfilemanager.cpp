@@ -27,6 +27,8 @@
 #include "pathconstants.h"
 #include "shellarguments.h"
 
+#include <filesystem>
+
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -285,6 +287,9 @@ bool DockFileManager::removeFromMenu(const QString &filePath)
         if (success && removed) {
             success = writeMenu(menu.fileName(), kept);
         }
+    } else {
+        std::error_code error;
+        success = !std::filesystem::exists(menu.filesystemFileName(), error) && !error;
     }
     if (!success) {
         setLastError(tr("Failed to remove dock from Fluxbox menu"));
