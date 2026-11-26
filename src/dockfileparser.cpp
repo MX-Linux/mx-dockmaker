@@ -24,6 +24,9 @@
 
 #include "dockfileparser.h"
 #include "pathconstants.h"
+#include "shellarguments.h"
+
+#include <algorithm>
 
 #include <QColor>
 #include <QDebug>
@@ -59,8 +62,7 @@ const QSet<QString> DockFileParser::KNOWN_OPTIONS = {"-d",
 
 // Static regex patterns to avoid recompilation
 static const QRegularExpression wmalauncherPrefixRe(QStringLiteral("^wmalauncher"));
-static const QRegularExpression sleepSuffixRe(QStringLiteral("\\s*&(?:\\s*sleep.*)?$"));
-static const QRegularExpression tokenRe(QStringLiteral(R"((\"[^\"]*\"|'[^']*'|\S+))"));
+static const QRegularExpression sleepSuffixRe(QStringLiteral(R"(\s*&(?:\s*sleep\s+[0-9.]+\s*;?)?$)"));
 
 DockFileParser::DockFileParser(QObject *parent)
     : QObject(parent)
@@ -116,6 +118,9 @@ bool DockFileParser::parseContent(const QString &content, DockConfiguration &con
 
         if (trimmedLine.startsWith(QLatin1String("wmalauncher"))) {
             DockIconInfo iconInfo = parseWmalauncherLine(trimmedLine);
+            if (!m_lastError.isEmpty()) {
+                return false;
+            }
             if (iconInfo.isValid()) {
                 configuration.addApplication(iconInfo);
             }
@@ -220,19 +225,18 @@ DockIconInfo DockFileParser::parseWmalauncherLine(const QString &line)
     QString cleanLine = line;
     cleanLine.remove(wmalauncherPrefixRe);
     cleanLine.remove(sleepSuffixRe);
-    auto matchIt = ::tokenRe.globalMatch(cleanLine);
-
     QStringList tokens;
-    while (matchIt.hasNext()) {
-        tokens << matchIt.next().captured(0);
+    QStringList spellings;
+    if (!ShellArguments::split(cleanLine, tokens, m_lastError, &spellings)) {
+        return {};
     }
-
+    QStringList extraOptions;
     for (int i = 0; i < tokens.size(); ++i) {
         const QString token = tokens.at(i);
 
         auto nextValue = [&](QString *out) {
             if (i + 1 < tokens.size()) {
-                *out = stripQuotes(tokens.at(++i));
+                *out = tokens.at(++i);
             }
         };
 
@@ -243,15 +247,22 @@ DockIconInfo DockFileParser::parseWmalauncherLine(const QString &line)
                 info.appName = value;
             }
         } else if (token == QLatin1String("-c") || token == QLatin1String("--command")) {
-            QString value;
-            nextValue(&value);
-            // Collect remaining non-option tokens as part of command
-            while (i + 1 < tokens.size() && !isKnownOption(tokens.at(i + 1), false)) {
-                value += QLatin1Char(' ') + stripQuotes(tokens.at(++i));
+            QStringList command;
+            if (i + 1 < tokens.size()) {
+                command.append(spellings.at(++i));
+                // wmalauncher consumes command arguments up to its next --icon/-i.
+                // Older dock files without that delimiter use the next launcher option.
+                const auto first = tokens.cbegin() + i + 1;
+                auto end = std::find_if(first, tokens.cend(), [](const QString &arg) {
+                    return arg == QLatin1String("--icon") || arg == QLatin1String("-i");
+                });
+                if (end == tokens.cend()) {
+                    end = std::find_if(first, end, [](const QString &arg) { return isKnownOption(arg, false); });
+                }
+                command.append(spellings.mid(i + 1, end - first));
+                i = static_cast<int>(end - tokens.cbegin()) - 1;
             }
-            if (!value.isEmpty()) {
-                info.command = value;
-            }
+            info.command = command.join(QLatin1Char(' '));
         } else if (token == QLatin1String("-i") || token == QLatin1String("--icon")) {
             QString value;
             nextValue(&value);
@@ -298,26 +309,10 @@ DockIconInfo DockFileParser::parseWmalauncherLine(const QString &line)
         } else if (token == QLatin1String("-x") || token == QLatin1String("--exit-on-right-click")) {
             // Not used right now, but we could store it if needed
         } else {
-            // Unknown option, store as extra options
-            QString value;
-            if (i + 1 < tokens.size()) {
-                const QString possibleValue = tokens.at(i + 1);
-                if (!possibleValue.startsWith(QLatin1Char('-')) && !isKnownOption(possibleValue)) {
-                    value = possibleValue;
-                    ++i;
-                }
-            }
-
-            if (!info.extraOptions.isEmpty()) {
-                info.extraOptions += QLatin1Char(' ');
-            }
-            info.extraOptions += token;
-            if (!value.isEmpty()) {
-                info.extraOptions += QLatin1Char(' ') + value;
-            }
+            extraOptions.append(spellings.at(i));
         }
     }
-
+    info.extraOptions = extraOptions.join(QLatin1Char(' '));
     return info;
 }
 
@@ -334,12 +329,11 @@ QString DockFileParser::stripQuotes(const QString &value)
 
 bool DockFileParser::isKnownOption(const QString &token, bool allowExitOnRightClick)
 {
-    const QString cleanToken = stripQuotes(token);
     if (!allowExitOnRightClick
-        && (cleanToken == QLatin1String("-x") || cleanToken == QLatin1String("--exit-on-right-click"))) {
+        && (token == QLatin1String("-x") || token == QLatin1String("--exit-on-right-click"))) {
         return false;
     }
-    return KNOWN_OPTIONS.contains(cleanToken);
+    return KNOWN_OPTIONS.contains(token);
 }
 
 void DockFileParser::setLastError(const QString &error)

@@ -59,8 +59,7 @@ private:
     QString m_lastError; ///< Last error message
     QThreadPool m_processPool;
 
-    QString generateDockContent(const DockConfiguration &configuration) const;
-    static QString escapeShellArg(const QString &arg);
+    QString generateDockContent(const DockConfiguration &configuration);
     static QString escapeSedArg(const QString &arg);
     static void killAndWaitForProcess(const QString &processName);
     static bool runCommandQuiet(const QString &command, const QStringList &args = {});

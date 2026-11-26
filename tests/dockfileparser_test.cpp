@@ -25,6 +25,9 @@
 #include <QDir>
 #include <QFile>
 #include <QTemporaryDir>
+#include <QScopeGuard>
+
+#include "dockfilemanager.h"
 
 #include "dockconfiguration.h"
 #include "dockfileparser.h"
@@ -37,6 +40,7 @@ private slots:
     void parsesMultipleEntriesAndDefaults();
     void preservesIconSizesAbove255();
     void parsesCommandsWithQuotedArguments();
+    void savesAndReloadsQuotedArguments();
     void parsesQuotedDesktopAndIconValues();
     void parsesCommandsWithDashXFlag();
     void roundTripCommandWithDashX();
@@ -97,10 +101,10 @@ void DockFileParserTest::parsesCommandsWithQuotedArguments()
     QCOMPARE(configuration.getApplicationCount(), 2);
 
     const DockIconInfo first = configuration.getApplication(0);
-    QCOMPARE(first.command, QStringLiteral("echo hello world"));
+    QCOMPARE(first.command, QStringLiteral("echo \"hello world\""));
 
     const DockIconInfo second = configuration.getApplication(1);
-    QCOMPARE(second.command, QStringLiteral("/usr/bin/my_app arg one arg two with space"));
+    QCOMPARE(second.command, QStringLiteral("/usr/bin/my_app \"arg one\" 'arg two with space'"));
 }
 
 void DockFileParserTest::parsesQuotedDesktopAndIconValues()
@@ -241,4 +245,45 @@ void DockFileParserTest::matchesStockMenuEntryByPath()
     QVERIFY(DockFileParser::menuEntryName(stock, QStringLiteral("/another/DefaultDock.mxdk")).isEmpty());
     QCOMPARE(DockFileParser::menuEntryName(QStringLiteral("t\t\t[exec] (Saved) {%1}").arg(path), path),
              QStringLiteral("Saved"));
+}
+
+void DockFileParserTest::savesAndReloadsQuotedArguments()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QByteArray oldHome = qgetenv("HOME");
+    const auto restoreHome = qScopeGuard([&] { oldHome.isNull() ? qunsetenv("HOME") : qputenv("HOME", oldHome); });
+    qputenv("HOME", dir.path().toUtf8());
+
+    DockIconInfo icon;
+    icon.command = QStringLiteral("viewer \"O'Brien's Notes.pdf\" \"\" 'A & B' -c ~/bin/tool \"$HOME/My file\" '$HOME'");
+    icon.customIcon = QStringLiteral("/icons/Reader's icon.png");
+    icon.extraOptions = QStringLiteral("--tooltip-font \"Reader's Font/10\"");
+    DockConfiguration original;
+    QVERIFY(original.addApplication(icon) >= 0);
+
+    const QString file = dir.filePath(QStringLiteral("dock.mxdk"));
+    DockFileManager files;
+    QVERIFY2(files.saveConfiguration(original, file), qPrintable(files.getLastError()));
+    DockConfiguration loaded;
+    QVERIFY2(files.loadConfiguration(file, loaded), qPrintable(files.getLastError()));
+    QCOMPARE(loaded.getApplication(0).customIcon, icon.customIcon);
+    QVERIFY2(files.saveConfiguration(loaded, file), qPrintable(files.getLastError()));
+
+    QFile script(file);
+    QVERIFY(script.open(QIODevice::ReadOnly));
+    const QString line = QString::fromUtf8(script.readAll()).section(QStringLiteral("\nwmalauncher "), 1)
+                             .section(QStringLiteral("& sleep"), 0, 0);
+    QVERIFY(!line.isEmpty());
+    // Ask sh for the argument vector without starting any dock processes.
+    QProcess shell;
+    shell.start(QStringLiteral("/bin/sh"),
+                {QStringLiteral("-c"), QStringLiteral("set -- ") + line + QStringLiteral("\nprintf '%s\\n' \"$@\"")});
+    QVERIFY(shell.waitForFinished());
+    QCOMPARE(shell.exitCode(), 0);
+    const auto args = shell.readAllStandardOutput().split('\n');
+    QCOMPARE(args.mid(0, 11), QList<QByteArray>({"--command", "viewer", "O'Brien's Notes.pdf", "", "A & B", "-c",
+                                                dir.filePath("bin/tool").toUtf8(), dir.filePath("My file").toUtf8(), "$HOME",
+                                                "--icon", "/icons/Reader's icon.png"}));
+    QVERIFY(args.contains("Reader's Font/10"));
 }

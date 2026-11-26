@@ -25,6 +25,7 @@
 #include "dockfilemanager.h"
 #include "dockfileparser.h"
 #include "pathconstants.h"
+#include "shellarguments.h"
 
 #include <QDir>
 #include <QFile>
@@ -57,6 +58,13 @@ bool DockFileManager::saveConfiguration(const DockConfiguration &configuration, 
         return false;
     }
 
+    const QString content = generateDockContent(configuration);
+    if (content.isNull()) {
+        emit operationError(operation, m_lastError);
+        emit operationCompleted(operation, false);
+        return false;
+    }
+
     // Create backup if requested (createBackup handles non-existent files gracefully)
     if (createBackup && !DockFileManager::createBackup(filePath)) {
         emit operationError(operation, m_lastError);
@@ -73,7 +81,7 @@ bool DockFileManager::saveConfiguration(const DockConfiguration &configuration, 
     }
 
     QTextStream out(&file);
-    out << generateDockContent(configuration);
+    out << content;
     file.close();
 
     // Set executable permissions
@@ -333,7 +341,7 @@ QString DockFileManager::getLastError() const
     return m_lastError;
 }
 
-QString DockFileManager::generateDockContent(const DockConfiguration &configuration) const
+QString DockFileManager::generateDockContent(const DockConfiguration &configuration)
 {
     QString content;
     QTextStream out(&content);
@@ -360,21 +368,28 @@ QString DockFileManager::generateDockContent(const DockConfiguration &configurat
         }
         QString command;
         if (app.isDesktopFile()) {
-            command = "--desktop-file " + escapeShellArg(app.appName);
+            command = "--desktop-file " + ShellArguments::quote(app.appName);
         } else {
             const QString iconPath
                 = app.customIcon.isEmpty() ? QStringLiteral("application-x-executable") : app.customIcon;
-            command = "--command " + app.command + " --icon " + escapeShellArg(iconPath);
+            QStringList arguments;
+            QStringList words;
+            if (!ShellArguments::split(app.command, arguments, m_lastError, &words)) {
+                return {};
+            }
+            command = "--command " + words.join(QLatin1Char(' ')) + " --icon " + ShellArguments::quote(iconPath);
         }
 
-        QString extraOptions = app.extraOptions;
-        if (!extraOptions.isEmpty() && !extraOptions.startsWith(QLatin1Char(' '))) {
-            extraOptions.prepend(QLatin1Char(' '));
+        QStringList options;
+        QStringList words;
+        if (!ShellArguments::split(app.extraOptions, options, m_lastError, &words)) {
+            return {};
         }
+        const QString extraOptions = options.isEmpty() ? QString() : QLatin1Char(' ') + words.join(QLatin1Char(' '));
 
         QString tooltipOption;
         if (!app.tooltip.isEmpty()) {
-            tooltipOption = QStringLiteral(" --tooltip-text ") + escapeShellArg(app.tooltip);
+            tooltipOption = QStringLiteral(" --tooltip-text ") + ShellArguments::quote(app.tooltip);
         }
 
         out << "wmalauncher " << command << " --background-color \"" << app.backgroundColor.name() << "\""
@@ -386,18 +401,6 @@ QString DockFileManager::generateDockContent(const DockConfiguration &configurat
     }
 
     return content;
-}
-
-QString DockFileManager::escapeShellArg(const QString &arg)
-{
-    if (arg.isEmpty()) {
-        return QStringLiteral("''");
-    }
-
-    // POSIX-safe single-quote escaping
-    QString escaped = arg;
-    escaped.replace(QLatin1Char('\''), QStringLiteral("'\"'\"'"));
-    return QLatin1Char('\'') + escaped + QLatin1Char('\'');
 }
 
 QString DockFileManager::escapeSedArg(const QString &arg)
