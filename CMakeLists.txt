@@ -68,9 +68,6 @@ if(USE_CLANG)
     message(STATUS "Using clang compiler")
 endif()
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GLIB REQUIRED IMPORTED_TARGET glib-2.0)
-
 # Find Qt6 components
 find_package(Qt6 REQUIRED COMPONENTS
     Core
@@ -134,7 +131,6 @@ add_executable(mx-dockmaker
 
 # Link Qt6 libraries
 target_link_libraries(mx-dockmaker
-    PkgConfig::GLIB
     Qt6::Core
     Qt6::Gui
     Qt6::Widgets
@@ -172,7 +168,6 @@ if(ENABLE_TESTS)
     set_target_properties(dockfileparser_test PROPERTIES AUTOMOC ON)
     target_include_directories(dockfileparser_test PRIVATE src)
     target_link_libraries(dockfileparser_test
-        PkgConfig::GLIB
         Qt6::Core
         Qt6::Gui
         Qt6::Test

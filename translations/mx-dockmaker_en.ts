@@ -681,4 +681,17 @@ Creating a new dock instead.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
+<context>
+    <name>ShellArguments</name>
+    <message>
+        <location filename="../src/shellarguments.cpp" line="93"/>
+        <source>Unmatched quote or trailing backslash in command line.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/shellarguments.cpp" line="102"/>
+        <source>Expected a command-line argument.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 </TS>

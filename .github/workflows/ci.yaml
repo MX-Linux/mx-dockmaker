@@ -21,8 +21,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             cmake \
-            libglib2.0-dev \
-            pkg-config \
             ninja-build \
             qt6-base-dev \
             qt6-base-dev-tools \
@@ -77,8 +75,6 @@ jobs:
             debhelper \
             build-essential \
             cmake \
-            libglib2.0-dev \
-            pkg-config \
             ninja-build \
             qt6-base-dev \
             qt6-base-dev-tools \

@@ -41,6 +41,7 @@ private slots:
     void preservesIconSizesAbove255();
     void parsesCommandsWithQuotedArguments();
     void savesAndReloadsQuotedArguments();
+    void rejectsMalformedArgumentsBeforeOverwritingDock();
     void parsesQuotedDesktopAndIconValues();
     void parsesCommandsWithDashXFlag();
     void roundTripCommandWithDashX();
@@ -174,7 +175,7 @@ void DockFileParserTest::roundTripCommandWithDashX()
 void DockFileParserTest::parsesWmalauncherDashXBeforeCommand()
 {
     const QString content = QStringLiteral(
-        "wmalauncher -x --command xfce4-terminal --hold -x bc --icon terminal.png "
+        "wmalauncher -x -c xfce4-terminal --hold -x bc -c -w -i terminal.png "
         "--background-color black --hover-background-color black --border-color white --hover-border-color white\n");
 
     DockConfiguration configuration;
@@ -184,7 +185,7 @@ void DockFileParserTest::parsesWmalauncherDashXBeforeCommand()
     QCOMPARE(configuration.getApplicationCount(), 1);
 
     const DockIconInfo app = configuration.getApplication(0);
-    QCOMPARE(app.command, QStringLiteral("xfce4-terminal --hold -x bc"));
+    QCOMPARE(app.command, QStringLiteral("xfce4-terminal --hold -x bc -c -w"));
     QCOMPARE(app.customIcon, QStringLiteral("terminal.png"));
 }
 
@@ -259,6 +260,8 @@ void DockFileParserTest::savesAndReloadsQuotedArguments()
 
     DockIconInfo icon;
     icon.command = QStringLiteral("viewer \"O'Brien's Notes.pdf\" \"\" 'A & B' -c ~/bin/tool \"$HOME/My file\" '$HOME'");
+    icon.command += QStringLiteral(R"( pre"two words"post escaped\ space "a\"b\c" a|b)");
+    icon.command += QStringLiteral(" file\\\n --flag \"$HO\\\nME\" end\\ #");
     icon.customIcon = QStringLiteral("/icons/Reader's icon.png");
     icon.extraOptions = QStringLiteral("--tooltip-font \"Reader's Font/10\"");
     DockConfiguration original;
@@ -284,10 +287,43 @@ void DockFileParserTest::savesAndReloadsQuotedArguments()
     QVERIFY(shell.waitForFinished());
     QCOMPARE(shell.exitCode(), 0);
     const auto args = shell.readAllStandardOutput().split('\n');
-    QCOMPARE(args.mid(0, 11), QList<QByteArray>({"--command", "viewer", "O'Brien's Notes.pdf", "", "A & B", "-c",
+    QCOMPARE(args.mid(0, 19), QList<QByteArray>({"--command", "viewer", "O'Brien's Notes.pdf", "", "A & B", "-c",
                                                 dir.filePath("bin/tool").toUtf8(), dir.filePath("My file").toUtf8(), "$HOME",
+                                                "pretwo wordspost", "escaped space", "a\"b\\c", "a|b",
+                                                "file", "--flag", dir.path().toUtf8(), "end #",
                                                 "--icon", "/icons/Reader's icon.png"}));
     QVERIFY(args.contains("Reader's Font/10"));
+}
+
+void DockFileParserTest::rejectsMalformedArgumentsBeforeOverwritingDock()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QByteArray oldHome = qgetenv("HOME");
+    const auto restoreHome = qScopeGuard([&] { oldHome.isNull() ? qunsetenv("HOME") : qputenv("HOME", oldHome); });
+    qputenv("HOME", dir.path().toUtf8());
+
+    DockIconInfo icon;
+    icon.command = QStringLiteral("viewer");
+    DockConfiguration dock;
+    QVERIFY(dock.addApplication(icon) >= 0);
+    DockFileManager files;
+    QFile file(dir.filePath(QStringLiteral("dock.mxdk")));
+    QVERIFY(files.saveConfiguration(dock, file.fileName()));
+    QVERIFY(file.open(QIODevice::ReadOnly));
+    const QByteArray saved = file.readAll();
+    file.close();
+
+    for (const QString &command : {QStringLiteral("viewer 'open"), QStringLiteral("viewer unfinished\\")}) {
+        icon.command = command;
+        QVERIFY(dock.updateApplication(0, icon));
+        QVERIFY(!files.saveConfiguration(dock, file.fileName(), true));
+        QVERIFY(!files.getLastError().isEmpty());
+        QVERIFY(!QFile::exists(file.fileName() + QStringLiteral(".~")));
+        QVERIFY(file.open(QIODevice::ReadOnly));
+        QCOMPARE(file.readAll(), saved);
+        file.close();
+    }
 }
 
 void DockFileParserTest::writesQuotedMenuEntry()
