@@ -31,6 +31,7 @@
 #include <QFileInfo>
 #include <QProcess>
 #include <QRegularExpression>
+#include <QSaveFile>
 #include <QStandardPaths>
 #include <QTextStream>
 #include <QThread>
@@ -224,12 +225,27 @@ bool DockFileManager::removeFromMenu(const QString &filePath)
     const QString operation = tr("Removing dock from menu");
     emit operationStarted(operation);
 
-    const QString command = QStringLiteral("sed");
-    const QString escapedFilePath = escapeSedArg(filePath);
-    const QStringList args = {QStringLiteral("-ni"), QStringLiteral("\\|%1|!p").arg(escapedFilePath),
-                              QDir::homePath() + PathConstants::FLUXBOX_SUBMENUS_FILE};
-
-    if (!runCommandQuiet(command, args)) {
+    QFile menu(QDir::homePath() + PathConstants::FLUXBOX_SUBMENUS_FILE);
+    bool success = menu.open(QIODevice::ReadOnly);
+    if (success) {
+        QByteArray kept;
+        bool removed = false;
+        while (!menu.atEnd()) {
+            const QByteArray line = menu.readLine();
+            if (DockFileParser::menuEntryName(QString::fromUtf8(line), filePath).isEmpty()) {
+                kept += line;
+            } else {
+                removed = true;
+            }
+        }
+        success = menu.error() == QFileDevice::NoError;
+        menu.close();
+        if (success && removed) {
+            QSaveFile updated(menu.fileName());
+            success = updated.open(QIODevice::WriteOnly) && updated.write(kept) == kept.size() && updated.commit();
+        }
+    }
+    if (!success) {
         setLastError(tr("Failed to remove dock from Fluxbox menu"));
         emit operationError(operation, m_lastError);
         emit operationCompleted(operation, false);
@@ -245,15 +261,7 @@ bool DockFileManager::removeFromMenu(const QString &filePath)
 
 bool DockFileManager::isInMenu(const QString &filePath) const
 {
-    QFile menuFile(QDir::homePath() + PathConstants::FLUXBOX_SUBMENUS_FILE);
-    if (!menuFile.open(QFile::Text | QFile::ReadOnly)) {
-        return false;
-    }
-
-    QString content = menuFile.readAll();
-    menuFile.close();
-
-    return content.contains(filePath);
+    return !DockFileParser::extractDockName(filePath).isEmpty();
 }
 
 bool DockFileManager::createBackup(const QString &filePath)

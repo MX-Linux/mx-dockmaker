@@ -42,6 +42,7 @@ public:
     bool parseFile(const QString &filePath, DockConfiguration &configuration);
     bool validateFile(const QString &filePath);
     explicit DockFileParser(QObject *parent = nullptr);
+    static QString menuEntryName(const QString &line, const QString &filePath);
     static QString extractDockName(const QString &fileName);
 
 signals:

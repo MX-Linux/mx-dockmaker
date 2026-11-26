@@ -42,6 +42,7 @@ private slots:
     void roundTripCommandWithDashX();
     void parsesWmalauncherDashXBeforeCommand();
     void extractsDockNameWithoutTruncation();
+    void matchesStockMenuEntryByPath();
     void extractsSlitLocationFromPlacementCommand();
     void ignoresUnrelatedLocationTokensInContent();
 };
@@ -229,4 +230,15 @@ void DockFileParserTest::ignoresUnrelatedLocationTokensInContent()
         "--hover-background-color black --border-color white --hover-border-color white\n");
 
     QVERIFY(parser.extractSlitLocation(content).isEmpty());
+}
+
+void DockFileParserTest::matchesStockMenuEntryByPath()
+{
+    const QString stock = QStringLiteral("    [exec] (Default) {~/.fluxbox/scripts/DefaultDock.mxdk}");
+    const QString path = QDir::home().filePath(QStringLiteral(".fluxbox/scripts/DefaultDock.mxdk"));
+    QCOMPARE(DockFileParser::menuEntryName(stock, path), QStringLiteral("Default"));
+    QVERIFY(DockFileParser::menuEntryName(stock, path.chopped(5)).isEmpty());
+    QVERIFY(DockFileParser::menuEntryName(stock, QStringLiteral("/another/DefaultDock.mxdk")).isEmpty());
+    QCOMPARE(DockFileParser::menuEntryName(QStringLiteral("t\t\t[exec] (Saved) {%1}").arg(path), path),
+             QStringLiteral("Saved"));
 }

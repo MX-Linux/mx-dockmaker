@@ -139,38 +139,40 @@ QString DockFileParser::extractSlitLocation(const QString &content) const
     return match.hasMatch() ? match.captured(1) : QString();
 }
 
+QString DockFileParser::menuEntryName(const QString &line, const QString &filePath)
+{
+    // Older sed-based writers emitted a literal t before the two indentation tabs.
+    static const QRegularExpression entry(QStringLiteral(R"(^\s*(?:t\t\t)?\[exec\]\s*\(([^)]*)\)\s*\{([^}]*)\})"),
+                                          QRegularExpression::CaseInsensitiveOption);
+    const auto match = entry.match(line);
+    if (!match.hasMatch()) {
+        return {};
+    }
+
+    QString command = match.captured(2).trimmed();
+    if (command.startsWith(QLatin1String("~/"))) {
+        command = QDir::home().filePath(command.mid(2));
+    } else {
+        command = stripQuotes(command);
+    }
+    if (QDir::cleanPath(command) != QDir::cleanPath(QFileInfo(filePath).absoluteFilePath())) {
+        return {};
+    }
+    return stripQuotes(match.captured(1));
+}
+
 QString DockFileParser::extractDockName(const QString &fileName)
 {
-    QFileInfo fileInfo(fileName);
-    QString baseName = fileInfo.baseName();
-
-    // Try to extract name from submenus file
-    QFile submenusFile(QDir::homePath() + PathConstants::FLUXBOX_SUBMENUS_FILE);
-    if (submenusFile.open(QFile::Text | QFile::ReadOnly)) {
-        QString content = submenusFile.readAll();
-        submenusFile.close();
-
-        const QStringList lines = content.split('\n');
-        for (const QString &line : lines) {
-            if (!line.contains(baseName)) {
-                continue;
-            }
-
-            const int openParen = line.indexOf(QLatin1Char('('));
-            const int closeParen = line.indexOf(QLatin1Char(')'), openParen + 1);
-            if (openParen < 0 || closeParen <= openParen + 1) {
-                continue;
-            }
-
-            QString name = line.mid(openParen + 1, closeParen - openParen - 1);
+    QFile menu(QDir::homePath() + PathConstants::FLUXBOX_SUBMENUS_FILE);
+    if (menu.open(QIODevice::ReadOnly)) {
+        while (!menu.atEnd()) {
+            const QString name = menuEntryName(QString::fromUtf8(menu.readLine()), fileName);
             if (!name.isEmpty()) {
-                return stripQuotes(name);
+                return name;
             }
         }
     }
-
-    // Fallback to user input
-    return QString();
+    return {};
 }
 
 bool DockFileParser::validateFile(const QString &filePath)
