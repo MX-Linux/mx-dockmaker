@@ -1,11 +1,13 @@
 #!/bin/bash
 
-APPNAME="$(basename $(dirname $(pwd)))-desktop"
+set -e
 
-echodo() {
-  echo "${@}"
-  ${@}
-}
+cd "$(dirname "${BASH_SOURCE[0]}")"
+APPNAME="$(basename "$(dirname "$PWD")")-desktop"
+if ! command -v tx >/dev/null; then
+    echo "Transifex client (tx) is required to refresh translations." >&2
+    exit 1
+fi
 
 # prepare transifex 
 if [ ! -s  .tx/config ]; then
@@ -23,11 +25,13 @@ EOF
 fi    
 
 
-#remove existing translations
-rm po/*
+stage=$(mktemp -d)
+trap 'rm -rf -- "$stage"' EXIT
+mkdir -p "$stage/.tx" "$stage/po"
+cp .tx/config "$stage/.tx/config"
+cp "pot/${APPNAME}.pot" "$stage/${APPNAME}.pot"
+(cd "$stage" && tx pull -r "antix-development.$APPNAME" --all)
 
-# get all translations
-if command -v tx >/dev/null; then
-   echodo tx pull -r antix-development.$APPNAME  --all
-fi
-
+mkdir -p po
+rsync -a --checksum --delay-updates --delete-delay \
+    --include="/${APPNAME}_*.po" --exclude='*' "$stage/po/" po/

@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
+set -e
+
 # Get script directory and determine app name
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 APPNAME="$(basename "$PROJECT_DIR")"
 
-echodo() {
-  echo "${@}"
-  ${@}
-}
+cd "$SCRIPT_DIR"
+if ! command -v tx >/dev/null; then
+    echo "Transifex client (tx) is required to refresh translations." >&2
+    exit 1
+fi
 
 # Prepare transifex
 if [ ! -s  .tx/config ]; then
@@ -31,17 +34,6 @@ if [ -z "$(grep minimum_perc .tx/config)" ]; then
         echo "minimum_perc = 25" >> .tx/config
 fi
 
-# Remove existing translations
-find . -type f -name '*.ts' -not -name '*en.ts' -delete
-
-# Get all translations
-if command -v tx >/dev/null; then
-   echodo tx pull -r antix-development.$APPNAME --all
-fi
-
-# en_US duplicates the English source catalog and should not be shipped.
-rm -f "${APPNAME}_en_US.ts"
-
 # Find lupdate command in common locations
 LUPDATE=""
 for cmd in lupdate lupdate-qt6 /usr/lib/qt6/bin/lupdate /usr/bin/lupdate /usr/local/bin/lupdate; do
@@ -56,10 +48,23 @@ if [ -z "$LUPDATE" ]; then
     exit 1
 fi
 
-echo "Using lupdate: $LUPDATE"
+stage=$(mktemp -d)
+trap 'rm -rf -- "$stage"' EXIT
+mkdir "$stage/.tx"
+cp .tx/config "$stage/.tx/config"
+cp "${APPNAME}_en.ts" "$stage/"
+(cd "$stage" && tx pull -r "antix-development.$APPNAME" --all)
 
-# Update all .ts files from source files
-SOURCE_FILES=$(find ../src -name "*.cpp" -o -name "*.h" -o -name "*.ui" 2>/dev/null)
-if [ -n "$SOURCE_FILES" ]; then
-    "$LUPDATE" $SOURCE_FILES -ts *en.ts
+# en_US duplicates the locally maintained English source catalog.
+rm -f -- "$stage/${APPNAME}_en_US.ts"
+
+echo "Using lupdate: $LUPDATE"
+shopt -s globstar nullglob
+sources=(../src/**/*.cpp ../src/**/*.h ../src/**/*.ui)
+if (( ${#sources[@]} )); then
+    "$LUPDATE" "${sources[@]}" -ts "${APPNAME}_en.ts"
 fi
+
+# Publish only this resource's translations. Keep the source and unrelated files.
+rsync -a --checksum --delay-updates --delete-delay \
+    --exclude="/${APPNAME}_en.ts" --include="/${APPNAME}_*.ts" --exclude='*' "$stage/" ./
