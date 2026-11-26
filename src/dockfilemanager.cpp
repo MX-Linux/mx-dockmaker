@@ -38,6 +38,12 @@
 #include <QThread>
 #include <QTimer>
 
+static bool writeMenu(const QString &path, const QByteArray &content)
+{
+    QSaveFile menu(path);
+    return menu.open(QIODevice::WriteOnly) && menu.write(content) == content.size() && menu.commit();
+}
+
 DockFileManager::DockFileManager(QObject *parent)
     : QObject(parent)
 {
@@ -208,15 +214,56 @@ bool DockFileManager::addToMenu(const QString &filePath, const QString &dockName
     const QString operation = tr("Adding dock to menu");
     emit operationStarted(operation);
 
-    const QString command = QStringLiteral("sed");
-    const QString escapedDockName = escapeSedArg(dockName);
-    const QString escapedFilePath = escapeSedArg(filePath);
-    const QStringList args
-        = {QStringLiteral("-i"),
-           QStringLiteral("/\\[submenu\\] (Docks)/a \\t\\t\\t[exec] (%1) {%2}").arg(escapedDockName, escapedFilePath),
-           QDir::homePath() + PathConstants::FLUXBOX_SUBMENUS_FILE};
-
-    if (!runCommandQuiet(command, args)) {
+    const QString path = QFileInfo(filePath).absoluteFilePath();
+    const QString quoted = ShellArguments::quote(path).replace(QLatin1String("}"), QLatin1String("\\}"));
+    QString label = dockName;
+    label.replace(QLatin1String(")"), QLatin1String("\\)"));
+    // A trailing backslash would escape the label's closing parenthesis.
+    if (label.endsWith(QLatin1Char('\\'))) {
+        label += QLatin1Char(' ');
+    }
+    QFile menu(QDir::homePath() + PathConstants::FLUXBOX_SUBMENUS_FILE);
+    bool success = !path.contains(QLatin1Char('\n')) && !label.contains(QLatin1Char('\n')) && menu.open(QIODevice::ReadOnly);
+    if (success) {
+        const QByteArray original = menu.readAll();
+        success = menu.error() == QFileDevice::NoError;
+        menu.close();
+        auto lines = original.split('\n');
+        static const QRegularExpression docksHeading(QStringLiteral(R"(^\s*\[submenu\]\s*\(Docks\))"),
+                                                    QRegularExpression::CaseInsensitiveOption);
+        qsizetype heading = -1;
+        bool found = false;
+        for (qsizetype i = 0; i < lines.size(); ++i) {
+            QString line = QString::fromUtf8(lines.at(i));
+            if (heading < 0 && docksHeading.match(line).hasMatch()) {
+                heading = i;
+            }
+            QRegularExpressionMatch fields;
+            if (DockFileParser::menuEntryName(line, path, &fields).isEmpty()) {
+                continue;
+            }
+            found = true;
+            // Keep portable, working stock commands. Repair old unquoted absolute paths in place.
+            static const QRegularExpression homePath(QStringLiteral(R"(^~/[a-zA-Z0-9_./-]+$)"));
+            if (!homePath.match(fields.captured(2)).hasMatch()) {
+                line.replace(fields.capturedStart(2), fields.capturedLength(2), quoted);
+            }
+            if (line.startsWith(QLatin1String("t\t\t"))) {
+                line[0] = QLatin1Char('\t');
+            }
+            lines[i] = line.toUtf8();
+        }
+        if (!found && heading >= 0) {
+            QByteArray entry = QStringLiteral("\t\t\t[exec] (%1) {%2}").arg(label, quoted).toUtf8();
+            if (lines.at(heading).endsWith('\r')) {
+                entry.append('\r');
+            }
+            lines.insert(heading + 1, entry);
+        }
+        const QByteArray updated = lines.join('\n');
+        success = success && (updated == original || writeMenu(menu.fileName(), updated));
+    }
+    if (!success) {
         setLastError(tr("Failed to add dock to Fluxbox menu"));
         emit operationError(operation, m_lastError);
         emit operationCompleted(operation, false);
@@ -249,8 +296,7 @@ bool DockFileManager::removeFromMenu(const QString &filePath)
         success = menu.error() == QFileDevice::NoError;
         menu.close();
         if (success && removed) {
-            QSaveFile updated(menu.fileName());
-            success = updated.open(QIODevice::WriteOnly) && updated.write(kept) == kept.size() && updated.commit();
+            success = writeMenu(menu.fileName(), kept);
         }
     }
     if (!success) {
@@ -403,18 +449,6 @@ QString DockFileManager::generateDockContent(const DockConfiguration &configurat
     return content;
 }
 
-QString DockFileManager::escapeSedArg(const QString &arg)
-{
-    if (arg.isEmpty()) {
-        return QString();
-    }
-
-    // Escape sed metacharacters: / \ & | ! $ ^ * ? . [ ] { } ( ) + =
-    QString escaped = arg;
-    escaped.replace(QRegularExpression(QStringLiteral("([/\\\\&|!$^*?.\\[\\]{}\\(\\)\\+=])")), QStringLiteral("\\\\1"));
-    return escaped;
-}
-
 void DockFileManager::setLastError(const QString &error)
 {
     m_lastError = error;
@@ -423,14 +457,6 @@ void DockFileManager::setLastError(const QString &error)
 void DockFileManager::clearLastError()
 {
     m_lastError.clear();
-}
-
-bool DockFileManager::runCommandQuiet(const QString &command, const QStringList &args)
-{
-    QProcess proc;
-    proc.start(command, args);
-    proc.waitForFinished();
-    return proc.exitStatus() == QProcess::NormalExit && proc.exitCode() == 0;
 }
 
 void DockFileManager::restartDockAsync(const QString &processName, const QString &dockFile)

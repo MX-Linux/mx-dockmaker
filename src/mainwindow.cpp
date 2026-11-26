@@ -588,10 +588,7 @@ void MainWindow::buttonSave_clicked()
         return;
     }
 
-    bool addedToMenu = true;
-    if (!m_fileManager->isInMenu(targetFile)) {
-        addedToMenu = m_fileManager->addToMenu(targetFile, dockName);
-    }
+    const bool addedToMenu = m_fileManager->addToMenu(targetFile, dockName);
 
     m_configuration->markAsSaved();
     changed = false;

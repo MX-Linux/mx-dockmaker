@@ -144,26 +144,37 @@ QString DockFileParser::extractSlitLocation(const QString &content) const
     return match.hasMatch() ? match.captured(1) : QString();
 }
 
-QString DockFileParser::menuEntryName(const QString &line, const QString &filePath)
+QString DockFileParser::menuEntryName(const QString &line, const QString &filePath, QRegularExpressionMatch *fields)
 {
     // Older sed-based writers emitted a literal t before the two indentation tabs.
-    static const QRegularExpression entry(QStringLiteral(R"(^\s*(?:t\t\t)?\[exec\]\s*\(([^)]*)\)\s*\{([^}]*)\})"),
-                                          QRegularExpression::CaseInsensitiveOption);
+    static const QRegularExpression entry(
+        QStringLiteral(R"rx(^\s*(?:t\t\t)?\[exec\]\s*\((.*?)(?<!\\)\)\s*\{(.*?)(?<!\\)\})rx"),
+        QRegularExpression::CaseInsensitiveOption);
     const auto match = entry.match(line);
     if (!match.hasMatch()) {
         return {};
     }
 
-    QString command = match.captured(2).trimmed();
-    if (command.startsWith(QLatin1String("~/"))) {
-        command = QDir::home().filePath(command.mid(2));
-    } else {
-        command = stripQuotes(command);
+    // Fluxbox consumes the backslash before its closing field delimiter.
+    const QString command = match.captured(2).trimmed().replace(QLatin1String("\\}"), QLatin1String("}"));
+    const QString target = QDir::cleanPath(QFileInfo(filePath).absoluteFilePath());
+    QStringList args;
+    QString error;
+    if (ShellArguments::split(command, args, error) && args.size() == 1) {
+        QString path = args.first();
+        if (command.startsWith(QLatin1String("~/"))) {
+            path = QDir::home().filePath(path.mid(2));
+        }
+        if (QDir::cleanPath(path) != target && command != target) {
+            return {};
+        }
+    } else if (command != target) {
+        return {}; // Accept the complete unquoted path written by older versions.
     }
-    if (QDir::cleanPath(command) != QDir::cleanPath(QFileInfo(filePath).absoluteFilePath())) {
-        return {};
+    if (fields) {
+        *fields = match;
     }
-    return stripQuotes(match.captured(1));
+    return stripQuotes(match.captured(1).replace(QLatin1String("\\)"), QLatin1String(")")));
 }
 
 QString DockFileParser::extractDockName(const QString &fileName)

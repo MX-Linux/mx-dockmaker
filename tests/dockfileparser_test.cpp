@@ -47,6 +47,7 @@ private slots:
     void parsesWmalauncherDashXBeforeCommand();
     void extractsDockNameWithoutTruncation();
     void matchesStockMenuEntryByPath();
+    void writesQuotedMenuEntry();
     void extractsSlitLocationFromPlacementCommand();
     void ignoresUnrelatedLocationTokensInContent();
 };
@@ -286,4 +287,36 @@ void DockFileParserTest::savesAndReloadsQuotedArguments()
                                                 dir.filePath("bin/tool").toUtf8(), dir.filePath("My file").toUtf8(), "$HOME",
                                                 "--icon", "/icons/Reader's icon.png"}));
     QVERIFY(args.contains("Reader's Font/10"));
+}
+
+void DockFileParserTest::writesQuotedMenuEntry()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QByteArray oldHome = qgetenv("HOME");
+    const auto restoreHome = qScopeGuard([&] { oldHome.isNull() ? qunsetenv("HOME") : qputenv("HOME", oldHome); });
+    qputenv("HOME", dir.path().toUtf8());
+    QVERIFY(QDir().mkpath(dir.filePath(".fluxbox/submenus")));
+    QFile menu(dir.filePath(".fluxbox/submenus/appearance"));
+    QVERIFY(menu.open(QIODevice::WriteOnly));
+    const QByteArray header("[submenu] (Docks)\r\n");
+    menu.write(header);
+    menu.close();
+
+    DockFileManager files;
+    const QString path = dir.filePath(QStringLiteral("Sam's {Music} Dock.mxdk"));
+    const QString name = QStringLiteral("Music (work)");
+    QVERIFY(files.addToMenu(path, name));
+    QVERIFY(files.addToMenu(path, name));
+    QVERIFY(files.isInMenu(path));
+    QCOMPARE(DockFileParser::extractDockName(path), name);
+    QVERIFY(menu.open(QIODevice::ReadOnly));
+    const QByteArray contents = menu.readAll();
+    menu.close();
+    QCOMPARE(contents.count("[exec]"), 1);
+    QVERIFY(contents.contains("Music (work\\))"));
+    QVERIFY(contents.contains("{Music\\} Dock.mxdk'"));
+    QVERIFY(files.removeFromMenu(path));
+    QVERIFY(menu.open(QIODevice::ReadOnly));
+    QCOMPARE(menu.readAll(), header);
 }

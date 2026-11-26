@@ -60,9 +60,7 @@ private:
     QThreadPool m_processPool;
 
     QString generateDockContent(const DockConfiguration &configuration);
-    static QString escapeSedArg(const QString &arg);
     static void killAndWaitForProcess(const QString &processName);
-    static bool runCommandQuiet(const QString &command, const QStringList &args = {});
     void clearLastError();
     void setLastError(const QString &error);
 };
