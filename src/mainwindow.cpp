@@ -879,12 +879,12 @@ void MainWindow::pickColor(QWidget *widget)
     QColor color = QColorDialog::getColor(widget->palette().color(QWidget::backgroundRole()));
     if (color.isValid()) {
         setColor(widget, color);
-        itemChanged();
         if (widget == ui->widgetBackground) {
             setColor(ui->widgetHoverBackground, "black");
         } else if (widget == ui->widgetBorder) {
             setColor(ui->widgetHoverBorder, "white");
         }
+        itemChanged();
     }
 }
 
