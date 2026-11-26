@@ -25,6 +25,7 @@
 set -e
 
 # Default values
+PACKAGE="mx-dockmaker"
 BUILD_DIR="build"
 BUILD_TYPE="Release"
 USE_CLANG=false
@@ -80,19 +81,17 @@ if [ "$DEBIAN_BUILD" = true ]; then
 
     echo "Creating debs directory and moving debian artifacts..."
     mkdir -p debs
-    mv ../*.deb debs/ 2>/dev/null || true
-    mv ../*.changes debs/ 2>/dev/null || true
-    mv ../*.dsc debs/ 2>/dev/null || true
-    mv ../*.tar.* debs/ 2>/dev/null || true
-    mv ../*.buildinfo debs/ 2>/dev/null || true
-    mv ../*build* debs/ 2>/dev/null || true
+    for artifact in ../"${PACKAGE}"_*.{deb,changes,dsc,tar.*,buildinfo,build}; do
+        if [[ -f "$artifact" ]]; then
+            mv -- "$artifact" debs/
+        fi
+    done
 
     echo "Cleaning build directory and debian artifacts..."
     rm -rf "$BUILD_DIR"
     rm -f debian/*.debhelper.log debian/*.substvars debian/files
     rm -rf debian/.debhelper/ debian/deb-installer/ obj-*/
     rm -f translations/*.qm
-    rm -f ../*build* ../*.buildinfo 2>/dev/null || true
 
     echo "Debian package build completed!"
     echo "Debian artifacts moved to debs/ directory"
@@ -106,7 +105,7 @@ if [ "$CLEAN" = true ]; then
     rm -f debian/*.debhelper.log debian/*.substvars debian/files
     rm -rf debian/.debhelper/ debian/deb-installer/ obj-*/
     rm -f translations/*.qm
-    rm -f ../*build* ../*.buildinfo 2>/dev/null || true
+    rm -f -- ../"${PACKAGE}"_*.{build,buildinfo}
 fi
 
 # Create build directory
