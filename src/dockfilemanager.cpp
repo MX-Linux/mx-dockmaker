@@ -78,20 +78,7 @@ bool DockFileManager::saveConfiguration(const DockConfiguration &configuration, 
         return false;
     }
 
-    QFile file(filePath);
-    if (!file.open(QFile::Text | QFile::WriteOnly)) {
-        setLastError(tr("Could not open file for writing: %1").arg(filePath));
-        emit operationError(operation, m_lastError);
-        emit operationCompleted(operation, false);
-        return false;
-    }
-
-    QTextStream out(&file);
-    out << content;
-    file.close();
-
-    // Set executable permissions
-    if (!setExecutable(filePath)) {
+    if (!writeDockFile(filePath, content, true)) {
         emit operationError(operation, m_lastError);
         emit operationCompleted(operation, false);
         return false;
@@ -173,6 +160,12 @@ bool DockFileManager::moveDockFile(const QString &oldFilePath, const QString &ne
     }
 
     QString content = file.readAll();
+    if (file.error() != QFileDevice::NoError) {
+        setLastError(file.errorString());
+        emit operationError(operation, m_lastError);
+        emit operationCompleted(operation, false);
+        return false;
+    }
     file.close();
 
     // Update slit location in content
@@ -189,17 +182,11 @@ bool DockFileManager::moveDockFile(const QString &oldFilePath, const QString &ne
         updatedContent = "#set up slit location\n" + newLine + "\n" + content;
     }
 
-    // Write updated content
-    if (!file.open(QFile::Text | QFile::WriteOnly | QFile::Truncate)) {
-        setLastError(tr("Could not open file for writing: %1").arg(oldFilePath));
+    if (!writeDockFile(oldFilePath, updatedContent, false)) {
         emit operationError(operation, m_lastError);
         emit operationCompleted(operation, false);
         return false;
     }
-
-    QTextStream out(&file);
-    out << updatedContent;
-    file.close();
 
     // Restart wmalauncher without blocking the GUI while waiting for it to terminate
     restartDockAsync(QStringLiteral("wmalauncher"), oldFilePath);
@@ -343,22 +330,28 @@ bool DockFileManager::createBackup(const QString &filePath)
     return true;
 }
 
-bool DockFileManager::setExecutable(const QString &filePath)
+bool DockFileManager::writeDockFile(const QString &path, const QString &content, bool makeExecutable)
 {
-    clearLastError();
-    const QString operation = tr("Setting executable permissions on %1").arg(filePath);
-    emit operationStarted(operation);
-
-    QFile file(filePath);
-    if (!file.setPermissions(QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner | QFile::ReadGroup | QFile::ExeGroup
-                             | QFile::ReadOther | QFile::ExeOther)) {
-        setLastError(tr("Failed to set executable permissions"));
-        emit operationError(operation, m_lastError);
-        emit operationCompleted(operation, false);
+    QSaveFile file(path);
+    if (!file.open(QIODevice::WriteOnly)) {
+        setLastError(tr("Could not open file for writing: %1").arg(path));
         return false;
     }
 
-    emit operationCompleted(operation, true);
+    const QByteArray bytes = content.toUtf8();
+    if (file.write(bytes) != bytes.size()) {
+        setLastError(file.errorString());
+        return false;
+    }
+    if (makeExecutable && !file.setPermissions(QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner
+                                               | QFile::ReadGroup | QFile::ExeGroup | QFile::ReadOther | QFile::ExeOther)) {
+        setLastError(tr("Failed to set executable permissions"));
+        return false;
+    }
+    if (!file.commit()) {
+        setLastError(file.errorString());
+        return false;
+    }
     return true;
 }
 

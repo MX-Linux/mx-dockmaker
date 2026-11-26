@@ -45,7 +45,6 @@ public:
     bool moveDockFile(const QString &oldFilePath, const QString &newSlitLocation);
     bool removeFromMenu(const QString &filePath);
     bool saveConfiguration(const DockConfiguration &configuration, const QString &filePath, bool createBackup = true);
-    bool setExecutable(const QString &filePath);
     explicit DockFileManager(QObject *parent = nullptr);
     static QString getDefaultDockDirectory();
     void restartDockAsync(const QString &processName, const QString &dockFile);
@@ -59,6 +58,7 @@ private:
     QString m_lastError; ///< Last error message
     QThreadPool m_processPool;
 
+    bool writeDockFile(const QString &path, const QString &content, bool makeExecutable);
     QString generateDockContent(const DockConfiguration &configuration);
     static void killAndWaitForProcess(const QString &processName);
     void clearLastError();
