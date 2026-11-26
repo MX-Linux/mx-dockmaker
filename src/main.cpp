@@ -22,7 +22,7 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
-#include <QFile>
+#include <QFileInfo>
 #include <QIcon>
 #include <QLibraryInfo>
 #include <QLocale>
@@ -104,8 +104,8 @@ int main(int argc, char *argv[])
 
     QString file;
     const QStringList positionalArgs = parser.positionalArguments();
-    if (!positionalArgs.isEmpty() && QFile::exists(positionalArgs.first())) {
-        file = positionalArgs.first();
+    if (!positionalArgs.isEmpty() && QFileInfo::exists(positionalArgs.first())) {
+        file = QFileInfo(positionalArgs.first()).absoluteFilePath();
     }
     MainWindow w(nullptr, file);
     w.show();
