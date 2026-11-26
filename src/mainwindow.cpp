@@ -956,6 +956,9 @@ void MainWindow::lineEditCommand_textEdited()
 {
     changed = true;
     updateAppList(index);
+    if (index >= listIcons.size()) {
+        renderIconAt(index);
+    }
     checkDoneEditing();
 }
 
