@@ -320,6 +320,16 @@ void DockFileParserTest::writesQuotedMenuEntry()
     QVERIFY(files.removeFromMenu(path));
     QVERIFY(menu.open(QIODevice::ReadOnly));
     QCOMPARE(menu.readAll(), header);
+    menu.close();
+
+    const QByteArray renamed("[submenu] (Custom launchers)\n[end]\n");
+    QVERIFY(menu.open(QIODevice::WriteOnly));
+    menu.write(renamed);
+    menu.close();
+    QVERIFY(!files.addToMenu(path, name));
+    QVERIFY(!files.getLastError().isEmpty());
+    QVERIFY(menu.open(QIODevice::ReadOnly));
+    QCOMPARE(menu.readAll(), renamed);
 }
 
 void DockFileParserTest::deletesDockWithMissingMenu()

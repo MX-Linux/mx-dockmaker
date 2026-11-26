@@ -242,7 +242,9 @@ bool DockFileManager::addToMenu(const QString &filePath, const QString &dockName
             }
             lines[i] = line.toUtf8();
         }
-        if (!found && heading >= 0) {
+        if (!found && heading < 0) {
+            success = false;
+        } else if (!found) {
             QByteArray entry = QStringLiteral("\t\t\t[exec] (%1) {%2}").arg(label, quoted).toUtf8();
             if (lines.at(heading).endsWith('\r')) {
                 entry.append('\r');
