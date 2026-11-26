@@ -780,9 +780,11 @@ void MainWindow::buttonSelectApp_clicked()
 {
     const QString selected = QFileDialog::getOpenFileName(this, tr("Select .desktop file"), PathConstants::APPLICATIONS_DIR,
                                                           tr(DESKTOP_FILES_FILTER_TR));
-    const QString file = QFileInfo(selected).fileName();
-    if (!file.isEmpty()) {
-        ui->buttonSelectApp->setText(file);
+    if (!selected.isEmpty()) {
+        const QFileInfo file(selected);
+        const QString name = file.fileName();
+        const QString path = file.absoluteFilePath();
+        ui->buttonSelectApp->setText(DockIconManager::desktopFilePath(name) == path ? name : path);
         ui->buttonAdd->setEnabled(true);
         ui->buttonSelectApp->setProperty("extra_options", QString()); // reset extra options when changing the app.
         ui->lineEditTooltip->clear();

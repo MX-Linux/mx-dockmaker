@@ -80,6 +80,19 @@ QPixmap DockIconManager::findIcon(const QString &iconName, QSize size)
     return QPixmap();
 }
 
+QString DockIconManager::desktopFilePath(const QString &name)
+{
+    if (QDir::isAbsolutePath(name)) {
+        return name;
+    }
+    // Match wmalauncher's default desktop-file lookup order.
+    const QString local = QDir::home().filePath(QStringLiteral(".local/share/applications/") + name);
+    if (QFileInfo(local).isFile()) {
+        return local;
+    }
+    return QDir(PathConstants::APPLICATIONS_DIR).filePath(name);
+}
+
 void DockIconManager::displayIcon(const DockIconInfo &iconInfo, QLabel *label, int selectedIndex, int currentIndex)
 {
     clearLastError();
@@ -95,7 +108,7 @@ void DockIconManager::displayIcon(const DockIconInfo &iconInfo, QLabel *label, i
         iconPath = iconInfo.customIcon;
     } else if (iconInfo.isDesktopFile()) {
         // Extract icon from .desktop file
-        QFile desktopFile(PathConstants::APPLICATIONS_DIR + "/" + iconInfo.appName);
+        QFile desktopFile(desktopFilePath(iconInfo.appName));
         if (desktopFile.open(QFile::ReadOnly)) {
             QString content = desktopFile.readAll();
             desktopFile.close();

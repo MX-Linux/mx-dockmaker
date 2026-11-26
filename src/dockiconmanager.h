@@ -39,6 +39,7 @@ public:
     QPixmap findIcon(const QString &iconName, QSize size);
     [[nodiscard]] QString getLastError() const;
     explicit DockIconManager(QObject *parent = nullptr);
+    static QString desktopFilePath(const QString &name);
     static QSize getIconContainerSize(QSize iconSize);
     static QString getDefaultIconSize();
     static QStringList getAvailableIconSizes();
