@@ -252,9 +252,6 @@ bool DockFileManager::removeFromMenu(const QString &filePath)
         return false;
     }
 
-    // Kill wmalauncher without blocking the GUI while waiting for it to terminate
-    killProcessAsync(QStringLiteral("wmalauncher"));
-
     emit operationCompleted(operation, true);
     return true;
 }
@@ -431,11 +428,6 @@ bool DockFileManager::runCommandQuiet(const QString &command, const QStringList 
     proc.start(command, args);
     proc.waitForFinished();
     return proc.exitStatus() == QProcess::NormalExit && proc.exitCode() == 0;
-}
-
-void DockFileManager::killProcessAsync(const QString &processName)
-{
-    m_processPool.start([processName]() { killAndWaitForProcess(processName); });
 }
 
 void DockFileManager::restartDockAsync(const QString &processName, const QString &dockFile)

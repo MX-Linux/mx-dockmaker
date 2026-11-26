@@ -48,7 +48,6 @@ public:
     bool setExecutable(const QString &filePath);
     explicit DockFileManager(QObject *parent = nullptr);
     static QString getDefaultDockDirectory();
-    void killProcessAsync(const QString &processName);
     void restartDockAsync(const QString &processName, const QString &dockFile);
 
 signals:
